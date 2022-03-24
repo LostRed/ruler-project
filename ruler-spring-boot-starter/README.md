@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS 'tableName'
     `required`         bit(1) COMMENT '是否强制使用',
     `enable`           bit(1) COMMENT '是否启用',
     `valid_class_name` varchar(128) COMMENT '校验类型的全限定类名'
-) COMMENT '校验信息配置表'
+) COMMENT '校验信息配置表';
 ```
 
 ### 配置application.yaml
