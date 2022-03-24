@@ -6,7 +6,7 @@ import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.domain.model.ValidClass;
 import com.ylzinfo.ruler.engine.SimpleRulesEngine;
-import com.ylzinfo.ruler.rule.DictFieldRule;
+import com.ylzinfo.ruler.support.RuleFactory;
 import com.ylzinfo.ruler.support.RulesEngineFactory;
 import com.ylzinfo.ruler.support.TypeReference;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ import java.util.List;
 public class Config {
     @Bean
     public RulesEngine<ValidClass> defaultRulesEngine() {
-        List<Rule<ValidClass>> rules = new ArrayList<>();
+        List<RuleInfo> ruleInfos = new ArrayList<>();
         RuleInfo ruleInfo = new RuleInfo();
         ruleInfo.setRuleCode("test_1");
         ruleInfo.setBusinessType("common");
@@ -27,9 +27,10 @@ public class Config {
         ruleInfo.setSeq(0);
         ruleInfo.setEnable(true);
         ruleInfo.setRuleClassName("com.ylzinfo.ruler.rule.TestRule");
+        ruleInfos.add(ruleInfo);
         ValidConfiguration validConfiguration = new ValidConfiguration();
         //构建规则信息列表...
-        rules.add(new DictFieldRule<>(validConfiguration, ruleInfo));
+        List<Rule<ValidClass>> rules = RuleFactory.rulesBuilder(validConfiguration, ruleInfos, ValidClass.class).build();
         //定义规则引擎类型与校验对象类型
         TypeReference<SimpleRulesEngine<ValidClass>> typeReference = new TypeReference<SimpleRulesEngine<ValidClass>>() {
         };
