@@ -11,7 +11,15 @@ import java.io.OutputStream;
  * @author dengluwei
  */
 public final class SqlUtils {
-    public static String parseSql(String filename, String tableName) {
+    /**
+     * 解析sql
+     *
+     * @param filename    sql文件名
+     * @param targetName  替换目标表名
+     * @param replaceName 替换后的表名
+     * @return sql
+     */
+    public static String parseSql(String filename, String targetName, String replaceName) {
         try {
             InputStream is = SqlUtils.class.getClassLoader().getResourceAsStream("sql/" + filename + ".sql");
             if (is != null) {
@@ -20,7 +28,7 @@ public final class SqlUtils {
                 while ((i = is.read()) != -1) {
                     os.write(i);
                 }
-                return os.toString().replace("'tableName'", tableName);
+                return os.toString().replace(targetName, replaceName);
             }
         } catch (IOException e) {
             e.printStackTrace();

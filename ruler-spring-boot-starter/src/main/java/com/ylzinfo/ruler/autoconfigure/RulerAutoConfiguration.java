@@ -54,23 +54,23 @@ public class RulerAutoConfiguration {
         @Bean
         @ConditionalOnBean(name = "jdbcTemplate")
         @ConditionalOnProperty(prefix = "ruler", name = "config-table-init", havingValue = "true", matchIfMissing = true)
-        public RulerConfigTableInitializer rulerConfigTableInitializer(JdbcTemplate jdbcTemplate) {
-            return new RulerConfigTableInitializer(jdbcTemplate);
+        public RuleConfigInitializer ruleConfigInitializer(JdbcTemplate jdbcTemplate) {
+            return new RulerConfigDatabaseInitializer(jdbcTemplate, rulerProperties);
         }
 
         @Bean
         @ConditionalOnMissingBean
-        public ValidConfiguration defaultValidConfiguration(RulerConfigTableInitializer initializer) {
+        public ValidConfiguration defaultValidConfiguration(RuleConfigInitializer ruleConfigInitializer) {
             ValidConfiguration validConfiguration = new ValidConfiguration();
-            List<ValidInfo> validInfos = initializer.fetchValidInfo(rulerProperties);
+            List<ValidInfo> validInfos = ruleConfigInitializer.fetchValidInfo();
             validConfiguration.addValidInfo(validInfos);
             return validConfiguration;
         }
 
         @Bean
         @ConditionalOnMissingBean
-        public List<Rule<E>> defaultRules(RulerConfigTableInitializer initializer, ValidConfiguration validConfiguration) {
-            List<RuleInfo> ruleInfos = initializer.fetchRuleInfo(rulerProperties);
+        public List<Rule<E>> defaultRules(RuleConfigInitializer ruleConfigInitializer, ValidConfiguration validConfiguration) {
+            List<RuleInfo> ruleInfos = ruleConfigInitializer.fetchRuleInfo();
             return RuleFactory.rulesBuilder(validConfiguration, ruleInfos, rulerProperties.getDefaultValidClass()).build();
         }
     }

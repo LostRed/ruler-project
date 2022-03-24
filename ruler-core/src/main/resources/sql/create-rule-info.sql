@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS 'tableName'
+CREATE TABLE IF NOT EXISTS ruler_rule_info
 (
     `rule_code`       varchar(24) PRIMARY KEY COMMENT '规则编号',
     `business_type`   varchar(8) COMMENT '业务类型',

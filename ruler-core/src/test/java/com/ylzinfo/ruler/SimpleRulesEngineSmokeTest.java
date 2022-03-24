@@ -43,16 +43,16 @@ class SimpleRulesEngineSmokeTest {
 
     @BeforeEach
     void databaseInit() {
-        jdbcTemplate.execute(SqlUtils.parseSql("create-valid-info", VALID_INFO_TABLE_NAME));
-        jdbcTemplate.execute(SqlUtils.parseSql("create-rule-info", RULE_INFO_TABLE_NAME));
-        jdbcTemplate.execute(SqlUtils.parseSql("insert-valid-info", VALID_INFO_TABLE_NAME));
-        jdbcTemplate.execute(SqlUtils.parseSql("insert-rule-info", RULE_INFO_TABLE_NAME));
-        jdbcTemplate.execute(SqlUtils.parseSql("insert-test-rule-info", RULE_INFO_TABLE_NAME));
+        jdbcTemplate.execute(SqlUtils.parseSql("create-valid-info", "ruler_valid_info", VALID_INFO_TABLE_NAME));
+        jdbcTemplate.execute(SqlUtils.parseSql("create-rule-info", "ruler_rule_info", RULE_INFO_TABLE_NAME));
+        jdbcTemplate.execute(SqlUtils.parseSql("insert-valid-info", "ruler_valid_info", VALID_INFO_TABLE_NAME));
+        jdbcTemplate.execute(SqlUtils.parseSql("insert-rule-info", "ruler_rule_info", RULE_INFO_TABLE_NAME));
+        jdbcTemplate.execute(SqlUtils.parseSql("insert-test-rule-info", "ruler_rule_info", RULE_INFO_TABLE_NAME));
     }
 
     @BeforeEach
     void configurationInit() {
-        List<ValidInfo> validInfos = jdbcTemplate.query(SqlUtils.parseSql("select-valid-info", VALID_INFO_TABLE_NAME),
+        List<ValidInfo> validInfos = jdbcTemplate.query(SqlUtils.parseSql("select-valid-info", "ruler_valid_info", VALID_INFO_TABLE_NAME),
                 new BeanPropertyRowMapper<>(ValidInfo.class), BUSINESS_TYPE);
         config.addValidInfo(validInfos);
         Map<String, Set<Object>> map = new HashMap<>();
@@ -64,9 +64,9 @@ class SimpleRulesEngineSmokeTest {
     void ruleEngineInit() {
         if (rulesEngine == null) {
             //构建规则集合
-            List<RuleInfo> ruleInfos = jdbcTemplate.query(SqlUtils.parseSql("select-rule-info", RULE_INFO_TABLE_NAME),
+            List<RuleInfo> ruleInfos = jdbcTemplate.query(SqlUtils.parseSql("select-rule-info", "ruler_rule_info", RULE_INFO_TABLE_NAME),
                     new BeanPropertyRowMapper<>(RuleInfo.class), BUSINESS_TYPE);
-            List<RuleInfo> test = jdbcTemplate.query(SqlUtils.parseSql("select-rule-info", RULE_INFO_TABLE_NAME),
+            List<RuleInfo> test = jdbcTemplate.query(SqlUtils.parseSql("select-rule-info", "ruler_rule_info", RULE_INFO_TABLE_NAME),
                     new BeanPropertyRowMapper<>(RuleInfo.class), TEST_BUSINESS_TYPE);
             ruleInfos.addAll(test);
             List<Rule<ValidClass>> rules = RuleFactory.rulesBuilder(config, ruleInfos, ValidClass.class).build();
