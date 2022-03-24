@@ -48,9 +48,14 @@ public class ScopeFieldRule<T> extends SingleFieldValidRule<T> {
             ValidInfo validInfo = map.get(fieldName);
             if (value instanceof Number) {
                 BigDecimal bigDecimal = new BigDecimal(value.toString());
-                int l = bigDecimal.compareTo(validInfo.getLowerLimit());
-                int s = bigDecimal.compareTo(validInfo.getUpperLimit());
-                return l < 0 || s > 0;
+                BigDecimal lowerLimit = validInfo.getLowerLimit();
+                BigDecimal upperLimit = validInfo.getUpperLimit();
+                if (lowerLimit != null) {
+                    return bigDecimal.compareTo(lowerLimit) < 0;
+                }
+                if (upperLimit != null) {
+                    return bigDecimal.compareTo(upperLimit) > 0;
+                }
             }
         }
         return false;
@@ -60,7 +65,11 @@ public class ScopeFieldRule<T> extends SingleFieldValidRule<T> {
     protected Set<Map.Entry<String, Object>> collectToSet(Object validNode, String fieldName, Object value) {
         Map<String, ValidInfo> map = validConfiguration.getScopeValidInfos();
         ValidInfo validInfo = map.get(fieldName);
-        value = value + " (参考值: " + validInfo.getLowerLimit() + " ~ " + validInfo.getUpperLimit() + ")";
+        BigDecimal lowerLimit = validInfo.getLowerLimit();
+        BigDecimal upperLimit = validInfo.getUpperLimit();
+        String lower = lowerLimit == null ? "-∞" : lowerLimit.toString();
+        String upper = upperLimit == null ? "+∞" : upperLimit.toString();
+        value = value + " (参考值: " + lower + " ~ " + upper + ")";
         return this.transToSet(validNode, fieldName, value);
     }
 }
