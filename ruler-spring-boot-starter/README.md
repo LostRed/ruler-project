@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS 'tableName'
 
 ### 配置application.yaml
 
-框架默认只会根据application.yaml配置单实例规则引擎，项目中需要使用到多类规则引擎，需要自己编写配置类。
+框架默认只会根据application.yaml配置单实例规则引擎，项目中需要使用到多类规则引擎时，需要自己编写配置类。
 
 ```yaml
 ruler:
@@ -59,13 +59,22 @@ ruler:
 单实例规则引擎不能满足项目时，可自定义规则引擎。
 
 ```java
-
 @Configuration
 public class Config {
     @Bean
     public RulesEngine<ValidClass> defaultRulesEngine() {
         List<Rule<ValidClass>> rules = new ArrayList<>();
+        RuleInfo ruleInfo = new RuleInfo();
+        ruleInfo.setRuleCode("test_1");
+        ruleInfo.setBusinessType("common");
+        ruleInfo.setGrade("可疑");
+        ruleInfo.setDesc("测试规则");
+        ruleInfo.setSeq(0);
+        ruleInfo.setEnable(true);
+        ruleInfo.setRuleClassName("com.ylzinfo.ruler.rule.TestRule");
+        ValidConfiguration validConfiguration = new ValidConfiguration();
         //构建规则信息列表...
+        rules.add(new DictFieldRule<>(validConfiguration, ruleInfo));
         //定义规则引擎类型与校验对象类型
         TypeReference<SimpleRulesEngine<ValidClass>> typeReference = new TypeReference<SimpleRulesEngine<ValidClass>>() {
         };

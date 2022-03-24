@@ -48,7 +48,7 @@ class ApplicationTests {
     }
 
     @Test
-    void test() {
+    void rulesEngineManagerTest() {
         ValidClass validClass = new ValidClass();
         validClass.setNumber(BigDecimal.ZERO);
         SubValidClass subValidClass = new SubValidClass();
