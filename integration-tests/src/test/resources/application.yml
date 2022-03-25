@@ -14,3 +14,5 @@ ruler:
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass
   default-rules-engine-type: complete
   config-table-init: true
+  valid-info-table-name: ruler_valid_info
+  rule-info-table-name: ruler_rule_info

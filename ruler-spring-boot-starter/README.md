@@ -15,7 +15,7 @@
 ### 创建数据源及配置表
 
 ```sql
-CREATE TABLE IF NOT EXISTS 'tableName'
+CREATE TABLE IF NOT EXISTS ruler_rule_info
 (
     `rule_code`       varchar(24) PRIMARY KEY COMMENT '规则编号',
     `business_type`   varchar(8) COMMENT '业务类型',
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS 'tableName'
     `rule_class_name` varchar(128) COMMENT '规则实现类全限定类名'
 ) COMMENT '规则信息配置表';
 
-CREATE TABLE IF NOT EXISTS 'tableName'
+CREATE TABLE IF NOT EXISTS ruler_valid_info
 (
     `id`               varchar(24) PRIMARY KEY COMMENT 'id',
     `business_type`    varchar(8) COMMENT '业务类型',
@@ -51,6 +51,8 @@ ruler:
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass #规则引擎所约束的java类型
   default-rules-engine-type: complete #上述提到的规则引擎类型
   config-table-init: true #是否开启配置表的初始化功能，默认开启
+  valid-info-table-name: ruler_valid_info #校验信息配置表表名
+  rule-info-table-name: ruler_rule_info #规则信息配置表表名
 ```
 
 ### 编写配置类
@@ -109,5 +111,4 @@ class ApplicationTests {
 }
 ```
 
-这里注入的是RulesEngineManager接口，使用该接口的dispatch()方法获取业务类型对应的规则引擎接口。
-当然也可以直接注入自己配置规则引擎的实现类。
+这里注入的是RulesEngineManager接口，使用该接口的dispatch()方法获取业务类型对应的规则引擎接口。 当然也可以直接注入自己配置规则引擎的实现类。
