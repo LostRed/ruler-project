@@ -5,7 +5,6 @@
 ### 引入依赖
 
 ```xml
-
 <dependency>
     <groupId>com.ylzinfo.ruler</groupId>
     <artifactId>ruler-spring-boot-starter</artifactId>
@@ -89,7 +88,6 @@ ValidClass为校验对象的类。
 ### 规则引擎依赖注入
 
 ```java
-
 @SpringBootTest
 class ApplicationTests {
     @Autowired
