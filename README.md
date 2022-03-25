@@ -1,12 +1,12 @@
 # 📏Ruler
 
-## 特性
+## 1️⃣特性
 
 - 框架侵入性低，可扩展性强
 - 一处配置，处处使用
 - 可根据需求配置不同的引擎类型(simple, incomplete, complete)
 
-## 核心类
+## 2️⃣核心类
 
 ### RulesEngine接口
 
