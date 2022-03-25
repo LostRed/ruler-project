@@ -1,6 +1,7 @@
 package com.ylzinfo.ruler.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * 校验信息
@@ -32,6 +33,14 @@ public class ValidInfo {
      * 上限值
      */
     private BigDecimal upperLimit;
+    /**
+     * 开始时间
+     */
+    private LocalDateTime beginTime;
+    /**
+     * 结束时间
+     */
+    private LocalDateTime endTime;
     /**
      * 是否强制使用
      */
@@ -106,6 +115,22 @@ public class ValidInfo {
         this.upperLimit = upperLimit;
     }
 
+    public LocalDateTime getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(LocalDateTime beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
     public boolean isRequired() {
         return required;
     }
@@ -139,6 +164,8 @@ public class ValidInfo {
                 ", fieldName='" + fieldName + '\'' +
                 ", lowerLimit=" + lowerLimit +
                 ", upperLimit=" + upperLimit +
+                ", beginTime=" + beginTime +
+                ", endTime=" + endTime +
                 ", required=" + required +
                 ", enable=" + enable +
                 ", validClassName='" + validClassName + '\'' +

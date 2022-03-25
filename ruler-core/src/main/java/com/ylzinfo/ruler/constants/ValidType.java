@@ -8,5 +8,6 @@ package com.ylzinfo.ruler.constants;
 public enum ValidType {
     REQUIRED,
     DICT,
-    SCOPE
+    NUMBER_SCOPE,
+    DATETIME_SCOPE
 }

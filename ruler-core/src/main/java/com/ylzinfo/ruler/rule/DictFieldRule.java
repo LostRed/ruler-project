@@ -12,28 +12,28 @@ import java.util.stream.Collectors;
 /**
  * 字典字段校验规则
  *
- * @param <T> 规则约束的参数类型
+ * @param <E> 规则约束的参数类型
  * @author dengluwei
  */
-public class DictFieldRule<T> extends SingleFieldValidRule<T> {
+public class DictFieldRule<E> extends SingleFieldRule<E> {
 
     public DictFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         super(validConfiguration, ruleInfo);
     }
 
     @Override
-    public boolean isSupported(T element) {
+    public boolean isSupported(E element) {
         return !validConfiguration.getDictType().isEmpty();
     }
 
     @Override
-    public boolean judge(T element) {
+    public boolean judge(E element) {
         return validConfiguration.getDictValidInfos().stream()
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
     @Override
-    public Report buildReport(T element) {
+    public Report buildReport(E element) {
         Map<String, Object> map = validConfiguration.getDictValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
@@ -47,10 +47,5 @@ public class DictFieldRule<T> extends SingleFieldValidRule<T> {
             return !set.contains(value);
         }
         return false;
-    }
-
-    @Override
-    protected Set<Map.Entry<String, Object>> wrap(ValidInfo validInfo, Object value) {
-        return super.wrap(validInfo, value);
     }
 }

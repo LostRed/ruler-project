@@ -18,7 +18,7 @@
 CREATE TABLE IF NOT EXISTS ruler_rule_info
 (
     `rule_code`       varchar(24) PRIMARY KEY COMMENT '规则编号',
-    `business_type`   varchar(8) COMMENT '业务类型',
+    `business_type`   varchar(24) COMMENT '业务类型',
     `grade`           varchar(8) COMMENT '规则校验结果等级',
     `desc`            varchar(255) COMMENT '规则描述',
     `seq`             int(11) COMMENT '规则执行的顺序号',
@@ -30,16 +30,19 @@ CREATE TABLE IF NOT EXISTS ruler_rule_info
 CREATE TABLE IF NOT EXISTS ruler_valid_info
 (
     `id`               varchar(24) PRIMARY KEY COMMENT 'id',
-    `business_type`    varchar(8) COMMENT '业务类型',
-    `valid_type`       varchar(8) COMMENT '校验类型',
+    `business_type`    varchar(24) COMMENT '业务类型',
+    `valid_type`       varchar(24) COMMENT '校验类型',
     `field_name`       varchar(32) COMMENT '校验字段名',
     `lower_limit`      decimal(16, 2) COMMENT '下限值',
     `upper_limit`      decimal(16, 2) COMMENT '上限值',
+    `begin_time`       datetime COMMENT '开始时间',
+    `end_time`         datetime COMMENT '结束时间',
     `required`         bit(1) COMMENT '是否强制使用',
     `enable`           bit(1) COMMENT '是否启用',
     `valid_class_name` varchar(128) COMMENT '校验类型的全限定类名'
 ) COMMENT '校验信息配置表';
 ```
+valid_type的填写可参考ValidType类，字母全小写
 
 ### 配置application.yaml
 

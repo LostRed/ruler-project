@@ -12,28 +12,28 @@ import java.util.stream.Collectors;
 /**
  * 必填字段校验规则
  *
- * @param <T> 规则约束的参数类型
+ * @param <E> 规则约束的参数类型
  * @author dengluwei
  */
-public class RequiredFieldRule<T> extends SingleFieldValidRule<T> {
+public class RequiredFieldRule<E> extends SingleFieldRule<E> {
 
     public RequiredFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         super(validConfiguration, ruleInfo);
     }
 
     @Override
-    public boolean isSupported(T element) {
+    public boolean isSupported(E element) {
         return !validConfiguration.getRequiredValidInfos().isEmpty();
     }
 
     @Override
-    public boolean judge(T element) {
+    public boolean judge(E element) {
         return validConfiguration.getRequiredValidInfos().stream()
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
     @Override
-    public Report buildReport(T element) {
+    public Report buildReport(E element) {
         Map<String, Object> map = validConfiguration.getRequiredValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

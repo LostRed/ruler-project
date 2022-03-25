@@ -27,10 +27,10 @@ public class RulerConfigDatabaseInitializer implements RuleConfigInitializer {
     @Override
     public void afterPropertiesSet() {
         String validInfoTableName = rulerProperties.getValidInfoTableName();
-        String defaultBusinessType = rulerProperties.getDefaultBusinessType();
+        String ruleInfoTableName = rulerProperties.getRuleInfoTableName();
         jdbcTemplate.execute(SqlUtils.parseSql("create-valid-info", VALID_INFO_TABLE_NAME, validInfoTableName));
-        jdbcTemplate.execute(SqlUtils.parseSql("create-rule-info", RULE_INFO_TABLE_NAME, defaultBusinessType));
-        jdbcTemplate.execute(SqlUtils.parseSql("insert-rule-info", RULE_INFO_TABLE_NAME, defaultBusinessType));
+        jdbcTemplate.execute(SqlUtils.parseSql("create-rule-info", RULE_INFO_TABLE_NAME, ruleInfoTableName));
+        jdbcTemplate.execute(SqlUtils.parseSql("insert-rule-info", RULE_INFO_TABLE_NAME, ruleInfoTableName));
     }
 
     /**

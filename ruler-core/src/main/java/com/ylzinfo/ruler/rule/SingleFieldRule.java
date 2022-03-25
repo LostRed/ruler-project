@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
  * @param <E> 规则约束的参数类型
  * @author dengluwei
  */
-public abstract class SingleFieldValidRule<E> extends Rule<E> {
+public abstract class SingleFieldRule<E> extends Rule<E> {
 
-    public SingleFieldValidRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
+    public SingleFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         super(validConfiguration, ruleInfo);
     }
 

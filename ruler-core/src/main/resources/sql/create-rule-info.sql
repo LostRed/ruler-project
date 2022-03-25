@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS ruler_rule_info
 (
     `rule_code`       varchar(24) PRIMARY KEY COMMENT '规则编号',
-    `business_type`   varchar(8) COMMENT '业务类型',
+    `business_type`   varchar(24) COMMENT '业务类型',
     `grade`           varchar(8) COMMENT '规则校验结果等级',
     `desc`            varchar(255) COMMENT '规则描述',
     `seq`             int(11) COMMENT '规则执行的顺序号',

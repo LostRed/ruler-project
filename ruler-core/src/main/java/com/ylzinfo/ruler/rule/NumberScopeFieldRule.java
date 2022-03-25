@@ -13,29 +13,29 @@ import java.util.stream.Collectors;
 /**
  * 数值范围字段校验规则
  *
- * @param <T> 规则约束的参数类型
+ * @param <E> 规则约束的参数类型
  * @author dengluwei
  */
-public class NumberScopeFieldRule<T> extends SingleFieldValidRule<T> {
+public class NumberScopeFieldRule<E> extends SingleFieldRule<E> {
 
     public NumberScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         super(validConfiguration, ruleInfo);
     }
 
     @Override
-    public boolean isSupported(T element) {
-        return !validConfiguration.getScopeValidInfos().isEmpty();
+    public boolean isSupported(E element) {
+        return !validConfiguration.getNumberScopeValidInfos().isEmpty();
     }
 
     @Override
-    public boolean judge(T element) {
-        return validConfiguration.getScopeValidInfos().stream()
+    public boolean judge(E element) {
+        return validConfiguration.getNumberScopeValidInfos().stream()
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
     @Override
-    public Report buildReport(T element) {
-        Map<String, Object> map = validConfiguration.getScopeValidInfos().stream()
+    public Report buildReport(E element) {
+        Map<String, Object> map = validConfiguration.getNumberScopeValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return this.getReport(this.ruleInfo, map);
@@ -43,18 +43,19 @@ public class NumberScopeFieldRule<T> extends SingleFieldValidRule<T> {
 
     @Override
     protected boolean match(ValidInfo validInfo, Object value) {
-        if (value != null && !"".equals(value)) {
-            if (value instanceof Number) {
-                BigDecimal bigDecimal = new BigDecimal(value.toString());
-                BigDecimal lowerLimit = validInfo.getLowerLimit();
-                BigDecimal upperLimit = validInfo.getUpperLimit();
-                if (lowerLimit != null) {
-                    return bigDecimal.compareTo(lowerLimit) < 0;
-                }
-                if (upperLimit != null) {
-                    return bigDecimal.compareTo(upperLimit) > 0;
-                }
+        if (value instanceof Number) {
+            BigDecimal lowerLimit = validInfo.getLowerLimit();
+            BigDecimal upperLimit = validInfo.getUpperLimit();
+            BigDecimal bigDecimal = new BigDecimal(value.toString());
+            boolean lower = false;
+            boolean upper = false;
+            if (lowerLimit != null) {
+                lower = bigDecimal.compareTo(lowerLimit) < 0;
             }
+            if (upperLimit != null) {
+                upper = bigDecimal.compareTo(upperLimit) > 0;
+            }
+            return lower || upper;
         }
         return false;
     }

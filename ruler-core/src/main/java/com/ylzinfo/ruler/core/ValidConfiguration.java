@@ -20,9 +20,13 @@ public final class ValidConfiguration {
      */
     private List<ValidInfo> dictValidInfos = new ArrayList<>();
     /**
-     * 范围字段校验的信息列表
+     * 数值范围字段校验的信息列表
      */
-    private List<ValidInfo> scopeValidInfos = new ArrayList<>();
+    private List<ValidInfo> numberScopeValidInfos = new ArrayList<>();
+    /**
+     * 日期时间范围字段校验的信息列表
+     */
+    private List<ValidInfo> datetimeScopeValidInfos = new ArrayList<>();
     /**
      * 字典字段规则所依赖的字典集合
      * <p>key值是字典类型，value是改类型字典下的所有字典码值</p>
@@ -37,8 +41,10 @@ public final class ValidConfiguration {
             this.requiredValidInfos.add(validInfo);
         } else if (ValidType.DICT.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
             this.dictValidInfos.add(validInfo);
-        } else if (ValidType.SCOPE.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
-            this.scopeValidInfos.add(validInfo);
+        } else if (ValidType.NUMBER_SCOPE.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
+            this.numberScopeValidInfos.add(validInfo);
+        } else if (ValidType.DATETIME_SCOPE.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
+            this.datetimeScopeValidInfos.add(validInfo);
         }
     }
 
@@ -76,12 +82,20 @@ public final class ValidConfiguration {
         this.dictValidInfos = dictValidInfos;
     }
 
-    public List<ValidInfo> getScopeValidInfos() {
-        return scopeValidInfos;
+    public List<ValidInfo> getNumberScopeValidInfos() {
+        return numberScopeValidInfos;
     }
 
-    public void setScopeValidInfos(List<ValidInfo> scopeValidInfos) {
-        this.scopeValidInfos = scopeValidInfos;
+    public void setNumberScopeValidInfos(List<ValidInfo> numberScopeValidInfos) {
+        this.numberScopeValidInfos = numberScopeValidInfos;
+    }
+
+    public List<ValidInfo> getDatetimeScopeValidInfos() {
+        return datetimeScopeValidInfos;
+    }
+
+    public void setDatetimeScopeValidInfos(List<ValidInfo> datetimeScopeValidInfos) {
+        this.datetimeScopeValidInfos = datetimeScopeValidInfos;
     }
 
     public Map<String, Set<Object>> getDictType() {

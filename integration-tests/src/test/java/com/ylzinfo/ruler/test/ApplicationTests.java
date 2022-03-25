@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @SpringBootTest
@@ -53,10 +54,14 @@ class ApplicationTests {
         validClass.setNumber(BigDecimal.ZERO);
         SubValidClass subValidClass = new SubValidClass();
         subValidClass.setNumber(new BigDecimal(11));
+        subValidClass.setTime(LocalDateTime.now());
         validClass.setSubValidClasses(Collections.singletonList(subValidClass));
         RulesEngine<ValidClass> common = rulesEngineManager.dispatch("common", validClass, ValidClass.class);
         if (common instanceof DetailRulesEngine) {
+            long s = System.currentTimeMillis();
             Result result = ((DetailRulesEngine<ValidClass>) common).execute(validClass);
+            long e = System.currentTimeMillis();
+            System.out.println("执行时间: " + (e - s) + " ms");
             System.out.println(toJson(result));
         }
     }
