@@ -35,11 +35,11 @@ public abstract class SingleFieldValidRule<E> extends Rule<E> {
         //校验数组属性
         if (validNode instanceof Collection) {
             return ((Collection<?>) validNode)
-                    .stream().anyMatch(e -> this.valid(e, validInfo.getFieldName()));
+                    .stream().anyMatch(e -> this.valid(e, validInfo));
         }
         //校验对象属性
         else {
-            return this.valid(validNode, validInfo.getFieldName());
+            return this.valid(validNode, validInfo);
         }
     }
 
@@ -50,14 +50,14 @@ public abstract class SingleFieldValidRule<E> extends Rule<E> {
      * @param validInfo 校验信息
      * @return 非法字段与值
      */
-    protected Set<Map.Entry<String, Object>> collectIllegal(E element, ValidInfo validInfo) {
+    protected Set<Map.Entry<String, Object>> collectIllegals(E element, ValidInfo validInfo) {
         Object validNode = this.findValidNode(element, validInfo.getValidClassName());
         if (validNode instanceof Collection) {
             return ((Collection<?>) validNode).stream()
-                    .flatMap(node -> this.collectFromValidNode(node, validInfo.getFieldName()).stream())
+                    .flatMap(node -> this.collectFromValidNode(node, validInfo).stream())
                     .collect(Collectors.toSet());
         } else {
-            return this.collectFromValidNode(validNode, validInfo.getFieldName());
+            return this.collectFromValidNode(validNode, validInfo);
         }
     }
 
@@ -65,7 +65,7 @@ public abstract class SingleFieldValidRule<E> extends Rule<E> {
      * 找到校验的节点
      *
      * @param validRootNode  校验根节点
-     * @param validClassName 需要校验类型的全限定类名
+     * @param validClassName 规则约束类的全限定类名
      * @return 待校验节点的值
      */
     protected Object findValidNode(Object validRootNode, String validClassName) {
@@ -143,15 +143,15 @@ public abstract class SingleFieldValidRule<E> extends Rule<E> {
      * 校验对象数据
      *
      * @param validNode 校验节点
-     * @param fieldName 字段名
+     * @param validInfo 校验信息
      * @return 违规返回true，否则返回false
      */
-    protected boolean valid(Object validNode, String fieldName) {
-        Field field = this.findField(validNode.getClass(), fieldName);
+    protected boolean valid(Object validNode, ValidInfo validInfo) {
+        Field field = this.findField(validNode.getClass(), validInfo.getFieldName());
         if (field != null) {
             field.setAccessible(true);
             try {
-                return this.match(fieldName, field.get(validNode));
+                return this.match(validInfo, field.get(validNode));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -160,21 +160,21 @@ public abstract class SingleFieldValidRule<E> extends Rule<E> {
     }
 
     /**
-     * 校验对象数据并收集非法的字段与值
+     * 从校验对象数据收集非法的字段与值
      *
      * @param validNode 校验节点
-     * @param fieldName 字段名
+     * @param validInfo 校验信息
      * @return 非法的字段与值
      */
-    protected Set<Map.Entry<String, Object>> collectFromValidNode(Object validNode, String fieldName) {
+    protected Set<Map.Entry<String, Object>> collectFromValidNode(Object validNode, ValidInfo validInfo) {
         if (validNode != null) {
-            Field field = this.findField(validNode.getClass(), fieldName);
+            Field field = this.findField(validNode.getClass(), validInfo.getFieldName());
             if (field != null) {
                 field.setAccessible(true);
                 try {
                     Object value = field.get(validNode);
-                    if (this.match(fieldName, value)) {
-                        return this.collectToSet(validNode, fieldName, value);
+                    if (this.match(validInfo, value)) {
+                        return this.wrap(validInfo, value);
                     }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -187,19 +187,22 @@ public abstract class SingleFieldValidRule<E> extends Rule<E> {
     /**
      * 是否匹配规则逻辑
      *
-     * @param fieldName 字段名
+     * @param validInfo 校验信息
      * @param value     待校验的值
      * @return 是返回true，否则返回false
      */
-    protected abstract boolean match(String fieldName, Object value);
+    protected abstract boolean match(ValidInfo validInfo, Object value);
 
     /**
      * 将非法字段与值包装成集合
      *
-     * @param validNode 校验节点
-     * @param fieldName 字段名
+     * @param validInfo 校验信息
      * @param value     违规值
      * @return 非法字段与值的集合
      */
-    protected abstract Set<Map.Entry<String, Object>> collectToSet(Object validNode, String fieldName, Object value);
+    protected Set<Map.Entry<String, Object>> wrap(ValidInfo validInfo, Object value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(validInfo.fieldKey(), value);
+        return map.entrySet();
+    }
 }

@@ -17,8 +17,8 @@
 ### Rule抽象类
 
 定义了规则的主要方法，开发者可扩展该类，实现其他特殊的规则。
-框架默认实现类三类普适规则：必填字段规则，字典字段规则，范围字段规则。
+框架默认实现类三类普适规则：必填字段规则，字典字段规则，数值范围字段规则。
 
 - RequiredFieldRule 必填字段规则
 - DictFieldRule 字典字段规则
-- ScopeFieldRule 范围字段规则
+- NumberScopeFieldRule 数值范围字段规则

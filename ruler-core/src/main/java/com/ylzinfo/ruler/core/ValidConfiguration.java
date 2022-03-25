@@ -22,7 +22,7 @@ public final class ValidConfiguration {
     /**
      * 范围字段校验的信息列表
      */
-    private Map<String, ValidInfo> scopeValidInfos = new HashMap<>();
+    private List<ValidInfo> scopeValidInfos = new ArrayList<>();
     /**
      * 字典字段规则所依赖的字典集合
      * <p>key值是字典类型，value是改类型字典下的所有字典码值</p>
@@ -38,7 +38,7 @@ public final class ValidConfiguration {
         } else if (ValidType.DICT.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
             this.dictValidInfos.add(validInfo);
         } else if (ValidType.SCOPE.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
-            this.scopeValidInfos.put(validInfo.getFieldName(), validInfo);
+            this.scopeValidInfos.add(validInfo);
         }
     }
 
@@ -76,11 +76,11 @@ public final class ValidConfiguration {
         this.dictValidInfos = dictValidInfos;
     }
 
-    public Map<String, ValidInfo> getScopeValidInfos() {
+    public List<ValidInfo> getScopeValidInfos() {
         return scopeValidInfos;
     }
 
-    public void setScopeValidInfos(Map<String, ValidInfo> scopeValidInfos) {
+    public void setScopeValidInfos(List<ValidInfo> scopeValidInfos) {
         this.scopeValidInfos = scopeValidInfos;
     }
 

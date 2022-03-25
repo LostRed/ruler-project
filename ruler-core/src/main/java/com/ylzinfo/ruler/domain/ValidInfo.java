@@ -45,6 +45,19 @@ public class ValidInfo {
      */
     private String validClassName;
 
+    /**
+     * 获取校验字段的key
+     *
+     * @return 节点名
+     */
+    public String fieldKey() {
+        String simpleName = validClassName.substring(validClassName.lastIndexOf('.') + 1);
+        StringBuilder sb = new StringBuilder();
+        char headCharacter = Character.toLowerCase(simpleName.charAt(0));
+        String nodeName = sb.append(headCharacter).append(simpleName.substring(1)).toString();
+        return nodeName + "." + fieldName;
+    }
+
     public String getId() {
         return id;
     }

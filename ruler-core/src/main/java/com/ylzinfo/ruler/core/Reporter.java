@@ -5,7 +5,6 @@ import com.ylzinfo.ruler.domain.RuleInfo;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 校验报告生成接口
@@ -21,20 +20,6 @@ public interface Reporter<E> {
      * @return 报告
      */
     Report buildReport(E element);
-
-    /**
-     * 将非法字段与值包装成集合
-     *
-     * @param validNode 校验节点
-     * @param fieldName 字段名
-     * @param value     违规值
-     * @return 非法字段与值的集合
-     */
-    default Set<Map.Entry<String, Object>> transToSet(Object validNode, String fieldName, Object value) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(this.getNodeName(validNode) + "." + fieldName, value);
-        return map.entrySet();
-    }
 
     /**
      * 将非法字段与值包装成报告

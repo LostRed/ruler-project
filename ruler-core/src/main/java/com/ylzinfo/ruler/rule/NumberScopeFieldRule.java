@@ -11,14 +11,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 必填字段校验规则
+ * 数值范围字段校验规则
  *
  * @param <T> 规则约束的参数类型
  * @author dengluwei
  */
-public class ScopeFieldRule<T> extends SingleFieldValidRule<T> {
+public class NumberScopeFieldRule<T> extends SingleFieldValidRule<T> {
 
-    public ScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
+    public NumberScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         super(validConfiguration, ruleInfo);
     }
 
@@ -29,23 +29,21 @@ public class ScopeFieldRule<T> extends SingleFieldValidRule<T> {
 
     @Override
     public boolean judge(T element) {
-        return validConfiguration.getScopeValidInfos().values().stream()
+        return validConfiguration.getScopeValidInfos().stream()
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
     @Override
     public Report buildReport(T element) {
-        Map<String, Object> map = validConfiguration.getScopeValidInfos().values().stream()
-                .flatMap(validInfo -> this.collectIllegal(element, validInfo).stream())
+        Map<String, Object> map = validConfiguration.getScopeValidInfos().stream()
+                .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return this.getReport(this.ruleInfo, map);
     }
 
     @Override
-    protected boolean match(String fieldName, Object value) {
-        Map<String, ValidInfo> map = validConfiguration.getScopeValidInfos();
-        if (map != null && value != null && !"".equals(value)) {
-            ValidInfo validInfo = map.get(fieldName);
+    protected boolean match(ValidInfo validInfo, Object value) {
+        if (value != null && !"".equals(value)) {
             if (value instanceof Number) {
                 BigDecimal bigDecimal = new BigDecimal(value.toString());
                 BigDecimal lowerLimit = validInfo.getLowerLimit();
@@ -62,14 +60,12 @@ public class ScopeFieldRule<T> extends SingleFieldValidRule<T> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> collectToSet(Object validNode, String fieldName, Object value) {
-        Map<String, ValidInfo> map = validConfiguration.getScopeValidInfos();
-        ValidInfo validInfo = map.get(fieldName);
+    protected Set<Map.Entry<String, Object>> wrap(ValidInfo validInfo, Object value) {
         BigDecimal lowerLimit = validInfo.getLowerLimit();
         BigDecimal upperLimit = validInfo.getUpperLimit();
         String lower = lowerLimit == null ? "-∞" : lowerLimit.toString();
         String upper = upperLimit == null ? "+∞" : upperLimit.toString();
         value = value + " (参考值: " + lower + " ~ " + upper + ")";
-        return this.transToSet(validNode, fieldName, value);
+        return super.wrap(validInfo, value);
     }
 }
