@@ -1,7 +1,7 @@
 package com.ylzinfo.ruler.rule;
 
 import com.ylzinfo.ruler.core.ValidConfiguration;
-import com.ylzinfo.ruler.core.Rule;
+import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.domain.ValidInfo;
 
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @param <E> 规则约束的参数类型
  * @author dengluwei
  */
-public abstract class SingleFieldRule<E> extends Rule<E> {
+public abstract class SingleFieldRule<E> extends AbstractRule<E> {
 
     public SingleFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         super(validConfiguration, ruleInfo);
@@ -71,7 +71,7 @@ public abstract class SingleFieldRule<E> extends Rule<E> {
     protected Object findValidNode(Object validRootNode, String validClassName) {
         Class<?> validClass;
         try {
-            validClass = Class.forName(validClassName);
+            validClass = this.getClass().getClassLoader().loadClass(validClassName);
         } catch (ClassNotFoundException e) {
             return null;
         }
@@ -151,7 +151,7 @@ public abstract class SingleFieldRule<E> extends Rule<E> {
         if (field != null) {
             field.setAccessible(true);
             try {
-                return this.match(validInfo, field.get(validNode));
+                return this.isNotMatch(validInfo, field.get(validNode));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -173,7 +173,7 @@ public abstract class SingleFieldRule<E> extends Rule<E> {
                 field.setAccessible(true);
                 try {
                     Object value = field.get(validNode);
-                    if (this.match(validInfo, value)) {
+                    if (this.isNotMatch(validInfo, value)) {
                         return this.wrap(validInfo, value);
                     }
                 } catch (IllegalAccessException e) {
@@ -185,13 +185,13 @@ public abstract class SingleFieldRule<E> extends Rule<E> {
     }
 
     /**
-     * 是否匹配规则逻辑
+     * 是否不匹配规则逻辑
      *
      * @param validInfo 校验信息
      * @param value     待校验的值
-     * @return 是返回true，否则返回false
+     * @return 不匹配返回true，否则返回false
      */
-    protected abstract boolean match(ValidInfo validInfo, Object value);
+    protected abstract boolean isNotMatch(ValidInfo validInfo, Object value);
 
     /**
      * 将非法字段与值包装成集合

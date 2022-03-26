@@ -1,12 +1,14 @@
 package com.ylzinfo.ruler.rule;
 
+import com.ylzinfo.ruler.annotation.Rule;
 import com.ylzinfo.ruler.core.ValidConfiguration;
-import com.ylzinfo.ruler.core.Rule;
+import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.domain.model.ValidClass;
 
-public class NumberRule extends Rule<ValidClass> {
+@Rule(ruleCode = "test_1", businessType = "common", desc = "number必须>0", validClass = ValidClass.class)
+public class NumberRule extends AbstractRule<ValidClass> {
 
     private final static String FIELD_NAME = "number";
 

@@ -1,5 +1,6 @@
 package com.ylzinfo.ruler.rule;
 
+import com.ylzinfo.ruler.annotation.Rule;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  * @param <E> 规则约束的参数类型
  * @author dengluwei
  */
+@Rule(ruleCode = "common_2", businessType = "common", desc = "规定的字段必须填写字典中的值")
 public class DictFieldRule<E> extends SingleFieldRule<E> {
 
     public DictFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
@@ -23,7 +25,8 @@ public class DictFieldRule<E> extends SingleFieldRule<E> {
 
     @Override
     public boolean isSupported(E element) {
-        return !validConfiguration.getDictType().isEmpty();
+        return !validConfiguration.getDictValidInfos().isEmpty()
+                && !validConfiguration.getDict().isEmpty();
     }
 
     @Override
@@ -41,8 +44,8 @@ public class DictFieldRule<E> extends SingleFieldRule<E> {
     }
 
     @Override
-    protected boolean match(ValidInfo validInfo, Object value) {
-        Set<Object> set = validConfiguration.getDictType().get(validInfo.getFieldName());
+    protected boolean isNotMatch(ValidInfo validInfo, Object value) {
+        Set<Object> set = validConfiguration.getDict().get(validInfo.getFieldName());
         if (set != null && value != null && !"".equals(value)) {
             return !set.contains(value);
         }

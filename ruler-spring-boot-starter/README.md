@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS ruler_rule_info
     `seq`             int(11) COMMENT '规则执行的顺序号',
     `required`        bit(1) COMMENT '是否强制使用',
     `enable`          bit(1) COMMENT '是否启用',
-    `rule_class_name` varchar(128) COMMENT '规则实现类全限定类名'
+    `rule_class_name` varchar(128) COMMENT '规则实现类的全限定类名'
 ) COMMENT '规则信息配置表';
 
 CREATE TABLE IF NOT EXISTS ruler_valid_info
@@ -52,10 +52,15 @@ valid_type的填写可参考ValidType类，字母全小写
 ruler:
   default-business-type: common #业务类型，对应以上两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass #规则引擎所约束的java类型
-  default-rules-engine-type: complete #上述提到的规则引擎类型
-  config-table-init: true #是否开启配置表的初始化功能，默认开启
-  valid-info-table-name: ruler_valid_info #校验信息配置表表名
-  rule-info-table-name: ruler_rule_info #规则信息配置表表名
+  valid-config:
+    table-init: false #是否开启校验配置表的初始化功能，默认开启
+    table-name: ruler_valid_info #校验信息配置表表名
+  rule-config:
+    table-init: false #是否开启规则配置表的初始化功能，默认关闭
+    table-name: ruler_rule_info #规则信息配置表表名
+    scan-base-packages: com.ylzinfo.ruler.rule #规则包扫描路径
+  rules-engine-config:
+    type: complete #上述提到的规则引擎类型
 ```
 
 ### 编写配置类
@@ -75,15 +80,15 @@ public class Config {
         ruleInfo.setDesc("测试规则");
         ruleInfo.setSeq(0);
         ruleInfo.setEnable(true);
-        ruleInfo.setRuleClassName("com.ylzinfo.ruler.rule.TestRule");
+        ruleInfo.setRuleClassName("com.ylzinfo.ruler.abstractRule.TestRule");
         ruleInfos.add(ruleInfo);
         ValidConfiguration validConfiguration = new ValidConfiguration();
         //构建规则信息列表...
-        List<Rule<ValidClass>> rules = RuleFactory.rulesBuilder(validConfiguration, ruleInfos, ValidClass.class).build();
+        List<Rule<ValidClass>> abstractRules = RuleFactory.rulesBuilder(validConfiguration, ruleInfos, ValidClass.class).build();
         //定义规则引擎类型与校验对象类型
         TypeReference<SimpleRulesEngine<ValidClass>> typeReference = new TypeReference<SimpleRulesEngine<ValidClass>>() {
         };
-        return RulesEngineFactory.builder(typeReference, rules).build();
+        return RulesEngineFactory.builder(typeReference, abstractRules).build();
     }
 }
 ```

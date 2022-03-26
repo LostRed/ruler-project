@@ -1,7 +1,7 @@
 package com.ylzinfo.ruler.core;
 
-import com.ylzinfo.ruler.domain.ValidInfo;
 import com.ylzinfo.ruler.constants.ValidType;
+import com.ylzinfo.ruler.domain.ValidInfo;
 
 import java.util.*;
 
@@ -31,12 +31,18 @@ public final class ValidConfiguration {
      * 字典字段规则所依赖的字典集合
      * <p>key值是字典类型，value是改类型字典下的所有字典码值</p>
      */
-    private Map<String, Set<Object>> dictType = new HashMap<>();
+    private Map<String, Set<Object>> dict = new HashMap<>();
 
-    public ValidConfiguration() {
+    public ValidConfiguration(Collection<ValidInfo> validInfos) {
+        this.addValidInfo(validInfos);
     }
 
     public void addValidInfo(ValidInfo validInfo) {
+        try {
+            this.getClass().getClassLoader().loadClass(validInfo.getValidClassName());
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException(e);
+        }
         if (ValidType.REQUIRED.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
             this.requiredValidInfos.add(validInfo);
         } else if (ValidType.DICT.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
@@ -49,6 +55,9 @@ public final class ValidConfiguration {
     }
 
     public void addValidInfo(Collection<ValidInfo> validInfos) {
+        if (validInfos == null) {
+            return;
+        }
         for (ValidInfo validInfo : validInfos) {
             this.addValidInfo(validInfo);
         }
@@ -59,11 +68,11 @@ public final class ValidConfiguration {
     }
 
     public void addDictType(Map<String, Set<Object>> dictType) {
-        this.dictType.putAll(dictType);
+        this.dict.putAll(dictType);
     }
 
     public Set<Object> removeDictType(String dictType) {
-        return this.dictType.remove(dictType);
+        return this.dict.remove(dictType);
     }
 
     public List<ValidInfo> getRequiredValidInfos() {
@@ -98,11 +107,11 @@ public final class ValidConfiguration {
         this.datetimeScopeValidInfos = datetimeScopeValidInfos;
     }
 
-    public Map<String, Set<Object>> getDictType() {
-        return dictType;
+    public Map<String, Set<Object>> getDict() {
+        return dict;
     }
 
-    public void setDictType(Map<String, Set<Object>> dictType) {
-        this.dictType = dictType;
+    public void setDict(Map<String, Set<Object>> dict) {
+        this.dict = dict;
     }
 }

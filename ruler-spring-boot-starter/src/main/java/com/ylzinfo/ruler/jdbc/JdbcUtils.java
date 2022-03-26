@@ -1,4 +1,4 @@
-package com.ylzinfo.ruler.utils;
+package com.ylzinfo.ruler.jdbc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -6,11 +6,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * sql工具
+ * jdbc工具
  *
  * @author dengluwei
  */
-public final class SqlUtils {
+public final class JdbcUtils {
     /**
      * 解析sql
      *
@@ -21,7 +21,7 @@ public final class SqlUtils {
      */
     public static String parseSql(String filename, String targetName, String replaceName) {
         try {
-            InputStream is = SqlUtils.class.getClassLoader().getResourceAsStream("sql/" + filename + ".sql");
+            InputStream is = JdbcUtils.class.getClassLoader().getResourceAsStream("sql/" + filename + ".sql");
             if (is != null) {
                 OutputStream os = new ByteArrayOutputStream();
                 int i;

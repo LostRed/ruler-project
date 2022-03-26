@@ -1,8 +1,8 @@
 package com.ylzinfo.ruler.engine;
 
-import com.ylzinfo.ruler.core.Rule;
-import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.constants.ValidGrade;
+import com.ylzinfo.ruler.core.AbstractRule;
+import com.ylzinfo.ruler.domain.Report;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -15,8 +15,8 @@ import java.util.Optional;
  */
 public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
 
-    public IncompleteRulesEngine(Collection<Rule<E>> rules) {
-        super(rules);
+    public IncompleteRulesEngine(String businessType, Collection<AbstractRule<E>> abstractRules) {
+        super(businessType, abstractRules);
     }
 
     @Override
@@ -31,9 +31,9 @@ public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
      * @return 有返回true，否则返回false
      */
     public Optional<Report> findSuspiciousReport(E element) {
-        for (Rule<E> rule : this.rules) {
-            if (rule.isSupported(element) && ValidGrade.SUSPECTED.getText().equals(rule.getRuleInfo().getGrade())) {
-                return this.ruleReport(element, rule);
+        for (AbstractRule<E> abstractRule : this.abstractRules) {
+            if (abstractRule.isSupported(element) && ValidGrade.SUSPECTED.getText().equals(abstractRule.getRuleInfo().getGrade())) {
+                return this.ruleReport(element, abstractRule);
             }
         }
         return Optional.empty();

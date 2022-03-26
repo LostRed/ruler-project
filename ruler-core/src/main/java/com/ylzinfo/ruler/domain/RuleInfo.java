@@ -35,9 +35,17 @@ public class RuleInfo {
      */
     private boolean enable;
     /**
-     * 规则实现类全限定类名
+     * 规则实现类的全限定类名
      */
     private String ruleClassName;
+    /**
+     * 规则约束类的全限定类名
+     */
+    private String validClassName;
+    /**
+     * 规则约束的类
+     */
+    private Class<?> validClass;
 
     public String getRuleCode() {
         return ruleCode;
@@ -103,17 +111,19 @@ public class RuleInfo {
         this.ruleClassName = ruleClassName;
     }
 
-    @Override
-    public String toString() {
-        return "RuleInfo{" +
-                "ruleCode='" + ruleCode + '\'' +
-                ", businessType='" + businessType + '\'' +
-                ", grade='" + grade + '\'' +
-                ", desc='" + desc + '\'' +
-                ", seq=" + seq +
-                ", required=" + required +
-                ", enable=" + enable +
-                ", ruleClassName='" + ruleClassName + '\'' +
-                '}';
+    public String getValidClassName() {
+        return validClassName;
+    }
+
+    public void setValidClassName(String validClassName) {
+        this.validClassName = validClassName;
+    }
+
+    public Class<?> getValidClass() {
+        return validClass;
+    }
+
+    public void setValidClass(Class<?> validClass) {
+        this.validClass = validClass;
     }
 }

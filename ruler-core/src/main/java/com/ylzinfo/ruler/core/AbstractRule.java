@@ -8,7 +8,7 @@ import com.ylzinfo.ruler.domain.RuleInfo;
  * @param <T> 规则约束的参数类型
  * @author dengluwei
  */
-public abstract class Rule<T> implements Judgement<T>, Reporter<T> {
+public abstract class AbstractRule<T> implements Judgement<T>, Reporter<T> {
     /**
      * 规则配置
      */
@@ -18,7 +18,7 @@ public abstract class Rule<T> implements Judgement<T>, Reporter<T> {
      */
     protected final RuleInfo ruleInfo;
 
-    public Rule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
+    public AbstractRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         this.validConfiguration = validConfiguration;
         this.ruleInfo = ruleInfo;
     }

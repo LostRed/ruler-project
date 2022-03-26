@@ -1,7 +1,7 @@
 package com.ylzinfo.ruler.engine;
 
+import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.IterationEngine;
-import com.ylzinfo.ruler.core.Rule;
 import com.ylzinfo.ruler.core.RulesEngine;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.Result;
@@ -18,8 +18,8 @@ import java.util.Optional;
  */
 public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements IterationEngine {
 
-    public DetailRulesEngine(Collection<Rule<E>> rules) {
-        super(rules);
+    public DetailRulesEngine(String businessType, Collection<AbstractRule<E>> abstractRules) {
+        super(businessType, abstractRules);
     }
 
     /**
@@ -31,10 +31,10 @@ public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements Ite
     public Result execute(E element) {
         this.checkBeforeExecute(element);
         Result result = Result.of();
-        Iterator<Rule<E>> iterator = this.rules.iterator();
+        Iterator<AbstractRule<E>> iterator = this.abstractRules.iterator();
         while (iterator.hasNext() && this.toNext(result.getGrade())) {
-            Rule<E> rule = iterator.next();
-            Optional<Report> report = this.ruleReport(element, rule);
+            AbstractRule<E> abstractRule = iterator.next();
+            Optional<Report> report = this.ruleReport(element, abstractRule);
             report.ifPresent(result::addReport);
             result.updateGrade(report.orElse(null));
         }

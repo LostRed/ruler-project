@@ -12,7 +12,12 @@ logging:
 ruler:
   default-business-type: common
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass
-  default-rules-engine-type: complete
-  config-table-init: true
-  valid-info-table-name: ruler_valid_info
-  rule-info-table-name: ruler_rule_info
+  valid-config:
+    table-init: false
+    table-name: ruler_valid_info
+  rule-config:
+    table-init: false
+    table-name: ruler_rule_info
+    scan-base-packages: com.ylzinfo.ruler.rule
+  rules-engine-config:
+    type: incomplete

@@ -1,8 +1,8 @@
 package com.ylzinfo.ruler.engine;
 
-import com.ylzinfo.ruler.core.Rule;
-import com.ylzinfo.ruler.core.RulesEngine;
 import com.ylzinfo.ruler.constants.ValidGrade;
+import com.ylzinfo.ruler.core.AbstractRule;
+import com.ylzinfo.ruler.core.RulesEngine;
 
 import java.util.Collection;
 
@@ -14,8 +14,8 @@ import java.util.Collection;
  */
 public class SimpleRulesEngine<E> extends RulesEngine<E> {
 
-    public SimpleRulesEngine(Collection<Rule<E>> rules) {
-        super(rules);
+    public SimpleRulesEngine(String businessType, Collection<AbstractRule<E>> abstractRules) {
+        super(businessType, abstractRules);
     }
 
     /**
@@ -25,8 +25,8 @@ public class SimpleRulesEngine<E> extends RulesEngine<E> {
      * @return 违规返回true，否则返回false
      */
     public boolean execute(E element) {
-        for (Rule<E> rule : this.rules) {
-            return this.ruleJudge(element, rule);
+        for (AbstractRule<E> abstractRule : this.abstractRules) {
+            return this.ruleJudge(element, abstractRule);
         }
         return false;
     }
@@ -38,9 +38,9 @@ public class SimpleRulesEngine<E> extends RulesEngine<E> {
      * @return 有返回true，否则返回false
      */
     public boolean checkSuspicious(E element) {
-        for (Rule<E> rule : this.rules) {
-            if (rule.isSupported(element) && ValidGrade.SUSPECTED.getText().equals(rule.getRuleInfo().getGrade())) {
-                return this.ruleJudge(element, rule);
+        for (AbstractRule<E> abstractRule : this.abstractRules) {
+            if (abstractRule.isSupported(element) && ValidGrade.SUSPECTED.getText().equals(abstractRule.getRuleInfo().getGrade())) {
+                return this.ruleJudge(element, abstractRule);
             }
         }
         return false;

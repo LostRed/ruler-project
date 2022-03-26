@@ -5,39 +5,58 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * ruler默认规则引擎实例配置类
- *
- * @param <E> 规则约束的参数类型
  */
 @ConfigurationProperties("ruler")
-public class RulerProperties<E> {
-    private String ruleInfoTableName = "ruler_rule_info";
-    private String validInfoTableName = "ruler_valid_info";
-    private String defaultRulesEngineType = RulesEngineType.SIMPLE.toString();
+public class RulerProperties {
     private String defaultBusinessType;
-    private Class<E> defaultValidClass;
+    private Class<?> defaultValidClass;
+    private ValidConfig validConfig = new ValidConfig();
+    private RuleConfig ruleConfig = new RuleConfig();
+    private RulesEngineConfig rulesEngineConfig = new RulesEngineConfig();
 
-    public String getRuleInfoTableName() {
-        return ruleInfoTableName;
+    static class ValidConfig {
+        private String tableName = "ruler_valid_info";
+
+        public String getTableName() {
+            return tableName;
+        }
+
+        public void setTableName(String tableName) {
+            this.tableName = tableName;
+        }
     }
 
-    public void setRuleInfoTableName(String ruleInfoTableName) {
-        this.ruleInfoTableName = ruleInfoTableName;
+    static class RuleConfig {
+        private String tableName = "ruler_rule_info";
+        private String[] scanBasePackages;
+
+        public String getTableName() {
+            return tableName;
+        }
+
+        public void setTableName(String tableName) {
+            this.tableName = tableName;
+        }
+
+        public String[] getScanBasePackages() {
+            return scanBasePackages;
+        }
+
+        public void setScanBasePackages(String[] scanBasePackages) {
+            this.scanBasePackages = scanBasePackages;
+        }
     }
 
-    public String getValidInfoTableName() {
-        return validInfoTableName;
-    }
+    static class RulesEngineConfig {
+        private String type = RulesEngineType.SIMPLE.name();
 
-    public void setValidInfoTableName(String validInfoTableName) {
-        this.validInfoTableName = validInfoTableName;
-    }
+        public String getType() {
+            return type;
+        }
 
-    public String getDefaultRulesEngineType() {
-        return defaultRulesEngineType;
-    }
-
-    public void setDefaultRulesEngineType(String defaultRulesEngineType) {
-        this.defaultRulesEngineType = defaultRulesEngineType;
+        public void setType(String type) {
+            this.type = type;
+        }
     }
 
     public String getDefaultBusinessType() {
@@ -48,11 +67,35 @@ public class RulerProperties<E> {
         this.defaultBusinessType = defaultBusinessType;
     }
 
-    public Class<E> getDefaultValidClass() {
+    public Class<?> getDefaultValidClass() {
         return defaultValidClass;
     }
 
-    public void setDefaultValidClass(Class<E> defaultValidClass) {
+    public void setDefaultValidClass(Class<?> defaultValidClass) {
         this.defaultValidClass = defaultValidClass;
+    }
+
+    public ValidConfig getValidConfig() {
+        return validConfig;
+    }
+
+    public void setValidConfig(ValidConfig validConfig) {
+        this.validConfig = validConfig;
+    }
+
+    public RuleConfig getRuleConfig() {
+        return ruleConfig;
+    }
+
+    public void setRuleConfig(RuleConfig ruleConfig) {
+        this.ruleConfig = ruleConfig;
+    }
+
+    public RulesEngineConfig getRulesEngineConfig() {
+        return rulesEngineConfig;
+    }
+
+    public void setRulesEngineConfig(RulesEngineConfig rulesEngineConfig) {
+        this.rulesEngineConfig = rulesEngineConfig;
     }
 }

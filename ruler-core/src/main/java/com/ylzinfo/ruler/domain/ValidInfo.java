@@ -54,6 +54,19 @@ public class ValidInfo {
      */
     private String validClassName;
 
+    public ValidInfo() {
+    }
+
+    public ValidInfo(String id, String businessType, String validType, String fieldName, String validClassName) {
+        this.id = id;
+        this.businessType = businessType;
+        this.validType = validType;
+        this.fieldName = fieldName;
+        this.required = true;
+        this.enable = true;
+        this.validClassName = validClassName;
+    }
+
     /**
      * 获取校验字段的key
      *
@@ -153,22 +166,5 @@ public class ValidInfo {
 
     public void setValidClassName(String validClassName) {
         this.validClassName = validClassName;
-    }
-
-    @Override
-    public String toString() {
-        return "ValidInfo{" +
-                "id='" + id + '\'' +
-                ", businessType='" + businessType + '\'' +
-                ", validType='" + validType + '\'' +
-                ", fieldName='" + fieldName + '\'' +
-                ", lowerLimit=" + lowerLimit +
-                ", upperLimit=" + upperLimit +
-                ", beginTime=" + beginTime +
-                ", endTime=" + endTime +
-                ", required=" + required +
-                ", enable=" + enable +
-                ", validClassName='" + validClassName + '\'' +
-                '}';
     }
 }
