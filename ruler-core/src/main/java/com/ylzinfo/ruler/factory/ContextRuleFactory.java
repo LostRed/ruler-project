@@ -83,7 +83,7 @@ public class ContextRuleFactory extends AbstractRuleFactory {
      *
      * @param packages 包名数组
      */
-    public void register(String[] packages) {
+    private void register(String[] packages) {
         for (String packageName : packages) {
             String packagePath = packageName.replace(".", "/");
             ClassLoader classLoader = this.getClass().getClassLoader();

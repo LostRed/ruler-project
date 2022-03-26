@@ -69,26 +69,38 @@ ruler:
 
 ```java
 @Configuration
-public class Config {
+@RuleScan("com.ylzinfo.ruler.rule")
+public class RulerConfig {
+    private static final String validClassName = "com.ylzinfo.ruler.domain.model.SubValidClass";
+    private static final String businessType = "common";
+
+    //如果不使用数据库配置校验配置，则需要在spring容器中注册一个ValidConfiguration实例对象，记得设置dict
     @Bean
-    public RulesEngine<ValidClass> defaultRulesEngine() {
-        List<RuleInfo> ruleInfos = new ArrayList<>();
-        RuleInfo ruleInfo = new RuleInfo();
-        ruleInfo.setRuleCode("test_1");
-        ruleInfo.setBusinessType("common");
-        ruleInfo.setGrade("可疑");
-        ruleInfo.setDesc("测试规则");
-        ruleInfo.setSeq(0);
-        ruleInfo.setEnable(true);
-        ruleInfo.setRuleClassName("com.ylzinfo.ruler.abstractRule.TestRule");
-        ruleInfos.add(ruleInfo);
-        ValidConfiguration validConfiguration = new ValidConfiguration();
-        //构建规则信息列表...
-        List<Rule<ValidClass>> abstractRules = RuleFactory.rulesBuilder(validConfiguration, ruleInfos, ValidClass.class).build();
-        //定义规则引擎类型与校验对象类型
-        TypeReference<SimpleRulesEngine<ValidClass>> typeReference = new TypeReference<SimpleRulesEngine<ValidClass>>() {
+    public ValidConfiguration validConfiguration() {
+        Collection<ValidInfo> validInfos = new ArrayList<>();
+        ValidInfo validInfo1 = new ValidInfo("1", businessType, ValidType.REQUIRED.name(), "string", validClassName);
+        ValidInfo validInfo2 = new ValidInfo("2", businessType, ValidType.REQUIRED.name(), "number", validClassName);
+        ValidInfo validInfo3 = new ValidInfo("3", businessType, ValidType.REQUIRED.name(), "time", validClassName);
+        ValidInfo validInfo4 = new ValidInfo("4", businessType, ValidType.DICT.name(), "string", validClassName);
+        ValidInfo validInfo5 = new ValidInfo("5", businessType, ValidType.NUMBER_SCOPE.name(), "number", validClassName);
+        validInfo5.setUpperLimit(BigDecimal.TEN);
+        ValidInfo validInfo6 = new ValidInfo("6", businessType, ValidType.DATETIME_SCOPE.name(), "time", validClassName);
+        validInfo6.setEndTime(LocalDateTime.now());
+        validInfos.add(validInfo1);
+        validInfos.add(validInfo2);
+        validInfos.add(validInfo3);
+        validInfos.add(validInfo4);
+        validInfos.add(validInfo5);
+        validInfos.add(validInfo6);
+        return new ValidConfiguration(validInfos);
+    }
+
+    //选择适合的规则引擎注册到spring容器
+    @Bean
+    public RulesEngine<ValidClass> rulerEngine(RuleFactory ruleFactory) {
+        TypeReference<CompleteRulesEngine<ValidClass>> typeReference = new TypeReference<CompleteRulesEngine<ValidClass>>() {
         };
-        return RulesEngineFactory.builder(typeReference, abstractRules).build();
+        return RulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();
     }
 }
 ```
