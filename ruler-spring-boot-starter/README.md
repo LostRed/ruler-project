@@ -133,7 +133,7 @@ class ApplicationTests {
 
 这里注入的是RulesEngineManager接口，使用该接口的dispatch()方法获取业务类型对应的规则引擎接口。 当然也可以直接注入自己配置规则引擎的实现类。
 
-## 二次开发
+## 💻二次开发
 
 继承AbstractRule，重写接口方法即可实现自定义规则
 ```java
@@ -165,11 +165,11 @@ public class NumberRule extends AbstractRule<ValidClass> {
     }
 }
 ```
-### @Rule注解
+### Rule注解
 
 在类上标记该注解，规则工厂在扫描包时，会将其放入缓存。
 
-### @RuleScan注解
+### RuleScan注解
 
 在配置类上标记该注解，规则工厂会扫描其value指定的包路径。当使用spring时，需将该配置类注册到spring容器。
 
