@@ -2,6 +2,7 @@ package com.ylzinfo.ruler.core;
 
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
+import com.ylzinfo.ruler.factory.RuleFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,6 +15,10 @@ import java.util.stream.Collectors;
  */
 public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     /**
+     * 规则工厂
+     */
+    private final RuleFactory ruleFactory;
+    /**
      * 业务类型
      */
     private final String businessType;
@@ -22,7 +27,8 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      */
     protected final LinkedList<AbstractRule<E>> abstractRules = new LinkedList<>();
 
-    public RulesEngine(String businessType, Collection<AbstractRule<E>> abstractRules) {
+    public RulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
+        this.ruleFactory = ruleFactory;
         this.businessType = businessType;
         this.abstractRules.addAll(abstractRules);
         this.abstractRules.sort(Comparator.comparing(e -> e.getRuleInfo().getSeq()));
@@ -61,12 +67,13 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     /**
      * 添加规则并按顺序号排序
      *
-     * @param abstractRule 规则
+     * @param ruleCode 规则编号
      */
-    public void addRule(AbstractRule<E> abstractRule) {
+    public void addRule(String ruleCode) {
         for (int i = 0; i < this.abstractRules.size(); i++) {
-            if (this.abstractRules.get(i).getRuleInfo().getSeq() > abstractRule.getRuleInfo().getSeq()) {
-                this.abstractRules.add(i, abstractRule);
+            AbstractRule<E> rule = this.ruleFactory.getRule(ruleCode);
+            if (this.abstractRules.get(i).getRuleInfo().getSeq() > rule.getRuleInfo().getSeq()) {
+                this.abstractRules.add(i, rule);
                 break;
             }
         }
@@ -75,10 +82,10 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     /**
      * 添加规则并按顺序号排序
      *
-     * @param abstractRules 规则集合
+     * @param ruleCodes 规则编号集合
      */
-    public void addRule(Collection<AbstractRule<E>> abstractRules) {
-        abstractRules.forEach(this::addRule);
+    public void addRule(Collection<String> ruleCodes) {
+        ruleCodes.forEach(this::addRule);
     }
 
     /**

@@ -17,6 +17,14 @@ public interface RuleFactory {
     void init();
 
     /**
+     * 获取规则
+     *
+     * @param ruleCode 规则编码
+     * @return 规则
+     */
+    <E> AbstractRule<E> getRule(String ruleCode);
+
+    /**
      * 获取校验配置
      *
      * @return 校验配置

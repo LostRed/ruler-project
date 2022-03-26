@@ -15,6 +15,10 @@ public class RulesEngineManagerImpl implements RulesEngineManager {
     @Override
     @SuppressWarnings("unchecked")
     public <E> RulesEngine<E> dispatch(String businessType, Object validRootNode, Class<E> validClass) {
-        return (RulesEngine<E>) this.map.get(businessType);
+        RulesEngine<E> rulesEngine = (RulesEngine<E>) this.map.get(businessType);
+        if (rulesEngine == null) {
+            throw new RuntimeException("Cannot dispatch this business, because has not available rules engine.");
+        }
+        return rulesEngine;
     }
 }

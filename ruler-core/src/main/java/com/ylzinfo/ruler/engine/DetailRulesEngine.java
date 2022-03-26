@@ -5,6 +5,7 @@ import com.ylzinfo.ruler.core.IterationEngine;
 import com.ylzinfo.ruler.core.RulesEngine;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.Result;
+import com.ylzinfo.ruler.factory.RuleFactory;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,8 +19,8 @@ import java.util.Optional;
  */
 public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements IterationEngine {
 
-    public DetailRulesEngine(String businessType, Collection<AbstractRule<E>> abstractRules) {
-        super(businessType, abstractRules);
+    public DetailRulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
+        super(ruleFactory, businessType, abstractRules);
     }
 
     /**

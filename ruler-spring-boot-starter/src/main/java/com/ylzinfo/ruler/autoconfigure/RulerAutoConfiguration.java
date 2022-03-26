@@ -89,10 +89,13 @@ public class RulerAutoConfiguration {
             Optional<Object> first = beans.values().stream().findFirst();
             if (first.isPresent()) {
                 Object object = first.get();
-                String name = object.getClass().getName();
-                String originName = name.substring(0, name.indexOf("$$"));
+                String className = object.getClass().getName();
+                int suffix = className.indexOf("$$");
+                if (suffix != -1) {
+                    className = className.substring(0, className.indexOf("$$"));
+                }
                 try {
-                    configClass = this.getClass().getClassLoader().loadClass(originName);
+                    configClass = this.getClass().getClassLoader().loadClass(className);
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }

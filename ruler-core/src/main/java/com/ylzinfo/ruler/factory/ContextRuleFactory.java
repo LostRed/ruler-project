@@ -59,6 +59,7 @@ public class ContextRuleFactory extends AbstractRuleFactory {
             ruleInfo.setEnable(rule.enable());
             ruleInfo.setRuleClassName(ruleClass.getName());
             ruleInfo.setValidClass(rule.validClass());
+            ruleInfo.setValidClassName(rule.validClass().getName());
             if (ruleInfoMap.containsKey(ruleInfo.getRuleCode())) {
                 throw new RuntimeException("Rule code '" + ruleInfo.getRuleCode() + "' is repeat.");
             }

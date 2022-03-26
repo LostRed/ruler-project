@@ -1,6 +1,7 @@
 package com.ylzinfo.ruler.engine;
 
 import com.ylzinfo.ruler.core.AbstractRule;
+import com.ylzinfo.ruler.factory.RuleFactory;
 
 import java.util.Collection;
 
@@ -12,8 +13,8 @@ import java.util.Collection;
  */
 public class CompleteRulesEngine<E> extends DetailRulesEngine<E> {
 
-    public CompleteRulesEngine(String businessType, Collection<AbstractRule<E>> abstractRules) {
-        super(businessType, abstractRules);
+    public CompleteRulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
+        super(ruleFactory, businessType, abstractRules);
     }
 
     @Override

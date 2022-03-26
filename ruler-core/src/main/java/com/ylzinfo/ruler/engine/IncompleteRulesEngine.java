@@ -3,8 +3,10 @@ package com.ylzinfo.ruler.engine;
 import com.ylzinfo.ruler.constants.ValidGrade;
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.domain.Report;
+import com.ylzinfo.ruler.factory.RuleFactory;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -15,8 +17,8 @@ import java.util.Optional;
  */
 public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
 
-    public IncompleteRulesEngine(String businessType, Collection<AbstractRule<E>> abstractRules) {
-        super(businessType, abstractRules);
+    public IncompleteRulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
+        super(ruleFactory, businessType, abstractRules);
     }
 
     @Override

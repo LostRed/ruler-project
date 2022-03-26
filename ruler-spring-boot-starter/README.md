@@ -132,3 +132,50 @@ class ApplicationTests {
 ```
 
 这里注入的是RulesEngineManager接口，使用该接口的dispatch()方法获取业务类型对应的规则引擎接口。 当然也可以直接注入自己配置规则引擎的实现类。
+
+## 二次开发
+
+继承AbstractRule，重写接口方法即可实现自定义规则
+```java
+@Rule(ruleCode = "test_1", businessType = "common", desc = "number必须>0", validClass = ValidClass.class)
+public class NumberRule extends AbstractRule<ValidClass> {
+
+    private final static String FIELD_NAME = "number";
+
+    public NumberRule(ValidConfiguration config, RuleInfo ruleInfo) {
+        super(config, ruleInfo);
+    }
+
+    @Override
+    public boolean isSupported(ValidClass element) {
+        return element.getNumber() != null;
+    }
+
+    @Override
+    public boolean judge(ValidClass element) {
+        return element.getNumber().intValue() <= 0;
+    }
+
+    @Override
+    public Report buildReport(ValidClass element) {
+        if (this.judge(element)) {
+            return this.getReport(ruleInfo, element, FIELD_NAME, element.getNumber());
+        }
+        return null;
+    }
+}
+```
+### @Rule注解
+
+在类上标记该注解，规则工厂在扫描包时，会将其放入缓存。
+
+### @RuleScan注解
+
+在配置类上标记该注解，规则工厂会扫描其value指定的包路径。当使用spring时，需将该配置类注册到spring容器。
+
+```java
+@Configuration
+@RuleScan("com.ylzinfo.ruler.rule")
+public class RulerConfig {
+}
+```

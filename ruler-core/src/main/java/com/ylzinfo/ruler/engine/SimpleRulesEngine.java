@@ -3,6 +3,7 @@ package com.ylzinfo.ruler.engine;
 import com.ylzinfo.ruler.constants.ValidGrade;
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.RulesEngine;
+import com.ylzinfo.ruler.factory.RuleFactory;
 
 import java.util.Collection;
 
@@ -14,8 +15,8 @@ import java.util.Collection;
  */
 public class SimpleRulesEngine<E> extends RulesEngine<E> {
 
-    public SimpleRulesEngine(String businessType, Collection<AbstractRule<E>> abstractRules) {
-        super(businessType, abstractRules);
+    public SimpleRulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
+        super(ruleFactory, businessType, abstractRules);
     }
 
     /**

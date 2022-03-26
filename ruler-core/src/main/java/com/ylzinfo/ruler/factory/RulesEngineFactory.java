@@ -89,12 +89,12 @@ public final class RulesEngineFactory {
          */
         public T build() {
             try {
-                Constructor<T> constructor = rulesEngineType.getDeclaredConstructor(String.class, Collection.class);
+                Constructor<T> constructor = rulesEngineType.getDeclaredConstructor(RuleFactory.class, String.class, Collection.class);
                 List<AbstractRule<E>> rules = ruleFactory.getRules(businessType, validClass);
                 if (rules.isEmpty()) {
                     throw new IllegalArgumentException("Cannot get available rules.");
                 }
-                return constructor.newInstance(businessType, rules);
+                return constructor.newInstance(ruleFactory, businessType, rules);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             } catch (InvocationTargetException e) {

@@ -41,6 +41,16 @@ public abstract class AbstractRuleFactory implements RuleFactory {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E> AbstractRule<E> getRule(String ruleCode) {
+        if (!this.ruleInfoMap.containsKey(ruleCode)) {
+            throw new RuntimeException("This rule didn't register.");
+        }
+        AbstractRule<?> rule = this.rules.get(ruleCode);
+        return (AbstractRule<E>) rule;
+    }
+
     /**
      * 获取规则的建造者
      *
