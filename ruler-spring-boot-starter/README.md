@@ -19,7 +19,7 @@
 ```yaml
 ruler:
   init-type: annotation #ruler的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置规则信息，数据库方式需要引入spring-jdbc依赖并配置数据源
-  default-business-type: common #业务类型，对应以上两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息
+  default-business-type: common #业务类型，对应以下两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass #规则引擎所约束的java类型
   valid-config:
     table-name: ruler_valid_info #校验信息配置表表名
