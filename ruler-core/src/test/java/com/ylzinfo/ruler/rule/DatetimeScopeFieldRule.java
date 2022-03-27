@@ -46,7 +46,7 @@ public class DatetimeScopeFieldRule<E> extends SingleFieldRule<E> {
         Map<String, Object> map = validConfiguration.getDatetimeScopeValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return this.getReport(this.ruleInfo, map);
+        return this.getReport(this.ruleInfo, element, map);
     }
 
     @Override

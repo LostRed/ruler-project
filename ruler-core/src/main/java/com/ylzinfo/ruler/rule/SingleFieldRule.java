@@ -202,7 +202,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      */
     protected Set<Map.Entry<String, Object>> wrap(ValidInfo validInfo, Object value) {
         Map<String, Object> map = new HashMap<>();
-        map.put(validInfo.fieldKey(), value);
+        map.put(validInfo.getFieldName(), value);
         return map.entrySet();
     }
 }

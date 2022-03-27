@@ -40,7 +40,7 @@ public class NumberScopeFieldRule<E> extends SingleFieldRule<E> {
         Map<String, Object> map = validConfiguration.getNumberScopeValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return this.getReport(this.ruleInfo, map);
+        return this.getReport(this.ruleInfo, element, map);
     }
 
     @Override
