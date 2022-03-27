@@ -23,17 +23,17 @@
   ],
   "properties": [
     {
-      "name": "ruler.valid-config.table-init",
+      "name": "ruler.valid-config.init-from-db",
       "type": "java.lang.Boolean",
       "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
-      "description": "是否开启校验信息配置表初始化.",
-      "defaultValue": true
+      "description": "是否从数据库初始化校验信息.",
+      "defaultValue": false
     },
     {
-      "name": "ruler.rule-config.table-init",
+      "name": "ruler.rule-config.init-from-db",
       "type": "java.lang.Boolean",
       "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
-      "description": "是否开启规则信息配置表初始化.",
+      "description": "是否从数据库初始化规则信息.",
       "defaultValue": false
     },
     {

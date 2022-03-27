@@ -53,10 +53,10 @@ ruler:
   default-business-type: common #业务类型，对应以上两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass #规则引擎所约束的java类型
   valid-config:
-    table-init: false #是否开启校验配置表的初始化功能，默认开启
+    init-from-db: false #是否从数据库初始化校验信息，默认关闭
     table-name: ruler_valid_info #校验信息配置表表名
   rule-config:
-    table-init: false #是否开启规则配置表的初始化功能，默认关闭
+    init-from-db: false #是否从数据库初始化规则信息，默认关闭
     table-name: ruler_rule_info #规则信息配置表表名
     scan-base-packages: com.ylzinfo.ruler.rule #规则包扫描路径
   rules-engine-config:

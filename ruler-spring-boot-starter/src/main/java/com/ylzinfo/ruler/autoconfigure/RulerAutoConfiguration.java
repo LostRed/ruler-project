@@ -14,6 +14,7 @@ import com.ylzinfo.ruler.factory.DefaultRulesEngineFactory;
 import com.ylzinfo.ruler.factory.RuleFactory;
 import com.ylzinfo.ruler.jdbc.JdbcUtils;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
@@ -24,6 +25,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -35,20 +37,22 @@ import java.util.Optional;
  * @author dengluwei
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty("ruler.default-business-type")
+@ConditionalOnProperty(prefix = "ruler", name = {"default-business-type", "default-valid-class"})
 public class RulerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RulesEngineFactory rulesEngineManager(Collection<RulesEngine<?>> rulesEngines) {
+    public RulesEngineFactory rulesEngineFactory(Collection<RulesEngine<?>> rulesEngines) {
         return new DefaultRulesEngineFactory(rulesEngines);
     }
 
+    /**
+     * 规则自动配置类
+     */
     @Configuration(proxyBeanMethods = false)
     @AutoConfigureAfter(JdbcTemplateAutoConfiguration.class)
     @EnableConfigurationProperties(RulerProperties.class)
-    @ConditionalOnProperty("ruler.default-valid-class")
-    static class RuleAutoConfiguration {
+    public static class RuleAutoConfiguration {
         private final static String VALID_INFO_TABLE_NAME = "ruler_valid_info";
 
         private final ApplicationContext applicationContext;
@@ -62,7 +66,8 @@ public class RulerAutoConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
-        @ConditionalOnProperty(prefix = "ruler.valid-config", name = "table-init", havingValue = "true")
+        @ConditionalOnClass({DataSource.class, JdbcTemplate.class})
+        @ConditionalOnProperty(prefix = "ruler.valid-config", name = "init-from-db", havingValue = "true")
         public ValidConfiguration defaultValidConfiguration(JdbcTemplate jdbcTemplate) {
             String validInfoTableName = rulerProperties.getValidConfig().getTableName();
             String defaultBusinessType = rulerProperties.getDefaultBusinessType();
@@ -74,14 +79,15 @@ public class RulerAutoConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
-        @ConditionalOnProperty(prefix = "ruler.rule-config", name = "table-init", havingValue = "true")
+        @ConditionalOnClass({DataSource.class, JdbcTemplate.class})
+        @ConditionalOnProperty(prefix = "ruler.rule-config", name = "init-from-db", havingValue = "true")
         public RuleFactory databaseRuleFactory(ValidConfiguration validConfiguration, JdbcTemplate jdbcTemplate) {
             return new DatabaseRuleFactory(validConfiguration, jdbcTemplate, rulerProperties);
         }
 
         @Bean
         @ConditionalOnMissingBean
-        @ConditionalOnProperty(prefix = "ruler.rule-config", name = "table-init", havingValue = "false")
+        @ConditionalOnProperty(prefix = "ruler.rule-config", name = "init-from-db", havingValue = "false", matchIfMissing = true)
         public RuleFactory contextRuleFactory(ValidConfiguration validConfiguration) {
             Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RuleScan.class);
             Class<?> configClass = null;
@@ -106,11 +112,13 @@ public class RulerAutoConfiguration {
             return new ContextRuleFactory(validConfiguration, configClass);
         }
 
+        /**
+         * 规则引擎自动配置类
+         */
         @Configuration(proxyBeanMethods = false)
-        @ConditionalOnProperty("ruler.default-valid-class")
         @AutoConfigureAfter(RuleAutoConfiguration.class)
         @EnableConfigurationProperties(RulerProperties.class)
-        static class RulesEngineAutoConfiguration {
+        public static class RulesEngineAutoConfiguration {
 
             private final RulerProperties rulerProperties;
 

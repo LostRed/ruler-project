@@ -13,10 +13,10 @@ ruler:
   default-business-type: common
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass
   valid-config:
-    table-init: false
+    init-from-db: false
     table-name: ruler_valid_info
   rule-config:
-    table-init: false
+    init-from-db: false
     table-name: ruler_rule_info
     scan-base-packages: com.ylzinfo.ruler.rule
   rules-engine-config:
