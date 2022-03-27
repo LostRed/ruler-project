@@ -12,31 +12,40 @@ import java.util.*;
  */
 public final class ValidConfiguration {
     /**
+     * 所有校验信息列表
+     */
+    private final List<ValidInfo> validInfos = new ArrayList<>();
+    /**
      * 必填字段校验的信息列表
      */
-    private List<ValidInfo> requiredValidInfos = new ArrayList<>();
+    private final List<ValidInfo> requiredValidInfos = new ArrayList<>();
     /**
      * 字典字段校验的信息列表
      */
-    private List<ValidInfo> dictValidInfos = new ArrayList<>();
+    private final List<ValidInfo> dictValidInfos = new ArrayList<>();
     /**
      * 数值范围字段校验的信息列表
      */
-    private List<ValidInfo> numberScopeValidInfos = new ArrayList<>();
+    private final List<ValidInfo> numberScopeValidInfos = new ArrayList<>();
     /**
      * 日期时间范围字段校验的信息列表
      */
-    private List<ValidInfo> datetimeScopeValidInfos = new ArrayList<>();
+    private final List<ValidInfo> datetimeScopeValidInfos = new ArrayList<>();
     /**
      * 字典字段规则所依赖的字典集合
      * <p>key值是字典类型，value是改类型字典下的所有字典码值</p>
      */
-    private Map<String, Set<Object>> dict = new HashMap<>();
+    private final Map<String, Set<Object>> dict = new HashMap<>();
 
     public ValidConfiguration(Collection<ValidInfo> validInfos) {
         this.addValidInfo(validInfos);
     }
 
+    /**
+     * 添加校验信息
+     *
+     * @param validInfo 校验信息
+     */
     public void addValidInfo(ValidInfo validInfo) {
         try {
             this.getClass().getClassLoader().loadClass(validInfo.getValidClassName());
@@ -52,8 +61,14 @@ public final class ValidConfiguration {
         } else if (ValidType.DATETIME_SCOPE.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
             this.datetimeScopeValidInfos.add(validInfo);
         }
+        this.validInfos.add(validInfo);
     }
 
+    /**
+     * 添加校验信息
+     *
+     * @param validInfos 校验信息集合
+     */
     public void addValidInfo(Collection<ValidInfo> validInfos) {
         if (validInfos == null) {
             return;
@@ -63,55 +78,60 @@ public final class ValidConfiguration {
         }
     }
 
+    /**
+     * 移除校验信息
+     *
+     * @param validInfo 校验信息
+     * @return 成功移除返回true，否则返回false
+     */
     public boolean removeValidInfo(ValidInfo validInfo) {
-        return this.requiredValidInfos.remove(validInfo) || this.dictValidInfos.remove(validInfo);
+        return this.validInfos.remove(validInfo)
+                && (this.requiredValidInfos.remove(validInfo)
+                || this.dictValidInfos.remove(validInfo)
+                || this.numberScopeValidInfos.remove(validInfo)
+                || this.datetimeScopeValidInfos.remove(validInfo));
     }
 
-    public void addDictType(Map<String, Set<Object>> dictType) {
-        this.dict.putAll(dictType);
+    /**
+     * 添加字典
+     *
+     * @param dict 字典
+     */
+    public void addDict(Map<String, Set<Object>> dict) {
+        this.dict.putAll(dict);
     }
 
-    public Set<Object> removeDictType(String dictType) {
+    /**
+     * 移除字典
+     *
+     * @param dictType 字典类型
+     * @return 移除的字典
+     */
+    public Set<Object> removeDict(String dictType) {
         return this.dict.remove(dictType);
+    }
+
+    public List<ValidInfo> getValidInfos() {
+        return validInfos;
     }
 
     public List<ValidInfo> getRequiredValidInfos() {
         return requiredValidInfos;
     }
 
-    public void setRequiredValidInfos(List<ValidInfo> requiredValidInfos) {
-        this.requiredValidInfos = requiredValidInfos;
-    }
-
     public List<ValidInfo> getDictValidInfos() {
         return dictValidInfos;
-    }
-
-    public void setDictValidInfos(List<ValidInfo> dictValidInfos) {
-        this.dictValidInfos = dictValidInfos;
     }
 
     public List<ValidInfo> getNumberScopeValidInfos() {
         return numberScopeValidInfos;
     }
 
-    public void setNumberScopeValidInfos(List<ValidInfo> numberScopeValidInfos) {
-        this.numberScopeValidInfos = numberScopeValidInfos;
-    }
-
     public List<ValidInfo> getDatetimeScopeValidInfos() {
         return datetimeScopeValidInfos;
     }
 
-    public void setDatetimeScopeValidInfos(List<ValidInfo> datetimeScopeValidInfos) {
-        this.datetimeScopeValidInfos = datetimeScopeValidInfos;
-    }
-
     public Map<String, Set<Object>> getDict() {
         return dict;
-    }
-
-    public void setDict(Map<String, Set<Object>> dict) {
-        this.dict = dict;
     }
 }

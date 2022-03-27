@@ -3,16 +3,15 @@ package com.ylzinfo.ruler.autoconfigure;
 import com.ylzinfo.ruler.annotation.RuleScan;
 import com.ylzinfo.ruler.constants.RulesEngineType;
 import com.ylzinfo.ruler.core.RulesEngine;
-import com.ylzinfo.ruler.core.RulesEngineManager;
-import com.ylzinfo.ruler.core.RulesEngineManagerImpl;
+import com.ylzinfo.ruler.core.RulesEngineFactory;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.ValidInfo;
 import com.ylzinfo.ruler.engine.CompleteRulesEngine;
 import com.ylzinfo.ruler.engine.IncompleteRulesEngine;
 import com.ylzinfo.ruler.engine.SimpleRulesEngine;
 import com.ylzinfo.ruler.factory.ContextRuleFactory;
+import com.ylzinfo.ruler.factory.DefaultRulesEngineFactory;
 import com.ylzinfo.ruler.factory.RuleFactory;
-import com.ylzinfo.ruler.factory.RulesEngineFactory;
 import com.ylzinfo.ruler.jdbc.JdbcUtils;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -41,8 +40,8 @@ public class RulerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RulesEngineManager rulesEngineManager(Collection<RulesEngine<?>> rulesEngines) {
-        return new RulesEngineManagerImpl(rulesEngines);
+    public RulesEngineFactory rulesEngineManager(Collection<RulesEngine<?>> rulesEngines) {
+        return new DefaultRulesEngineFactory(rulesEngines);
     }
 
     @Configuration(proxyBeanMethods = false)
@@ -128,11 +127,11 @@ public class RulerAutoConfiguration {
                 String defaultBusinessType = rulerProperties.getDefaultBusinessType();
                 Class<?> defaultValidClass = rulerProperties.getDefaultValidClass();
                 if (RulesEngineType.COMPLETE.equals(RulesEngineType.valueOf(type))) {
-                    return RulesEngineFactory.builder(ruleFactory, defaultBusinessType, CompleteRulesEngine.class, defaultValidClass).build();
+                    return DefaultRulesEngineFactory.builder(ruleFactory, defaultBusinessType, CompleteRulesEngine.class, defaultValidClass).build();
                 } else if (RulesEngineType.INCOMPLETE.equals(RulesEngineType.valueOf(type))) {
-                    return RulesEngineFactory.builder(ruleFactory, defaultBusinessType, IncompleteRulesEngine.class, defaultValidClass).build();
+                    return DefaultRulesEngineFactory.builder(ruleFactory, defaultBusinessType, IncompleteRulesEngine.class, defaultValidClass).build();
                 } else {
-                    return RulesEngineFactory.builder(ruleFactory, defaultBusinessType, SimpleRulesEngine.class, defaultValidClass).build();
+                    return DefaultRulesEngineFactory.builder(ruleFactory, defaultBusinessType, SimpleRulesEngine.class, defaultValidClass).build();
                 }
             }
         }

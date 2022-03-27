@@ -3,6 +3,7 @@ package com.ylzinfo.ruler.core;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
 
+import java.beans.Introspector;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +32,9 @@ public interface Reporter<E> {
      */
     default Report getReport(RuleInfo ruleInfo, Object validNode, String fieldName, Object value) {
         Map<String, Object> map = new HashMap<>();
-        map.put(this.getNodeName(validNode) + "." + fieldName, value);
+        String simpleName = validNode.getClass().getSimpleName();
+        String nodeName = Introspector.decapitalize(simpleName);
+        map.put(nodeName + "." + fieldName, value);
         return Report.of(ruleInfo).putIllegal(map);
     }
 
@@ -43,19 +46,5 @@ public interface Reporter<E> {
      */
     default Report getReport(RuleInfo ruleInfo, Map<String, Object> illegals) {
         return Report.of(ruleInfo).putIllegal(illegals);
-    }
-
-    /**
-     * 获取节点名，根据对象转换为简单类名小写开头的驼峰形式
-     *
-     * @param validNode 校验节点
-     * @return 节点名
-     */
-    default String getNodeName(Object validNode) {
-        String simpleName = validNode.getClass().getSimpleName();
-        String name = simpleName.substring(simpleName.lastIndexOf('.') + 1);
-        StringBuilder sb = new StringBuilder();
-        char c = Character.toLowerCase(name.charAt(0));
-        return sb.append(c).append(name.substring(1)).toString();
     }
 }

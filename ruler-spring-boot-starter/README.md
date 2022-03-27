@@ -92,7 +92,12 @@ public class RulerConfig {
         validInfos.add(validInfo4);
         validInfos.add(validInfo5);
         validInfos.add(validInfo6);
-        return new ValidConfiguration(validInfos);
+        ValidConfiguration validConfiguration = new ValidConfiguration(validInfos);
+        Map<String, Set<Object>> dict = new HashMap<>();
+        Set<Object> set = new HashSet<>(Arrays.asList("hello", "world"));
+        dict.put("string", set);
+        validConfiguration.addDict(dict);
+        return validConfiguration;
     }
 
     //选择适合的规则引擎注册到spring容器
@@ -100,7 +105,7 @@ public class RulerConfig {
     public RulesEngine<ValidClass> rulerEngine(RuleFactory ruleFactory) {
         TypeReference<CompleteRulesEngine<ValidClass>> typeReference = new TypeReference<CompleteRulesEngine<ValidClass>>() {
         };
-        return RulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();
+        return DefaultRulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();
     }
 }
 ```
@@ -113,7 +118,7 @@ ValidClass为校验对象的类。
 @SpringBootTest
 class ApplicationTests {
     @Autowired
-    RulesEngineManager rulesEngineManager;
+    RulesEngineFactory rulesEngineFactory;
 
     @Test
     void test() {
@@ -122,7 +127,7 @@ class ApplicationTests {
         SubValidClass subValidClass = new SubValidClass();
         subValidClass.setNumber(new BigDecimal(11));
         validClass.setSubValidClasses(Collections.singletonList(subValidClass));
-        RulesEngine<ValidClass> common = rulesEngineManager.dispatch("common", validClass, ValidClass.class);
+        RulesEngine<ValidClass> common = rulesEngineFactory.dispatch("common", validClass, ValidClass.class);
         if (common instanceof DetailRulesEngine) {
             Result result = ((DetailRulesEngine<ValidClass>) common).execute(validClass);
             System.out.println(result);

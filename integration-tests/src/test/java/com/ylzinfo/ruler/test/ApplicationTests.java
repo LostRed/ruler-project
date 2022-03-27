@@ -3,7 +3,7 @@ package com.ylzinfo.ruler.test;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.ylzinfo.ruler.core.RulesEngine;
-import com.ylzinfo.ruler.core.RulesEngineManager;
+import com.ylzinfo.ruler.core.RulesEngineFactory;
 import com.ylzinfo.ruler.domain.Result;
 import com.ylzinfo.ruler.domain.model.SubValidClass;
 import com.ylzinfo.ruler.domain.model.ValidClass;
@@ -20,10 +20,11 @@ import java.util.Collections;
 
 @SpringBootTest
 class ApplicationTests {
+    static String businessType = "common";
     @Autowired
     ObjectProvider<RulesEngine<ValidClass>> objectProvider;
     @Autowired
-    RulesEngineManager rulesEngineManager;
+    RulesEngineFactory rulesEngineFactory;
 
     String toJson(Object object) {
         return JSON.toJSONString(object, SerializerFeature.PrettyFormat,
@@ -49,14 +50,15 @@ class ApplicationTests {
     }
 
     @Test
-    void rulesEngineManagerTest() {
+    void rulesEngineFactoryTest() {
         ValidClass validClass = new ValidClass();
         validClass.setNumber(BigDecimal.ZERO);
         SubValidClass subValidClass = new SubValidClass();
+        subValidClass.setString("test");
         subValidClass.setNumber(new BigDecimal(11));
         subValidClass.setTime(LocalDateTime.now());
         validClass.setSubValidClasses(Collections.singletonList(subValidClass));
-        RulesEngine<ValidClass> common = rulesEngineManager.dispatch("common", validClass, ValidClass.class);
+        RulesEngine<ValidClass> common = rulesEngineFactory.dispatch(businessType, validClass, ValidClass.class);
         if (common instanceof DetailRulesEngine) {
             long s = System.currentTimeMillis();
             Result result = ((DetailRulesEngine<ValidClass>) common).execute(validClass);

@@ -13,7 +13,7 @@ import com.ylzinfo.ruler.domain.model.SubValidClass;
 import com.ylzinfo.ruler.domain.model.ValidClass;
 import com.ylzinfo.ruler.engine.CompleteRulesEngine;
 import com.ylzinfo.ruler.engine.DetailRulesEngine;
-import com.ylzinfo.ruler.factory.RulesEngineFactory;
+import com.ylzinfo.ruler.factory.DefaultRulesEngineFactory;
 import com.ylzinfo.ruler.support.TypeReference;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -63,7 +63,7 @@ public class SmokeTest {
         ruleFactory = new ContextRuleFactory(validConfiguration, RulerConfig.class);
         TypeReference<CompleteRulesEngine<ValidClass>> typeReference = new TypeReference<CompleteRulesEngine<ValidClass>>() {
         };
-        engine = RulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();
+        engine = DefaultRulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();
     }
 
     @Test

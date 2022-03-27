@@ -20,4 +20,4 @@ ruler:
     table-name: ruler_rule_info
     scan-base-packages: com.ylzinfo.ruler.rule
   rules-engine-config:
-    type: incomplete
+    type: complete

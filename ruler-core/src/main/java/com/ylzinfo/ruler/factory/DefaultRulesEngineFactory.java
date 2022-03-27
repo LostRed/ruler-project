@@ -2,6 +2,7 @@ package com.ylzinfo.ruler.factory;
 
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.RulesEngine;
+import com.ylzinfo.ruler.core.RulesEngineFactory;
 import com.ylzinfo.ruler.support.TypeReference;
 
 import java.lang.reflect.Constructor;
@@ -10,15 +11,20 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * 规则引擎工厂
+ * 默认规则引擎工厂
  *
  * @author dengluwei
  */
-public final class RulesEngineFactory {
+public class DefaultRulesEngineFactory implements RulesEngineFactory {
+    private final Map<String, ? extends RulesEngine<?>> rulesEngines;
 
-    private RulesEngineFactory() {
+    public DefaultRulesEngineFactory(Collection<RulesEngine<?>> rulesEngines) {
+        this.rulesEngines = rulesEngines.stream()
+                .collect(Collectors.toMap(RulesEngine::getBusinessType, e -> e));
     }
 
     /**
@@ -48,6 +54,16 @@ public final class RulesEngineFactory {
      */
     public static <T extends RulesEngine<E>, E> Builder<T, E> builder(RuleFactory ruleFactory, String businessType, TypeReference<T> typeReference) {
         return new Builder<>(ruleFactory, businessType, typeReference);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <E> RulesEngine<E> dispatch(String businessType, Object validRootNode, Class<E> validClass) {
+        RulesEngine<E> rulesEngine = (RulesEngine<E>) this.rulesEngines.get(businessType);
+        if (rulesEngine == null) {
+            throw new RuntimeException("Cannot dispatch this business, because has not available rules engine.");
+        }
+        return rulesEngine;
     }
 
     /**

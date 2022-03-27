@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 @Configuration
 @RuleScan("com.ylzinfo.ruler.rule")
@@ -35,6 +34,11 @@ public class RulerConfig {
         validInfos.add(validInfo4);
         validInfos.add(validInfo5);
         validInfos.add(validInfo6);
-        return new ValidConfiguration(validInfos);
+        ValidConfiguration validConfiguration = new ValidConfiguration(validInfos);
+        Map<String, Set<Object>> dict = new HashMap<>();
+        Set<Object> set = new HashSet<>(Arrays.asList("hello", "world"));
+        dict.put("string", set);
+        validConfiguration.addDict(dict);
+        return validConfiguration;
     }
 }

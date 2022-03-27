@@ -1,11 +1,11 @@
 package com.ylzinfo.ruler.core;
 
 /**
- * 规则引擎管理接口
+ * 规则引擎工厂
  *
  * @author dengluwei
  */
-public interface RulesEngineManager {
+public interface RulesEngineFactory {
     /**
      * 分配规则引擎
      *

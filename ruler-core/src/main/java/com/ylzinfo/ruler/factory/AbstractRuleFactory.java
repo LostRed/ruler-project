@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractRuleFactory implements RuleFactory {
     protected final Map<String, RuleInfo> ruleInfoMap = new ConcurrentHashMap<>();
     protected final Map<String, AbstractRule<?>> rules = new ConcurrentHashMap<>();
-    protected ValidConfiguration validConfiguration;
+    protected final ValidConfiguration validConfiguration;
 
     public AbstractRuleFactory(ValidConfiguration validConfiguration) {
         this.validConfiguration = validConfiguration;
