@@ -14,7 +14,7 @@ public class RulerProperties {
     private RuleConfig ruleConfig = new RuleConfig();
     private RulesEngineConfig rulesEngineConfig = new RulesEngineConfig();
 
-    static class ValidConfig {
+    public static class ValidConfig {
         private String tableName = "ruler_valid_info";
 
         public String getTableName() {
@@ -26,7 +26,7 @@ public class RulerProperties {
         }
     }
 
-    static class RuleConfig {
+    public static class RuleConfig {
         private String tableName = "ruler_rule_info";
         private String[] scanBasePackages;
 
@@ -47,7 +47,7 @@ public class RulerProperties {
         }
     }
 
-    static class RulesEngineConfig {
+    public static class RulesEngineConfig {
         private String type = RulesEngineType.SIMPLE.name();
 
         public String getType() {

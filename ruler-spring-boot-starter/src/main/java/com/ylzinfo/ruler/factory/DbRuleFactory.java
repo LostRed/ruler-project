@@ -1,9 +1,9 @@
-package com.ylzinfo.ruler.autoconfigure;
+package com.ylzinfo.ruler.factory;
 
+import com.ylzinfo.ruler.autoconfigure.RulerProperties;
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
-import com.ylzinfo.ruler.factory.AbstractRuleFactory;
 import com.ylzinfo.ruler.jdbc.JdbcUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,12 +15,12 @@ import java.util.List;
  *
  * @author dengluwei
  */
-public class DatabaseRuleFactory extends AbstractRuleFactory {
+public class DbRuleFactory extends AbstractRuleFactory {
     private final static String RULE_INFO_TABLE_NAME = "ruler_rule_info";
     private final JdbcTemplate jdbcTemplate;
     private final RulerProperties rulerProperties;
 
-    public DatabaseRuleFactory(ValidConfiguration validConfiguration, JdbcTemplate jdbcTemplate, RulerProperties rulerProperties) {
+    public DbRuleFactory(ValidConfiguration validConfiguration, JdbcTemplate jdbcTemplate, RulerProperties rulerProperties) {
         super(validConfiguration);
         this.jdbcTemplate = jdbcTemplate;
         this.rulerProperties = rulerProperties;
