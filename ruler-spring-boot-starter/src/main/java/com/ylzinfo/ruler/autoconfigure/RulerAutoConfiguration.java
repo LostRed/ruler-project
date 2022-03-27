@@ -119,7 +119,6 @@ public class RulerAutoConfiguration {
         @AutoConfigureAfter(RuleAutoConfiguration.class)
         @EnableConfigurationProperties(RulerProperties.class)
         public static class RulesEngineAutoConfiguration {
-
             private final RulerProperties rulerProperties;
 
             public RulesEngineAutoConfiguration(RulerProperties rulerProperties) {
