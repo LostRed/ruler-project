@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/rules_engine
-    username: root
-    password: levyteng952786
+    username: rules_engine
+    password: 123456
 
 logging:
   level:
