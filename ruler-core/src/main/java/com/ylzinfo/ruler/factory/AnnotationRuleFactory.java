@@ -69,7 +69,7 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
 
     @Override
     public void init() {
-        Stream<String> stream = Stream.concat(Arrays.stream(this.anotherPackages), Stream.of("com.ylzinfo.ruler.rule"));
+        Stream<String> stream = Stream.concat(Stream.of("com.ylzinfo.ruler.rule"), Arrays.stream(this.anotherPackages));
         if (this.configClass != null && this.configClass.isAnnotationPresent(RuleScan.class)) {
             String[] scanBasePackages = this.configClass.getAnnotation(RuleScan.class).value();
             String[] packages = Stream.concat(stream, Stream.of(scanBasePackages)).distinct().toArray(String[]::new);
