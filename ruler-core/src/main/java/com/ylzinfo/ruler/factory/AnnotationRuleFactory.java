@@ -16,11 +16,11 @@ import java.util.stream.Stream;
  *
  * @author dengluwei
  */
-public class ContextRuleFactory extends AbstractRuleFactory {
+public class AnnotationRuleFactory extends AbstractRuleFactory {
     private final Class<?> configClass;
     private final String[] anotherPackages;
 
-    public ContextRuleFactory(ValidConfiguration validConfiguration, Class<?> configClass, String... anotherPackages) {
+    public AnnotationRuleFactory(ValidConfiguration validConfiguration, Class<?> configClass, String... anotherPackages) {
         super(validConfiguration);
         this.configClass = configClass;
         this.anotherPackages = anotherPackages;

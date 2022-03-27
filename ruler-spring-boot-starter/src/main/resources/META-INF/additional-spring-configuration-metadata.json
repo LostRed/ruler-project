@@ -23,18 +23,30 @@
   ],
   "properties": [
     {
-      "name": "ruler.valid-config.init-from-db",
-      "type": "java.lang.Boolean",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
-      "description": "是否从数据库初始化校验信息.",
-      "defaultValue": false
+      "name": "ruler.init-type",
+      "type": "java.lang.String",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration",
+      "description": "ruler的初始化方式.",
+      "defaultValue": "annotation"
     },
     {
-      "name": "ruler.rule-config.init-from-db",
-      "type": "java.lang.Boolean",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
-      "description": "是否从数据库初始化规则信息.",
-      "defaultValue": false
+      "name": "ruler.default-business-type",
+      "type": "java.lang.String",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "description": "默认的业务类型."
+    },
+    {
+      "name": "ruler.default-valid-class",
+      "type": "java.lang.Class",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "description": "默认的约束类."
+    },
+    {
+      "name": "ruler.valid-config.table-name",
+      "type": "java.lang.String",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "description": "校验信息表名.",
+      "defaultValue": "ruler_valid_info"
     },
     {
       "name": "ruler.rule-config.table-name",
@@ -50,33 +62,35 @@
       "description": "规则包扫描路径."
     },
     {
-      "name": "ruler.valid-config.table-name",
-      "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
-      "description": "校验信息表名.",
-      "defaultValue": "ruler_valid_info"
-    },
-    {
       "name": "ruler.rules-engine-config.type",
       "type": "java.lang.String",
       "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
       "description": "容器单实例规则引擎的默认引擎类型.",
       "defaultValue": "simple"
-    },
-    {
-      "name": "ruler.default-business-type",
-      "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
-      "description": "默认的业务类型."
-    },
-    {
-      "name": "ruler.default-valid-class",
-      "type": "java.lang.Class",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
-      "description": "默认的约束类."
     }
   ],
   "hints": [
+    {
+      "name": "ruler.default-valid-class",
+      "providers": [
+        {
+          "name": "class-reference"
+        }
+      ]
+    },
+    {
+      "name": "ruler.init-type",
+      "values": [
+        {
+          "value": "db",
+          "description": "从数据库初始化校验与规则信息."
+        },
+        {
+          "value": "annotation",
+          "description": "从注解初始化规则信息，校验信息需要手动配置."
+        }
+      ]
+    },
     {
       "name": "ruler.rules-engine-config.type",
       "values": [
@@ -91,14 +105,6 @@
         {
           "value": "complete",
           "description": "完全详细的规则引擎，能够返回校验的结果报告，会执行规则集合中的所有规则."
-        }
-      ]
-    },
-    {
-      "name": "ruler.default-valid-class",
-      "providers": [
-        {
-          "name": "class-reference"
         }
       ]
     }

@@ -3,7 +3,7 @@ package com.ylzinfo.ruler.configure;
 import com.ylzinfo.ruler.annotation.RuleScan;
 import com.ylzinfo.ruler.autoconfigure.RulerProperties;
 import com.ylzinfo.ruler.core.ValidConfiguration;
-import com.ylzinfo.ruler.factory.ContextRuleFactory;
+import com.ylzinfo.ruler.factory.AnnotationRuleFactory;
 import com.ylzinfo.ruler.factory.RuleFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -16,13 +16,13 @@ import java.util.Map;
 import java.util.Optional;
 
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(prefix = "ruler.valid-config", name = "init-from-db", havingValue = "false", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "ruler", name = "init-type", havingValue = "annotation", matchIfMissing = true)
 @EnableConfigurationProperties(RulerProperties.class)
-public class ContextInitConfiguration {
+public class AnnotationInitConfiguration {
     private final ApplicationContext applicationContext;
     private final RulerProperties rulerProperties;
 
-    public ContextInitConfiguration(ApplicationContext applicationContext, RulerProperties rulerProperties) {
+    public AnnotationInitConfiguration(ApplicationContext applicationContext, RulerProperties rulerProperties) {
         this.applicationContext = applicationContext;
         this.rulerProperties = rulerProperties;
     }
@@ -35,7 +35,7 @@ public class ContextInitConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RuleFactory contextRuleFactory(ValidConfiguration validConfiguration) {
+    public RuleFactory annotationRuleFactory(ValidConfiguration validConfiguration) {
         Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RuleScan.class);
         Class<?> configClass = null;
         Optional<Object> first = beans.values().stream().findFirst();
@@ -54,8 +54,8 @@ public class ContextInitConfiguration {
         }
         String[] scanBasePackages = rulerProperties.getRuleConfig().getScanBasePackages();
         if (scanBasePackages != null) {
-            return new ContextRuleFactory(validConfiguration, configClass, scanBasePackages);
+            return new AnnotationRuleFactory(validConfiguration, configClass, scanBasePackages);
         }
-        return new ContextRuleFactory(validConfiguration, configClass);
+        return new AnnotationRuleFactory(validConfiguration, configClass);
     }
 }

@@ -1,6 +1,6 @@
 package com.ylzinfo.ruler.autoconfigure;
 
-import com.ylzinfo.ruler.configure.ContextInitConfiguration;
+import com.ylzinfo.ruler.configure.AnnotationInitConfiguration;
 import com.ylzinfo.ruler.configure.DbInitConfiguration;
 import com.ylzinfo.ruler.constants.RulesEngineType;
 import com.ylzinfo.ruler.core.RulesEngine;
@@ -34,7 +34,7 @@ public class RulerAutoConfiguration {
      */
     @Configuration(proxyBeanMethods = false)
     @AutoConfigureAfter(JdbcTemplateAutoConfiguration.class)
-    @Import({ContextInitConfiguration.class, DbInitConfiguration.class})
+    @Import({AnnotationInitConfiguration.class, DbInitConfiguration.class})
     public static class RuleAutoConfiguration {
     }
 

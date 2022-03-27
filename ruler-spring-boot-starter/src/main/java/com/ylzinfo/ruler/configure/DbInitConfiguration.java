@@ -20,7 +20,7 @@ import java.util.List;
 
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({DataSource.class, JdbcTemplate.class})
-@ConditionalOnProperty(prefix = "ruler.valid-config", name = "init-from-db", havingValue = "true")
+@ConditionalOnProperty(prefix = "ruler", name = "init-type", havingValue = "db")
 @EnableConfigurationProperties(RulerProperties.class)
 public class DbInitConfiguration {
     private final static String VALID_INFO_TABLE_NAME = "ruler_valid_info";

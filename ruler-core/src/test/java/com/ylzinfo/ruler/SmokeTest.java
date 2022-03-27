@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.ylzinfo.ruler.config.RulerConfig;
 import com.ylzinfo.ruler.constants.ValidType;
-import com.ylzinfo.ruler.factory.ContextRuleFactory;
+import com.ylzinfo.ruler.factory.AnnotationRuleFactory;
 import com.ylzinfo.ruler.factory.RuleFactory;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.Result;
@@ -60,7 +60,7 @@ public class SmokeTest {
     @BeforeAll
     static void init() {
         validConfiguration = buildValidInfos();
-        ruleFactory = new ContextRuleFactory(validConfiguration, RulerConfig.class);
+        ruleFactory = new AnnotationRuleFactory(validConfiguration, RulerConfig.class);
         TypeReference<CompleteRulesEngine<ValidClass>> typeReference = new TypeReference<CompleteRulesEngine<ValidClass>>() {
         };
         engine = DefaultRulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();

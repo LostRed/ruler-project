@@ -10,13 +10,12 @@ logging:
     org.springframework.jdbc.core.JdbcTemplate: debug
 
 ruler:
+  init-type: annotation
   default-business-type: common
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass
   valid-config:
-    init-from-db: false
     table-name: ruler_valid_info
   rule-config:
-    init-from-db: false
     table-name: ruler_rule_info
     scan-base-packages: com.ylzinfo.ruler.rule
   rules-engine-config:
