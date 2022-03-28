@@ -31,6 +31,7 @@ public class DatabaseInitConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "ruler.db-config", name = {"url", "username", "password"})
     public DataSource rulerDataSource(RulerProperties rulerProperties) {
         String driverClassName = rulerProperties.getDbConfig().getDriverClassName();
         String url = rulerProperties.getDbConfig().getUrl();

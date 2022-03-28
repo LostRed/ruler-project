@@ -1,15 +1,12 @@
+
+
 logging:
   level:
     root: info
     com.ylzinfo.ruler.jdbc.JdbcUtils: debug
 
 ruler:
-  init-type: annotation
-  db-config:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/rules_engine
-    username: rules_engine
-    password: 123456
+  init-type: db
   default-business-type: common
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass
   valid-config:
@@ -19,3 +16,10 @@ ruler:
     scan-base-packages: com.ylzinfo.ruler.rule
   rules-engine-config:
     type: complete
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rules_engine
+    username: rules_engine
+    password: 123456
