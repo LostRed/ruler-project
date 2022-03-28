@@ -1,17 +1,16 @@
-
-
 logging:
   level:
     root: info
     com.ylzinfo.ruler.jdbc.JdbcUtils: debug
 
 ruler:
-  init-type: annotation
   default-business-type: user
   default-valid-class: com.ylzinfo.ruler.test.entity.User
   valid-config:
+    init-type: annotation
     table-name: ruler_valid_info
   rule-config:
+    init-type: annotation
     table-name: ruler_rule_info
     scan-base-packages: com.ylzinfo.ruler.rule
   rules-engine-config:

@@ -28,13 +28,6 @@
   ],
   "properties": [
     {
-      "name": "ruler.init-type",
-      "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration",
-      "description": "ruler的初始化方式.",
-      "defaultValue": "annotation"
-    },
-    {
       "name": "ruler.default-business-type",
       "type": "java.lang.String",
       "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
@@ -71,11 +64,25 @@
       "description": "数据源密码."
     },
     {
+      "name": "ruler.valid-config.init-type",
+      "type": "java.lang.String",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
+      "description": "校验信息的初始化方式.",
+      "defaultValue": "annotation"
+    },
+    {
       "name": "ruler.valid-config.table-name",
       "type": "java.lang.String",
       "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
       "description": "校验信息表名.",
       "defaultValue": "ruler_valid_info"
+    },
+    {
+      "name": "ruler.rule-config.init-type",
+      "type": "java.lang.String",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
+      "description": "规则信息的初始化方式.",
+      "defaultValue": "annotation"
     },
     {
       "name": "ruler.rule-config.table-name",
@@ -119,15 +126,28 @@
       ]
     },
     {
-      "name": "ruler.init-type",
+      "name": "ruler.valid-config.init-type",
       "values": [
         {
           "value": "db",
-          "description": "从数据库初始化校验与规则信息."
+          "description": "从数据库初始化校验信息."
         },
         {
           "value": "annotation",
-          "description": "从注解初始化规则信息，校验信息需要手动配置."
+          "description": "从配置类注解初始化校验信息."
+        }
+      ]
+    },
+    {
+      "name": "ruler.rule-config.init-type",
+      "values": [
+        {
+          "value": "db",
+          "description": "从数据库初始化规则信息."
+        },
+        {
+          "value": "annotation",
+          "description": "从配置类注解初始化规则信息."
         }
       ]
     },

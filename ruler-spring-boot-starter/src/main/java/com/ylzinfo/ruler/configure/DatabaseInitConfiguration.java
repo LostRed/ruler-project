@@ -20,7 +20,6 @@ import java.util.List;
 
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(DataSource.class)
-@ConditionalOnProperty(prefix = "ruler", name = "init-type", havingValue = "db")
 @EnableConfigurationProperties(RulerProperties.class)
 public class DatabaseInitConfiguration {
     private final RulerProperties rulerProperties;
@@ -42,6 +41,7 @@ public class DatabaseInitConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "ruler.valid-config", name = "init-type", havingValue = "db")
     public ValidConfiguration defaultValidConfiguration(DataSource dataSource) {
         String validInfoTableName = rulerProperties.getValidConfig().getTableName();
         String createTableSql = JdbcUtils.parseSql(RulerConstants.CREATE_VALID_INFO_SQL,
@@ -54,6 +54,7 @@ public class DatabaseInitConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "ruler.rule-config", name = "init-type", havingValue = "db")
     public RuleFactory dbRuleFactory(ValidConfiguration validConfiguration, DataSource dataSource) {
         return new DatabaseRuleFactory(validConfiguration, dataSource, rulerProperties.getRuleConfig().getTableName());
     }

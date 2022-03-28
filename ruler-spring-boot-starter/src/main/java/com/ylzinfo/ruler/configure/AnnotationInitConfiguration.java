@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(prefix = "ruler", name = "init-type", havingValue = "annotation", matchIfMissing = true)
 @EnableConfigurationProperties(RulerProperties.class)
 public class AnnotationInitConfiguration {
     private final ApplicationContext applicationContext;
@@ -29,12 +28,14 @@ public class AnnotationInitConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "ruler.valid-config", name = "init-type", havingValue = "annotation", matchIfMissing = true)
     public ValidConfiguration defaultValidConfiguration() {
         return new ValidConfiguration(null);
     }
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "ruler.rule-config", name = "init-type", havingValue = "annotation", matchIfMissing = true)
     public RuleFactory annotationRuleFactory(ValidConfiguration validConfiguration) {
         Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RuleScan.class);
         Class<?> configClass = null;

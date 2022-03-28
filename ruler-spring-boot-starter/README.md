@@ -18,7 +18,6 @@
 
 ```yaml
 ruler:
-  init-type: annotation #ruler的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置规则信息，数据库方式需要引入数据库驱动包
   db-config:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/rules_engine
@@ -27,8 +26,10 @@ ruler:
   default-business-type: common #业务类型，对应以下两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass #规则引擎所约束的java类型
   valid-config:
+    init-type: annotation #校验信息的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置校验信息，数据库方式需要引入数据库驱动包
     table-name: ruler_valid_info #校验信息配置表表名
   rule-config:
+    init-type: annotation #规则信息的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置规则信息，数据库方式需要引入数据库驱动包
     table-name: ruler_rule_info #规则信息配置表表名
     scan-base-packages: com.ylzinfo.ruler.rule #规则包扫描路径
   rules-engine-config:
