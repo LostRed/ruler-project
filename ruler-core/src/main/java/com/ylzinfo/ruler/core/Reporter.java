@@ -75,6 +75,9 @@ public interface Reporter<E> {
      */
     default String fieldKey(Class<?> validClass, String fieldName) {
         String simpleName = validClass.getSimpleName();
+        if (fieldName.startsWith(simpleName)) {
+            return fieldName;
+        }
         String nodeName = Introspector.decapitalize(simpleName);
         return nodeName + "." + fieldName;
     }

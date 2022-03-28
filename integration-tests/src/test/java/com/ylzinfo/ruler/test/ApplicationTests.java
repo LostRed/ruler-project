@@ -5,6 +5,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.ylzinfo.ruler.core.RulesEngine;
 import com.ylzinfo.ruler.core.RulesEngineFactory;
 import com.ylzinfo.ruler.domain.Result;
+import com.ylzinfo.ruler.test.entity.Area;
+import com.ylzinfo.ruler.test.entity.Country;
 import com.ylzinfo.ruler.test.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ class ApplicationTests {
     void rulesEngineFactoryTest() {
         User user = new User();
         user.setPassword("12312");
+        Area area = new Area();
+        area.setCountry(new Country());
+        user.setArea(area);
         RulesEngine<User> rulesEngine = rulesEngineFactory.dispatch(businessType, user, User.class);
         long s = System.currentTimeMillis();
         Result result = rulesEngine.execute(user);

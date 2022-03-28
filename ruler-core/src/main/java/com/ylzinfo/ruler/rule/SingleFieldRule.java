@@ -1,13 +1,14 @@
 package com.ylzinfo.ruler.rule;
 
-import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.core.AbstractRule;
+import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.domain.ValidInfo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -93,8 +94,8 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
         Field[] fields = validNode.getClass().getDeclaredFields();
         Field nodeField = null;
         for (Field field : fields) {
-            //属性为对象时
-            if (field.getClass() == validClass) {
+            //属性为对象且是校验类时
+            if (field.getType() == validClass) {
                 nodeField = field;
             }
             //属性为数组时
@@ -112,6 +113,15 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
                     }
                 }
             }
+            //属性为对象且是非基本数据类型时
+            else if (this.isNotBaseType(field.getType())) {
+                try {
+                    field.setAccessible(true);
+                    Object value = field.get(validNode);
+                    return this.findValidNodeFromField(value, validClass);
+                } catch (IllegalAccessException ignored) {
+                }
+            }
             if (nodeField != null) {
                 nodeField.setAccessible(true);
                 try {
@@ -121,6 +131,19 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
             }
         }
         return null;
+    }
+
+    /**
+     * 不是非基本数据类型
+     *
+     * @param type 类型
+     * @return 不是返回true，否则返回false
+     */
+    private boolean isNotBaseType(Class<?> type) {
+        return !String.class.equals(type)
+                && !Temporal.class.isAssignableFrom(type)
+                && !Date.class.isAssignableFrom(type)
+                && !Number.class.isAssignableFrom(type);
     }
 
     /**
@@ -205,7 +228,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      */
     protected Set<Map.Entry<String, Object>> wrap(ValidInfo validInfo, Object value) {
         Map<String, Object> map = new HashMap<>();
-        map.put(validInfo.getFieldName(), value);
+        map.put(this.fieldKey(validInfo), value);
         return map.entrySet();
     }
 }

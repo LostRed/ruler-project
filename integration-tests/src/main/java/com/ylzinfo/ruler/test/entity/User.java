@@ -3,6 +3,7 @@ package com.ylzinfo.ruler.test.entity;
 public class User {
     private String username;
     private String password;
+    private Area area;
 
     public String getUsername() {
         return username;
@@ -20,11 +21,11 @@ public class User {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
     }
 }
