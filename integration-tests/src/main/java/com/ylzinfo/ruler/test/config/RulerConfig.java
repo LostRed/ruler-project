@@ -21,12 +21,14 @@ public class RulerConfig {
         Collection<ValidInfo> validInfos = new ArrayList<>();
         ValidInfo validInfo1 = new ValidInfo("1", businessType, ValidType.REQUIRED.name(), "name", validClassName1);
         ValidInfo validInfo2 = new ValidInfo("2", businessType, ValidType.REQUIRED.name(), "areaCode", validClassName2);
+        ValidInfo validInfo3 = new ValidInfo("3", businessType, ValidType.DICT.name(), "name", validClassName1);
         validInfos.add(validInfo1);
         validInfos.add(validInfo2);
+        validInfos.add(validInfo3);
         ValidConfiguration validConfiguration = new ValidConfiguration(validInfos);
-        Map<String, Set<Object>> dict = new HashMap<>();
+        Map<ValidInfo, Set<Object>> dict = new HashMap<>();
         Set<Object> set = new HashSet<>(Arrays.asList("hello", "world"));
-        dict.put("string", set);
+        dict.put(validInfo3, set);
         validConfiguration.addDict(dict);
         return validConfiguration;
     }

@@ -46,7 +46,7 @@ public class DictFieldRule<E> extends SingleFieldRule<E> {
 
     @Override
     protected boolean isNotMatch(ValidInfo validInfo, Object value) {
-        Set<Object> set = validConfiguration.getDict().get(validInfo.getFieldName());
+        Set<Object> set = validConfiguration.getDict().get(validInfo);
         if (set != null && value != null && !"".equals(value)) {
             return !set.contains(value);
         }

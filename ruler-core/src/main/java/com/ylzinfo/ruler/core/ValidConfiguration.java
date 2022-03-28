@@ -35,7 +35,7 @@ public final class ValidConfiguration {
      * 字典字段规则所依赖的字典集合
      * <p>key值是字典类型，value是改类型字典下的所有字典码值</p>
      */
-    private final Map<String, Set<Object>> dict = new HashMap<>();
+    private final Map<ValidInfo, Set<Object>> dict = new HashMap<>();
 
     public ValidConfiguration(Collection<ValidInfo> validInfos) {
         this.addValidInfo(validInfos);
@@ -97,18 +97,18 @@ public final class ValidConfiguration {
      *
      * @param dict 字典
      */
-    public void addDict(Map<String, Set<Object>> dict) {
+    public void addDict(Map<ValidInfo, Set<Object>> dict) {
         this.dict.putAll(dict);
     }
 
     /**
      * 移除字典
      *
-     * @param dictType 字典类型
+     * @param validInfo 校验信息
      * @return 移除的字典
      */
-    public Set<Object> removeDict(String dictType) {
-        return this.dict.remove(dictType);
+    public Set<Object> removeDict(ValidInfo validInfo) {
+        return this.dict.remove(validInfo);
     }
 
     public List<ValidInfo> getValidInfos() {
@@ -131,7 +131,7 @@ public final class ValidConfiguration {
         return datetimeScopeValidInfos;
     }
 
-    public Map<String, Set<Object>> getDict() {
+    public Map<ValidInfo, Set<Object>> getDict() {
         return dict;
     }
 }

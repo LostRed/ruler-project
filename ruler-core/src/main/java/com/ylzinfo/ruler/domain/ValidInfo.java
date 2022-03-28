@@ -2,6 +2,7 @@ package com.ylzinfo.ruler.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * 校验信息
@@ -153,5 +154,22 @@ public class ValidInfo {
 
     public void setValidClassName(String validClassName) {
         this.validClassName = validClassName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ValidInfo validInfo = (ValidInfo) o;
+        return Objects.equals(id, validInfo.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

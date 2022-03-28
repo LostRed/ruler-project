@@ -29,7 +29,9 @@ class ApplicationTests {
         User user = new User();
         user.setPassword("12312");
         Area area = new Area();
-        area.setCountry(new Country());
+        Country country = new Country();
+        country.setName("china");
+        area.setCountry(country);
         user.setArea(area);
         RulesEngine<User> rulesEngine = rulesEngineFactory.dispatch(businessType, user, User.class);
         long s = System.currentTimeMillis();
