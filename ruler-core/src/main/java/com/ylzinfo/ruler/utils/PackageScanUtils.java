@@ -12,7 +12,7 @@ import java.util.jar.JarEntry;
  *
  * @author dengluwei
  */
-public class PackageScanUtils {
+public final class PackageScanUtils {
     /**
      * 找到包扫描路径下的所有全限定类名
      *
