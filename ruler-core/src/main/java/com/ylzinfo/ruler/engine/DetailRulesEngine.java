@@ -23,12 +23,15 @@ public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements Ite
         super(ruleFactory, businessType, abstractRules);
     }
 
-    /**
-     * 执行规则，生成结果
-     *
-     * @param element 规则约束的对象
-     * @return 结果
-     */
+    @Override
+    public boolean check(E element) {
+        for (AbstractRule<E> abstractRule : this.abstractRules) {
+            return this.ruleJudge(element, abstractRule);
+        }
+        return false;
+    }
+
+    @Override
     public Result execute(E element) {
         this.checkBeforeExecute(element);
         Result result = Result.of();

@@ -5,10 +5,12 @@ import com.ylzinfo.ruler.annotation.RuleScan;
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
+import com.ylzinfo.ruler.utils.PackageScanUtils;
 
-import java.io.File;
-import java.net.URL;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -25,20 +27,6 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
         this.configClass = configClass;
         this.anotherPackages = anotherPackages;
         this.init();
-    }
-
-    /**
-     * 获取类文件
-     *
-     * @param resource 资源
-     * @return 文件数组
-     */
-    private File[] getClassFiles(URL resource) {
-        File file = new File(resource.getFile());
-        if (file.isDirectory()) {
-            return file.listFiles();
-        }
-        return null;
     }
 
     /**
@@ -69,13 +57,15 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
 
     @Override
     public void init() {
-        Stream<String> stream = Stream.concat(Stream.of("com.ylzinfo.ruler.rule"), Arrays.stream(this.anotherPackages));
+        Stream<String> mergedStream = Stream.concat(Stream.of("com.ylzinfo.ruler.rule"), Arrays.stream(this.anotherPackages));
         if (this.configClass != null && this.configClass.isAnnotationPresent(RuleScan.class)) {
             String[] scanBasePackages = this.configClass.getAnnotation(RuleScan.class).value();
-            String[] packages = Stream.concat(stream, Stream.of(scanBasePackages)).distinct().toArray(String[]::new);
-            this.register(packages);
+            String[] mergedPackages = Stream.concat(mergedStream, Stream.of(scanBasePackages))
+                    .distinct()
+                    .toArray(String[]::new);
+            this.register(mergedPackages);
         } else {
-            this.register(stream.distinct().toArray(String[]::new));
+            this.register(mergedStream.distinct().toArray(String[]::new));
         }
     }
 
@@ -86,25 +76,15 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
      */
     private void register(String[] packages) {
         for (String packageName : packages) {
-            String packagePath = packageName.replace(".", "/");
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            URL resource = classLoader.getResource(packagePath);
-            assert resource != null;
-            File[] classFiles = this.getClassFiles(resource);
-            assert classFiles != null;
-            for (File file : classFiles) {
-                String absolutePath = file.getAbsolutePath();
-                if (absolutePath.endsWith(".class")) {
-                    String fileName = file.getName();
-                    String relativePath = packagePath + "/" + fileName.substring(0, fileName.lastIndexOf("."));
-                    String className = relativePath.replace("/", ".");
-                    try {
-                        Class<?> ruleClass = classLoader.loadClass(className);
-                        this.registerRuleInfo(ruleClass);
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
+            try {
+                Set<String> classNames = PackageScanUtils.findClassNames(packageName);
+                classNames.stream()
+                        .map(PackageScanUtils::loadClass)
+                        .filter(Objects::nonNull)
+                        .filter(AbstractRule.class::isAssignableFrom)
+                        .forEach(this::registerRuleInfo);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
         for (String ruleCode : this.ruleInfoMap.keySet()) {

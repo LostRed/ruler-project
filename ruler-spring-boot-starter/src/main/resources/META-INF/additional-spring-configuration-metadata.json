@@ -6,6 +6,11 @@
       "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties"
     },
     {
+      "name": "ruler.db-config",
+      "type": "com.ylzinfo.ruler.autoconfigure.RulerProperties$DbConfig",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties"
+    },
+    {
       "name": "ruler.valid-config",
       "type": "com.ylzinfo.ruler.autoconfigure.RulerProperties$ValidConfig",
       "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties"
@@ -42,6 +47,30 @@
       "description": "默认的约束类."
     },
     {
+      "name": "ruler.db-config.driver-class-name",
+      "type": "java.lang.String",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "description": "数据源驱动类."
+    },
+    {
+      "name": "ruler.db-config.url",
+      "type": "java.lang.String",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "description": "数据源url."
+    },
+    {
+      "name": "ruler.db-config.username",
+      "type": "java.lang.String",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "description": "数据源用户名."
+    },
+    {
+      "name": "ruler.db-config.password",
+      "type": "java.lang.String",
+      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "description": "数据源密码."
+    },
+    {
       "name": "ruler.valid-config.table-name",
       "type": "java.lang.String",
       "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
@@ -75,6 +104,17 @@
       "providers": [
         {
           "name": "class-reference"
+        }
+      ]
+    },
+    {
+      "name": "ruler.db-config.driver-class-name",
+      "providers": [
+        {
+          "name": "class-reference",
+          "parameters": {
+            "target": "java.sql.Driver"
+          }
         }
       ]
     },

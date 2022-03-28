@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class SmokeTest {
+public class AnnotationInitSmokeTest {
     static String validClassName = "com.ylzinfo.ruler.domain.model.SubValidClass";
     static String businessType = "common";
     static RuleFactory ruleFactory;

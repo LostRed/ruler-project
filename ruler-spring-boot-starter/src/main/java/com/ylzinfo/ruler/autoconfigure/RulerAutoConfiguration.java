@@ -1,7 +1,7 @@
 package com.ylzinfo.ruler.autoconfigure;
 
 import com.ylzinfo.ruler.configure.AnnotationInitConfiguration;
-import com.ylzinfo.ruler.configure.DbInitConfiguration;
+import com.ylzinfo.ruler.configure.DatabaseInitConfiguration;
 import com.ylzinfo.ruler.constants.RulesEngineType;
 import com.ylzinfo.ruler.core.RulesEngine;
 import com.ylzinfo.ruler.core.RulesEngineFactory;
@@ -13,7 +13,6 @@ import com.ylzinfo.ruler.factory.RuleFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +32,7 @@ public class RulerAutoConfiguration {
      * 规则自动配置类
      */
     @Configuration(proxyBeanMethods = false)
-    @AutoConfigureAfter(JdbcTemplateAutoConfiguration.class)
-    @Import({AnnotationInitConfiguration.class, DbInitConfiguration.class})
+    @Import({AnnotationInitConfiguration.class, DatabaseInitConfiguration.class})
     public static class RuleAutoConfiguration {
     }
 

@@ -3,6 +3,7 @@ package com.ylzinfo.ruler.engine;
 import com.ylzinfo.ruler.constants.ValidGrade;
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.RulesEngine;
+import com.ylzinfo.ruler.domain.Result;
 import com.ylzinfo.ruler.factory.RuleFactory;
 
 import java.util.Collection;
@@ -19,17 +20,17 @@ public class SimpleRulesEngine<E> extends RulesEngine<E> {
         super(ruleFactory, businessType, abstractRules);
     }
 
-    /**
-     * 执行规则，生成是否违规的结果
-     *
-     * @param element 规则约束的对象
-     * @return 违规返回true，否则返回false
-     */
-    public boolean execute(E element) {
+    @Override
+    public boolean check(E element) {
         for (AbstractRule<E> abstractRule : this.abstractRules) {
             return this.ruleJudge(element, abstractRule);
         }
         return false;
+    }
+
+    @Override
+    public Result execute(E element) {
+        throw new UnsupportedOperationException("execute");
     }
 
     /**
@@ -38,7 +39,7 @@ public class SimpleRulesEngine<E> extends RulesEngine<E> {
      * @param element 规则约束的对象
      * @return 有返回true，否则返回false
      */
-    public boolean checkSuspicious(E element) {
+    public boolean hasSuspicious(E element) {
         for (AbstractRule<E> abstractRule : this.abstractRules) {
             if (abstractRule.isSupported(element) && ValidGrade.SUSPECTED.getText().equals(abstractRule.getRuleInfo().getGrade())) {
                 return this.ruleJudge(element, abstractRule);

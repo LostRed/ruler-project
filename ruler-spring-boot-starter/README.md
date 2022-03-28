@@ -18,7 +18,12 @@
 
 ```yaml
 ruler:
-  init-type: annotation #ruler的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置规则信息，数据库方式需要引入spring-jdbc依赖并配置数据源
+  init-type: annotation #ruler的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置规则信息，数据库方式需要引入数据库驱动包
+  db-config:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rules_engine
+    username: rules_engine
+    password: 123456
   default-business-type: common #业务类型，对应以下两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass #规则引擎所约束的java类型
   valid-config:
@@ -128,11 +133,9 @@ class ApplicationTests {
         SubValidClass subValidClass = new SubValidClass();
         subValidClass.setNumber(new BigDecimal(11));
         validClass.setSubValidClasses(Collections.singletonList(subValidClass));
-        RulesEngine<ValidClass> common = rulesEngineFactory.dispatch("common", validClass, ValidClass.class);
-        if (common instanceof DetailRulesEngine) {
-            Result result = ((DetailRulesEngine<ValidClass>) common).execute(validClass);
-            System.out.println(result);
-        }
+        RulesEngine<ValidClass> rulesEngine = rulesEngineFactory.dispatch("common", validClass, ValidClass.class);
+        Result result = rulesEngine.execute(validClass);
+        System.out.println(result);
     }
 }
 ```

@@ -1,5 +1,6 @@
 package com.ylzinfo.ruler.autoconfigure;
 
+import com.ylzinfo.ruler.constants.RulerConstants;
 import com.ylzinfo.ruler.constants.RulesEngineType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -10,12 +11,52 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class RulerProperties {
     private String defaultBusinessType;
     private Class<?> defaultValidClass;
+    private DbConfig dbConfig = new DbConfig();
     private ValidConfig validConfig = new ValidConfig();
     private RuleConfig ruleConfig = new RuleConfig();
     private RulesEngineConfig rulesEngineConfig = new RulesEngineConfig();
 
+    public static class DbConfig {
+        private String driverClassName;
+        private String url;
+        private String username;
+        private String password;
+
+        public String getDriverClassName() {
+            return driverClassName;
+        }
+
+        public void setDriverClassName(String driverClassName) {
+            this.driverClassName = driverClassName;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+    }
+
     public static class ValidConfig {
-        private String tableName = "ruler_valid_info";
+        private String tableName = RulerConstants.ORIGIN_VALID_INFO_TABLE_NAME;
 
         public String getTableName() {
             return tableName;
@@ -27,7 +68,7 @@ public class RulerProperties {
     }
 
     public static class RuleConfig {
-        private String tableName = "ruler_rule_info";
+        private String tableName = RulerConstants.ORIGIN_RULE_INFO_TABLE_NAME;
         private String[] scanBasePackages;
 
         public String getTableName() {
@@ -57,6 +98,14 @@ public class RulerProperties {
         public void setType(String type) {
             this.type = type;
         }
+    }
+
+    public DbConfig getDbConfig() {
+        return dbConfig;
+    }
+
+    public void setDbConfig(DbConfig dbConfig) {
+        this.dbConfig = dbConfig;
     }
 
     public String getDefaultBusinessType() {

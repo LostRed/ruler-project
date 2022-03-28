@@ -1,6 +1,7 @@
 package com.ylzinfo.ruler.core;
 
 import com.ylzinfo.ruler.domain.Report;
+import com.ylzinfo.ruler.domain.Result;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.factory.RuleFactory;
 
@@ -33,6 +34,22 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
         this.abstractRules.addAll(abstractRules);
         this.abstractRules.sort(Comparator.comparing(e -> e.getRuleInfo().getSeq()));
     }
+
+    /**
+     * 执行规则，生成是否违规的结果
+     *
+     * @param element 规则约束的对象
+     * @return 违规返回true，否则返回false
+     */
+    public abstract boolean check(E element);
+
+    /**
+     * 执行规则，生成结果
+     *
+     * @param element 规则约束的对象
+     * @return 结果
+     */
+    public abstract Result execute(E element);
 
     @Override
     public boolean ruleJudge(E element, AbstractRule<E> abstractRule) {

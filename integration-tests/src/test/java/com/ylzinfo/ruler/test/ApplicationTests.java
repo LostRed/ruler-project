@@ -41,10 +41,10 @@ class ApplicationTests {
         validClass.setSubValidClasses(Collections.singletonList(subValidClass));
         RulesEngine<ValidClass> rulesEngine = objectProvider.getObject();
         if (rulesEngine instanceof DetailRulesEngine) {
-            Result result = ((DetailRulesEngine<ValidClass>) rulesEngine).execute(validClass);
+            Result result = rulesEngine.execute(validClass);
             System.out.println(toJson(result));
         } else if (rulesEngine instanceof SimpleRulesEngine) {
-            boolean result = ((SimpleRulesEngine<ValidClass>) rulesEngine).execute(validClass);
+            boolean result = rulesEngine.check(validClass);
             System.out.println(result);
         }
     }
@@ -58,10 +58,10 @@ class ApplicationTests {
         subValidClass.setNumber(new BigDecimal(11));
         subValidClass.setTime(LocalDateTime.now());
         validClass.setSubValidClasses(Collections.singletonList(subValidClass));
-        RulesEngine<ValidClass> common = rulesEngineFactory.dispatch(businessType, validClass, ValidClass.class);
-        if (common instanceof DetailRulesEngine) {
+        RulesEngine<ValidClass> rulesEngine = rulesEngineFactory.dispatch(businessType, validClass, ValidClass.class);
+        if (rulesEngine instanceof DetailRulesEngine) {
             long s = System.currentTimeMillis();
-            Result result = ((DetailRulesEngine<ValidClass>) common).execute(validClass);
+            Result result = rulesEngine.execute(validClass);
             long e = System.currentTimeMillis();
             System.out.println("执行时间: " + (e - s) + " ms");
             System.out.println(toJson(result));
