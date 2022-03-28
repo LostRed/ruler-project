@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @param <E> 规则约束的参数类型
  * @author dengluwei
  */
-@Rule(ruleCode = "required", businessType = "common", desc = "规定的字段必须填写")
+@Rule(ruleCode = "required", desc = "规定的字段必须填写")
 public class RequiredFieldRule<E> extends SingleFieldRule<E> {
 
     public RequiredFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {

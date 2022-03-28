@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Configuration
-@RuleScan("com.ylzinfo.ruler.rule")
+@RuleScan("com.ylzinfo.ruler.test.rule")
 public class RulerConfig {
-    private static final String validClassName = "com.ylzinfo.ruler.domain.model.SubValidClass";
-    private static final String businessType = "common";
+    private static final String validClassName = "com.ylzinfo.ruler.test.entity.User";
+    private static final String businessType = "user";
 
     @Bean
     public ValidConfiguration validConfiguration() {
         Collection<ValidInfo> validInfos = new ArrayList<>();
-        ValidInfo validInfo1 = new ValidInfo("1", businessType, ValidType.REQUIRED.name(), "string", validClassName);
+        ValidInfo validInfo1 = new ValidInfo("1", businessType, ValidType.REQUIRED.name(), "username", validClassName);
         ValidInfo validInfo2 = new ValidInfo("2", businessType, ValidType.REQUIRED.name(), "number", validClassName);
         ValidInfo validInfo3 = new ValidInfo("3", businessType, ValidType.REQUIRED.name(), "time", validClassName);
         ValidInfo validInfo4 = new ValidInfo("4", businessType, ValidType.DICT.name(), "string", validClassName);

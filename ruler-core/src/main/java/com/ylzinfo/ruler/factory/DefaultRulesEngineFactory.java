@@ -1,5 +1,6 @@
 package com.ylzinfo.ruler.factory;
 
+import com.ylzinfo.ruler.constants.RulerConstants;
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.RulesEngine;
 import com.ylzinfo.ruler.core.RulesEngineFactory;
@@ -106,7 +107,8 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
         public T build() {
             try {
                 Constructor<T> constructor = rulesEngineType.getDeclaredConstructor(RuleFactory.class, String.class, Collection.class);
-                List<AbstractRule<E>> rules = ruleFactory.getRules(businessType, validClass);
+                List<AbstractRule<E>> rules = ruleFactory.getRules(RulerConstants.DEFAULT_BUSINESS, validClass);
+                rules.addAll(ruleFactory.getRules(businessType, validClass));
                 if (rules.isEmpty()) {
                     throw new IllegalArgumentException("Cannot get available rules.");
                 }

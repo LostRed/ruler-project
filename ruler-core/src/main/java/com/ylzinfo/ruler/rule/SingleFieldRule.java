@@ -131,6 +131,9 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 待校验的成员变量
      */
     protected Field findField(Class<?> child, String fieldName) {
+        if (child == null) {
+            return null;
+        }
         try {
             return child.getDeclaredField(fieldName);
         } catch (NoSuchFieldException ignored) {

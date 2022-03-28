@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @param <E> 规则约束的参数类型
  * @author dengluwei
  */
-@Rule(ruleCode = "number_scope", businessType = "common", desc = "规定的数值字段必须在限定的范围内")
+@Rule(ruleCode = "number_scope", desc = "规定的数值字段必须在限定的范围内")
 public class NumberScopeFieldRule<E> extends SingleFieldRule<E> {
 
     public NumberScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {

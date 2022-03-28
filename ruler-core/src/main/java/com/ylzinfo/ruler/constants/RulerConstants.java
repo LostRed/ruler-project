@@ -13,4 +13,5 @@ public class RulerConstants {
     public final static String INSERT_RULE_INFO_SQL = "insert-rule-info";
     public final static String SELECT_VALID_INFO_SQL = "select-valid-info";
     public final static String SELECT_RULE_INFO_SQL = "select-rule-info";
+    public static final String DEFAULT_BUSINESS = "common";
 }

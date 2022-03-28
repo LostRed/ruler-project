@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @param <E> 规则约束的参数类型
  * @author dengluwei
  */
-@Rule(ruleCode = "datetime_scope", businessType = "common", desc = "规定的日期时间字段必须在限定的范围内")
+@Rule(ruleCode = "datetime_scope", desc = "规定的日期时间字段必须在限定的范围内")
 public class DatetimeScopeFieldRule<E> extends SingleFieldRule<E> {
 
     public DatetimeScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {

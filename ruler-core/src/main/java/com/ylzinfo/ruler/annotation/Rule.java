@@ -1,5 +1,6 @@
 package com.ylzinfo.ruler.annotation;
 
+import com.ylzinfo.ruler.constants.RulerConstants;
 import com.ylzinfo.ruler.constants.ValidGrade;
 
 import java.lang.annotation.*;
@@ -25,7 +26,7 @@ public @interface Rule {
      *
      * @return 业务类型
      */
-    String businessType();
+    String businessType() default RulerConstants.DEFAULT_BUSINESS;
 
     /**
      * 规则校验结果等级
