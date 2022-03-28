@@ -5,6 +5,7 @@
 ### 引入依赖
 
 ```xml
+
 <dependency>
     <groupId>com.ylzinfo.ruler</groupId>
     <artifactId>ruler-spring-boot-starter</artifactId>
@@ -34,6 +35,17 @@ ruler:
     scan-base-packages: com.ylzinfo.ruler.rule #规则包扫描路径
   rules-engine-config:
     type: complete #上述提到的规则引擎类型，默认为simple
+```
+
+或者配置spring的数据源
+
+```yaml
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rules_engine
+    username: rules_engine
+    password: 123456
 ```
 
 ### 创建数据源及配置表(可选)
@@ -68,6 +80,7 @@ CREATE TABLE IF NOT EXISTS ruler_valid_info
     `valid_class_name` varchar(128) COMMENT '校验类型的全限定类名'
 ) COMMENT '校验信息配置表';
 ```
+
 valid_type的填写可参考ValidType枚举类，字母全小写。
 
 ### 编写配置类(可选)
@@ -75,6 +88,7 @@ valid_type的填写可参考ValidType枚举类，字母全小写。
 使用注解初始化方式必须配置ValidConfiguration，单实例规则引擎不能满足项目时，可自定义规则引擎。
 
 ```java
+
 @Configuration
 @RuleScan("com.ylzinfo.ruler.rule")
 public class RulerConfig {
@@ -122,6 +136,7 @@ public class RulerConfig {
 ### 规则引擎依赖注入
 
 ```java
+
 @SpringBootTest
 class ApplicationTests {
     @Autowired
@@ -148,6 +163,7 @@ class ApplicationTests {
 继承AbstractRule，重写接口方法即可实现自定义规则，若使用注解方式，需要在类上添加@Rule注解。
 
 ```java
+
 @Rule(ruleCode = "test_1", businessType = "common", desc = "number必须>0", validClass = ValidClass.class)
 public class NumberRule extends AbstractRule<ValidClass> {
 
@@ -176,6 +192,7 @@ public class NumberRule extends AbstractRule<ValidClass> {
     }
 }
 ```
+
 ### Rule注解
 
 在类上标记该注解，规则工厂在扫描包时，会将其放入缓存。
@@ -185,6 +202,7 @@ public class NumberRule extends AbstractRule<ValidClass> {
 在配置类上标记该注解，规则工厂会扫描其value指定的包路径。当使用spring时，需将该配置类注册到spring容器。
 
 ```java
+
 @Configuration
 @RuleScan("com.ylzinfo.ruler.rule")
 public class RulerConfig {

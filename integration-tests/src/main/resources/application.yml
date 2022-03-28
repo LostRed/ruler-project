@@ -1,8 +1,3 @@
-logging:
-  level:
-    root: info
-    com.ylzinfo.ruler.jdbc.JdbcUtils: debug
-
 ruler:
   default-business-type: user
   default-valid-class: com.ylzinfo.ruler.test.entity.User

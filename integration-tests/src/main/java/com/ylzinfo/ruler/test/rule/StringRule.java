@@ -1,13 +1,13 @@
-package com.ylzinfo.ruler.rule;
+package com.ylzinfo.ruler.test.rule;
 
 import com.ylzinfo.ruler.annotation.Rule;
-import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.core.AbstractRule;
+import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
-import com.ylzinfo.ruler.domain.model.ValidClass;
+import com.ylzinfo.ruler.test.domain.model.ValidClass;
 
-@Rule(ruleCode = "test_2", businessType = "common", desc = "number>0时，string不能为test", validClass = ValidClass.class)
+@Rule(ruleCode = "test_2", desc = "number>0时，string不能为test", validClass = ValidClass.class)
 public class StringRule extends AbstractRule<ValidClass> {
 
     private final static String FIELD_NAME = "string";

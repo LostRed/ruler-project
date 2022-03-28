@@ -1,13 +1,11 @@
-package com.ylzinfo.ruler;
+package com.ylzinfo.ruler.test;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylzinfo.ruler.constants.RulerConstants;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.Result;
 import com.ylzinfo.ruler.domain.ValidInfo;
-import com.ylzinfo.ruler.domain.model.SubValidClass;
-import com.ylzinfo.ruler.domain.model.ValidClass;
 import com.ylzinfo.ruler.engine.CompleteRulesEngine;
 import com.ylzinfo.ruler.engine.DetailRulesEngine;
 import com.ylzinfo.ruler.factory.DatabaseRuleFactory;
@@ -15,6 +13,8 @@ import com.ylzinfo.ruler.factory.DefaultRulesEngineFactory;
 import com.ylzinfo.ruler.factory.RuleFactory;
 import com.ylzinfo.ruler.jdbc.RulerDateSource;
 import com.ylzinfo.ruler.support.TypeReference;
+import com.ylzinfo.ruler.test.domain.model.SubValidClass;
+import com.ylzinfo.ruler.test.domain.model.ValidClass;
 import com.ylzinfo.ruler.utils.JdbcUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -37,16 +37,19 @@ public class DatabaseInitSmokeTest {
     static DetailRulesEngine<ValidClass> engine;
     static Collection<ValidInfo> validInfos;
     static ValidConfiguration validConfiguration;
+    ObjectMapper objectMapper = new ObjectMapper();
 
-    String toJson(Object object) {
-        return JSON.toJSONString(object, SerializerFeature.PrettyFormat,
-                SerializerFeature.WriteDateUseDateFormat, SerializerFeature.WriteMapNullValue,
-                SerializerFeature.WriteNullListAsEmpty);
+    String toJson(Object object) throws JsonProcessingException {
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
 
     static ValidConfiguration buildValidInfos() {
         String createTableSql = JdbcUtils.parseSql(RulerConstants.CREATE_VALID_INFO_SQL);
+        String insertDataSql1 = JdbcUtils.parseSql("insert-valid-info");
+        String insertDataSql2 = JdbcUtils.parseSql("insert-test-rule-info");
         JdbcUtils.execute(dataSource, createTableSql);
+        JdbcUtils.execute(dataSource, insertDataSql1);
+        JdbcUtils.execute(dataSource, insertDataSql2);
         String selectSql = JdbcUtils.parseSql(RulerConstants.SELECT_VALID_INFO_SQL);
         validInfos = JdbcUtils.query(dataSource, selectSql, ValidInfo.class);
         return new ValidConfiguration(validInfos);
@@ -63,7 +66,7 @@ public class DatabaseInitSmokeTest {
     }
 
     @Test
-    void sample1() {
+    void sample1() throws JsonProcessingException {
         ValidClass validClass = new ValidClass();
         validClass.setNumber(BigDecimal.ZERO);
         SubValidClass subValidClass = new SubValidClass();

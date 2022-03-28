@@ -1,20 +1,20 @@
-package com.ylzinfo.ruler;
+package com.ylzinfo.ruler.test;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.ylzinfo.ruler.config.RulerConfig;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylzinfo.ruler.constants.ValidType;
-import com.ylzinfo.ruler.factory.AnnotationRuleFactory;
-import com.ylzinfo.ruler.factory.RuleFactory;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.Result;
 import com.ylzinfo.ruler.domain.ValidInfo;
-import com.ylzinfo.ruler.domain.model.SubValidClass;
-import com.ylzinfo.ruler.domain.model.ValidClass;
 import com.ylzinfo.ruler.engine.CompleteRulesEngine;
 import com.ylzinfo.ruler.engine.DetailRulesEngine;
+import com.ylzinfo.ruler.factory.AnnotationRuleFactory;
 import com.ylzinfo.ruler.factory.DefaultRulesEngineFactory;
+import com.ylzinfo.ruler.factory.RuleFactory;
 import com.ylzinfo.ruler.support.TypeReference;
+import com.ylzinfo.ruler.test.config.RulerConfig;
+import com.ylzinfo.ruler.test.domain.model.SubValidClass;
+import com.ylzinfo.ruler.test.domain.model.ValidClass;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -31,11 +31,10 @@ public class AnnotationInitSmokeTest {
     static DetailRulesEngine<ValidClass> engine;
     static Collection<ValidInfo> validInfos;
     static ValidConfiguration validConfiguration;
+    ObjectMapper objectMapper = new ObjectMapper();
 
-    String toJson(Object object) {
-        return JSON.toJSONString(object, SerializerFeature.PrettyFormat,
-                SerializerFeature.WriteDateUseDateFormat, SerializerFeature.WriteMapNullValue,
-                SerializerFeature.WriteNullListAsEmpty);
+    String toJson(Object object) throws JsonProcessingException {
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
 
     static ValidConfiguration buildValidInfos() {
@@ -67,7 +66,7 @@ public class AnnotationInitSmokeTest {
     }
 
     @Test
-    void sample1() {
+    void sample1() throws JsonProcessingException {
         ValidClass validClass = new ValidClass();
         validClass.setNumber(BigDecimal.ZERO);
         SubValidClass subValidClass = new SubValidClass();

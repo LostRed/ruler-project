@@ -1,16 +1,13 @@
-package com.ylzinfo.ruler.domain.model;
+package com.ylzinfo.ruler.test.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
-public class ValidClass {
+public class SubValidClass {
     private String id;
     private String string;
     private BigDecimal number;
     private LocalDateTime time;
-    private List<String> stringList;
-    private List<SubValidClass> subValidClasses;
 
     public String getId() {
         return id;
@@ -42,21 +39,5 @@ public class ValidClass {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
-    }
-
-    public List<String> getStringList() {
-        return stringList;
-    }
-
-    public void setStringList(List<String> stringList) {
-        this.stringList = stringList;
-    }
-
-    public List<SubValidClass> getSubValidClasses() {
-        return subValidClasses;
-    }
-
-    public void setSubValidClasses(List<SubValidClass> subValidClasses) {
-        this.subValidClasses = subValidClasses;
     }
 }

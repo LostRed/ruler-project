@@ -1,7 +1,7 @@
 package com.ylzinfo.ruler.test;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylzinfo.ruler.core.RulesEngine;
 import com.ylzinfo.ruler.core.RulesEngineFactory;
 import com.ylzinfo.ruler.domain.Result;
@@ -17,15 +17,15 @@ class ApplicationTests {
     static String businessType = "user";
     @Autowired
     RulesEngineFactory rulesEngineFactory;
+    @Autowired
+    ObjectMapper objectMapper;
 
-    String toJson(Object object) {
-        return JSON.toJSONString(object, SerializerFeature.PrettyFormat,
-                SerializerFeature.WriteDateUseDateFormat, SerializerFeature.WriteMapNullValue,
-                SerializerFeature.WriteNullListAsEmpty);
+    String toJson(Object object) throws JsonProcessingException {
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
 
     @Test
-    void rulesEngineFactoryTest() {
+    void rulesEngineFactoryTest() throws JsonProcessingException {
         User user = new User();
         user.setPassword("12312");
         Area area = new Area();
