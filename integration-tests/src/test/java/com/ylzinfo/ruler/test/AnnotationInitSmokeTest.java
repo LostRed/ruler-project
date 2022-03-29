@@ -2,6 +2,7 @@ package com.ylzinfo.ruler.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ylzinfo.ruler.constants.RulerConstants;
 import com.ylzinfo.ruler.constants.ValidType;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.Result;
@@ -26,7 +27,7 @@ import java.util.Collections;
 
 public class AnnotationInitSmokeTest {
     static String validClassName = "com.ylzinfo.ruler.domain.model.SubValidClass";
-    static String businessType = "common";
+    static String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
     static RuleFactory ruleFactory;
     static DetailRulesEngine<ValidClass> engine;
     static Collection<ValidInfo> validInfos;

@@ -58,6 +58,11 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
     }
 
     @Override
+    public <E> RulesEngine<E> dispatch(Object validRootNode, Class<E> validClass) {
+        return this.dispatch(RulerConstants.DEFAULT_BUSINESS_TYPE, validRootNode, validClass);
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <E> RulesEngine<E> dispatch(String businessType, Object validRootNode, Class<E> validClass) {
         RulesEngine<E> rulesEngine = (RulesEngine<E>) this.rulesEngines.get(businessType);
@@ -107,7 +112,7 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
         public T build() {
             try {
                 Constructor<T> constructor = rulesEngineType.getDeclaredConstructor(RuleFactory.class, String.class, Collection.class);
-                List<AbstractRule<E>> rules = ruleFactory.getRules(RulerConstants.DEFAULT_BUSINESS, validClass);
+                List<AbstractRule<E>> rules = ruleFactory.getRules(RulerConstants.DEFAULT_BUSINESS_TYPE, validClass);
                 rules.addAll(ruleFactory.getRules(businessType, validClass));
                 if (rules.isEmpty()) {
                     throw new IllegalArgumentException("Cannot get available rules.");

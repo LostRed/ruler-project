@@ -1,6 +1,7 @@
 package com.ylzinfo.ruler.test.config;
 
 import com.ylzinfo.ruler.annotation.RuleScan;
+import com.ylzinfo.ruler.constants.RulerConstants;
 import com.ylzinfo.ruler.constants.ValidType;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.ValidInfo;
@@ -14,7 +15,7 @@ import java.util.*;
 public class RulerConfig {
     private static final String validClassName1 = "com.ylzinfo.ruler.test.entity.Country";
     private static final String validClassName2 = "com.ylzinfo.ruler.test.entity.Area";
-    private static final String businessType = "common";
+    private static final String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
 
     @Bean
     public ValidConfiguration validConfiguration() {

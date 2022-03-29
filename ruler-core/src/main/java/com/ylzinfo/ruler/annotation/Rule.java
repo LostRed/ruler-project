@@ -26,7 +26,7 @@ public @interface Rule {
      *
      * @return 业务类型
      */
-    String businessType() default RulerConstants.DEFAULT_BUSINESS;
+    String businessType() default RulerConstants.DEFAULT_BUSINESS_TYPE;
 
     /**
      * 规则校验结果等级

@@ -26,7 +26,7 @@ import java.util.Collection;
  * @author dengluwei
  */
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnProperty(prefix = "ruler", name = {"default-business-type", "default-valid-class"})
+@ConditionalOnProperty(prefix = "ruler", name = "default-valid-class")
 public class RulerAutoConfiguration {
     /**
      * 规则自动配置类

@@ -48,7 +48,8 @@ public final class ValidConfiguration {
      */
     public void addValidInfo(ValidInfo validInfo) {
         try {
-            this.getClass().getClassLoader().loadClass(validInfo.getValidClassName());
+            Class<?> validClass = this.getClass().getClassLoader().loadClass(validInfo.getValidClassName());
+            validInfo.setValidClass(validClass);
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException(e);
         }

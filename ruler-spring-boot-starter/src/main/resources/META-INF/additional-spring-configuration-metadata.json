@@ -31,7 +31,8 @@
       "name": "ruler.default-business-type",
       "type": "java.lang.String",
       "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
-      "description": "默认的业务类型."
+      "description": "默认的业务类型.",
+      "defaultValue": "common"
     },
     {
       "name": "ruler.default-valid-class",

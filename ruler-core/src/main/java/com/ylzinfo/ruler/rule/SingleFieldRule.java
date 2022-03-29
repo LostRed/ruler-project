@@ -32,7 +32,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 违规返回true，否则返回false
      */
     protected boolean check(E t, ValidInfo validInfo) {
-        Object validNode = this.findValidNode(t, validInfo.getValidClassName());
+        Object validNode = this.findValidNode(t, validInfo.getValidClass());
         //校验数组属性
         if (validNode instanceof Collection) {
             return ((Collection<?>) validNode)
@@ -52,7 +52,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 非法字段与值
      */
     protected Set<Map.Entry<String, Object>> collectIllegals(E element, ValidInfo validInfo) {
-        Object validNode = this.findValidNode(element, validInfo.getValidClassName());
+        Object validNode = this.findValidNode(element, validInfo.getValidClass());
         if (validNode instanceof Collection) {
             return ((Collection<?>) validNode).stream()
                     .flatMap(node -> this.collectFromValidNode(node, validInfo).stream())
@@ -65,17 +65,11 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
     /**
      * 找到校验的节点
      *
-     * @param validRootNode  校验根节点
-     * @param validClassName 规则约束类的全限定类名
+     * @param validRootNode 校验根节点
+     * @param validClass    规则约束类的类对象
      * @return 待校验节点的值
      */
-    protected Object findValidNode(Object validRootNode, String validClassName) {
-        Class<?> validClass;
-        try {
-            validClass = this.getClass().getClassLoader().loadClass(validClassName);
-        } catch (ClassNotFoundException e) {
-            return null;
-        }
+    protected Object findValidNode(Object validRootNode, Class<?> validClass) {
         if (validRootNode.getClass() == validClass) {
             return validRootNode;
         } else {

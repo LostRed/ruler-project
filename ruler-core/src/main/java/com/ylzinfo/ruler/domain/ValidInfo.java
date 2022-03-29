@@ -54,6 +54,10 @@ public class ValidInfo {
      * 校验类型的全限定类名
      */
     private String validClassName;
+    /**
+     * 规则约束的类
+     */
+    private Class<?> validClass;
 
     public ValidInfo() {
     }
@@ -154,6 +158,14 @@ public class ValidInfo {
 
     public void setValidClassName(String validClassName) {
         this.validClassName = validClassName;
+    }
+
+    public Class<?> getValidClass() {
+        return validClass;
+    }
+
+    public void setValidClass(Class<?> validClass) {
+        this.validClass = validClass;
     }
 
     @Override

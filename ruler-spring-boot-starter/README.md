@@ -24,7 +24,7 @@ ruler:
     url: jdbc:mysql://localhost:3306/rules_engine
     username: rules_engine
     password: 123456
-  default-business-type: common #业务类型，对应以下两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息
+  default-business-type: common #业务类型，对应以下两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息，默认为common
   default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass #规则引擎所约束的java类型
   valid-config:
     init-type: annotation #校验信息的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置校验信息，数据库方式需要引入数据库驱动包
@@ -93,7 +93,7 @@ valid_type的填写可参考ValidType枚举类，字母全小写。
 @RuleScan("com.ylzinfo.ruler.rule")
 public class RulerConfig {
     private static final String validClassName = "com.ylzinfo.ruler.domain.model.SubValidClass";
-    private static final String businessType = "common";
+    private static final String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
 
     //如果不使用数据库初始化方式，则需要在spring容器中注册一个ValidConfiguration实例对象，记得设置dict，否则创建出的规则引擎校验配置中的校验信息列表将为空
     @Bean
@@ -149,7 +149,7 @@ class ApplicationTests {
         SubValidClass subValidClass = new SubValidClass();
         subValidClass.setNumber(new BigDecimal(11));
         validClass.setSubValidClasses(Collections.singletonList(subValidClass));
-        RulesEngine<ValidClass> rulesEngine = rulesEngineFactory.dispatch("common", validClass, ValidClass.class);
+        RulesEngine<ValidClass> rulesEngine = rulesEngineFactory.dispatch(RulerConstants.DEFAULT_BUSINESS_TYPE, validClass, ValidClass.class);
         Result result = rulesEngine.execute(validClass);
         System.out.println(result);
     }

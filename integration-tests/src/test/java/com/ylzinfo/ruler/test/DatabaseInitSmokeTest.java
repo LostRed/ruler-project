@@ -30,7 +30,7 @@ public class DatabaseInitSmokeTest {
     static String url = "jdbc:mysql://localhost:3306/rules_engine";
     static String user = "rules_engine";
     static String password = "123456";
-    static String businessType = "common";
+    static String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
     static DataSource dataSource;
 
     static RuleFactory ruleFactory;
