@@ -77,11 +77,11 @@ public class RulerDateSource implements DataSource {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        if (iface.isInstance(this)) {
+    public <T> T unwrap(Class<T> interfaceClass) throws SQLException {
+        if (interfaceClass.isInstance(this)) {
             return (T) this;
         } else {
-            throw new SQLException("DataSource of type [" + this.getClass().getName() + "] cannot be unwrapped as [" + iface.getName() + "]");
+            throw new SQLException("DataSource of type [" + this.getClass().getName() + "] cannot be unwrapped as [" + interfaceClass.getName() + "]");
         }
     }
 

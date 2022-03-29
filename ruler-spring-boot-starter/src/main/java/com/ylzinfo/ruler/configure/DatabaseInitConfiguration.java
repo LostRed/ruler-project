@@ -18,6 +18,11 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 import java.util.List;
 
+/**
+ * 数据库初始化配置
+ *
+ * @author dengluwei
+ */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(DataSource.class)
 @EnableConfigurationProperties(RulerProperties.class)

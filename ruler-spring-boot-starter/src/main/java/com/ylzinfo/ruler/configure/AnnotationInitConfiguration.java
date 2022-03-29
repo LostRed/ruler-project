@@ -15,6 +15,11 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * 注解初始化配置
+ *
+ * @author dengluwei
+ */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(RulerProperties.class)
 public class AnnotationInitConfiguration {

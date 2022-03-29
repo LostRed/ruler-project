@@ -5,7 +5,9 @@ import com.ylzinfo.ruler.constants.RulesEngineType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * ruler默认规则引擎实例配置类
+ * ruler配置类
+ *
+ * @author dengluwei
  */
 @ConfigurationProperties("ruler")
 public class RulerProperties {
@@ -16,6 +18,9 @@ public class RulerProperties {
     private RuleConfig ruleConfig = new RuleConfig();
     private RulesEngineConfig rulesEngineConfig = new RulesEngineConfig();
 
+    /**
+     * 数据库配置
+     */
     public static class DbConfig {
         private String driverClassName;
         private String url;
@@ -55,6 +60,9 @@ public class RulerProperties {
         }
     }
 
+    /**
+     * 校验配置
+     */
     public static class ValidConfig {
         private String tableName = RulerConstants.ORIGIN_VALID_INFO_TABLE_NAME;
 
@@ -67,6 +75,9 @@ public class RulerProperties {
         }
     }
 
+    /**
+     * 规则配置
+     */
     public static class RuleConfig {
         private String tableName = RulerConstants.ORIGIN_RULE_INFO_TABLE_NAME;
         private String[] scanBasePackages;
@@ -88,6 +99,9 @@ public class RulerProperties {
         }
     }
 
+    /**
+     * 规则引擎配置
+     */
     public static class RulesEngineConfig {
         private String type = RulesEngineType.SIMPLE.name();
 
