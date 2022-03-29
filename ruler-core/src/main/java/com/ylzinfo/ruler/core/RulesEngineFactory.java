@@ -14,7 +14,7 @@ public interface RulesEngineFactory {
      * @param <E>           规则约束的参数类型
      * @return 规则引擎
      */
-    <E> RulesEngine<E> dispatch( Object validRootNode, Class<E> validClass);
+    <E> RulesEngine<E> dispatch(Object validRootNode, Class<E> validClass);
 
     /**
      * 分配规则引擎

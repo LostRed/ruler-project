@@ -67,7 +67,7 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
     public <E> RulesEngine<E> dispatch(String businessType, Object validRootNode, Class<E> validClass) {
         RulesEngine<E> rulesEngine = (RulesEngine<E>) this.rulesEngines.get(businessType);
         if (rulesEngine == null) {
-            throw new RuntimeException("Cannot dispatch this business, because has not available rules engine.");
+            throw new RuntimeException("Cannot dispatch this business type, because has not available rules engine.");
         }
         return rulesEngine;
     }
@@ -117,17 +117,14 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
                     rules.addAll(ruleFactory.getRules(businessType, validClass));
                 }
                 if (rules.isEmpty()) {
-                    throw new IllegalArgumentException("Cannot find available rules.");
+                    throw new IllegalArgumentException("This engine's business type is '" + businessType + "', has not available rules.");
                 }
                 return constructor.newInstance(ruleFactory, businessType, rules);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
-            } catch (InvocationTargetException e) {
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new IllegalArgumentException(e);
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
             }
-            throw new IllegalArgumentException("Fail to build Engine, because the type is illegal.");
         }
     }
 }
