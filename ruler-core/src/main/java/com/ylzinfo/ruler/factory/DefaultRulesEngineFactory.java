@@ -117,7 +117,7 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
                     rules.addAll(ruleFactory.getRules(businessType, validClass));
                 }
                 if (rules.isEmpty()) {
-                    throw new IllegalArgumentException("Cannot get available rules.");
+                    throw new IllegalArgumentException("Cannot find available rules.");
                 }
                 return constructor.newInstance(ruleFactory, businessType, rules);
             } catch (NoSuchMethodException e) {
