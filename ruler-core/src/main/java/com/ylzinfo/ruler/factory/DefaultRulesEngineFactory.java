@@ -113,7 +113,9 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
             try {
                 Constructor<T> constructor = rulesEngineType.getDeclaredConstructor(RuleFactory.class, String.class, Collection.class);
                 List<AbstractRule<E>> rules = ruleFactory.getRules(RulerConstants.DEFAULT_BUSINESS_TYPE, validClass);
-                rules.addAll(ruleFactory.getRules(businessType, validClass));
+                if (!RulerConstants.DEFAULT_BUSINESS_TYPE.equals(businessType)) {
+                    rules.addAll(ruleFactory.getRules(businessType, validClass));
+                }
                 if (rules.isEmpty()) {
                     throw new IllegalArgumentException("Cannot get available rules.");
                 }
