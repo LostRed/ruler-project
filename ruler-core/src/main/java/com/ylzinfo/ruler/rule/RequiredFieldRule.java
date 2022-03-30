@@ -40,7 +40,7 @@ public class RequiredFieldRule<E> extends SingleFieldRule<E> {
         Map<String, Object> map = validConfiguration.getRequiredValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return this.getReport(this.ruleInfo, element, map);
+        return Report.of(ruleInfo).putIllegal(map);
     }
 
     @Override
@@ -49,10 +49,10 @@ public class RequiredFieldRule<E> extends SingleFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrap(ValidInfo validInfo, Object value) {
+    protected Set<Map.Entry<String, Object>> wrap(E element, ValidInfo validInfo, Object value) {
         if (value == null) {
-            return super.wrap(validInfo, "-");
+            return super.wrap(element, validInfo, "-");
         }
-        return super.wrap(validInfo, value);
+        return super.wrap(element, validInfo, value);
     }
 }

@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
  * @author dengluwei
  */
 @Rule(ruleCode = "datetime_scope", desc = "规定的日期时间字段必须在限定的范围内")
-public class DatetimeScopeFieldRule<E> extends SingleFieldRule<E> {
+public class DatetimeScopeFieldRule<E> extends ScopeFieldRule<E> {
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public DatetimeScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         super(validConfiguration, ruleInfo);
@@ -47,7 +49,7 @@ public class DatetimeScopeFieldRule<E> extends SingleFieldRule<E> {
         Map<String, Object> map = validConfiguration.getDatetimeScopeValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return this.getReport(this.ruleInfo, element, map);
+        return Report.of(ruleInfo).putIllegal(map);
     }
 
     @Override
@@ -87,13 +89,25 @@ public class DatetimeScopeFieldRule<E> extends SingleFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrap(ValidInfo validInfo, Object value) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    protected Set<Map.Entry<String, Object>> wrap(E element, ValidInfo validInfo, Object value) {
+        LocalDateTime localDateTime = null;
+        if (value instanceof Date) {
+            Instant instant = ((Date) value).toInstant();
+            ZoneId zoneId = ZoneId.systemDefault();
+            localDateTime = instant.atZone(zoneId).toLocalDateTime();
+        } else if (value instanceof LocalDate) {
+            localDateTime = ((LocalDate) value).atStartOfDay();
+        } else if (value instanceof LocalDateTime) {
+            localDateTime = (LocalDateTime) value;
+        } else if (value instanceof String) {
+            localDateTime = DatetimeUtils.format(value.toString());
+        }
+        assert localDateTime != null;
+        String format = this.formatter.format(localDateTime);
         LocalDateTime beginTime = validInfo.getBeginTime();
         LocalDateTime endTime = validInfo.getEndTime();
-        String lower = beginTime == null ? "-∞" : formatter.format(beginTime);
-        String upper = endTime == null ? "+∞" : formatter.format(endTime);
-        value = formatter.format((LocalDateTime) value) + " (参考值: " + lower + " ~ " + upper + ")";
-        return super.wrap(validInfo, value);
+        String lower = beginTime == null ? null : this.formatter.format(localDateTime);
+        String upper = endTime == null ? null : this.formatter.format(localDateTime);
+        return super.wrap(element, validInfo, this.appendReference(format, lower, upper));
     }
 }

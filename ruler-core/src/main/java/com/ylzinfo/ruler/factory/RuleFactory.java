@@ -2,6 +2,7 @@ package com.ylzinfo.ruler.factory;
 
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.domain.RuleInfo;
 
 import java.util.List;
 
@@ -15,6 +16,20 @@ public interface RuleFactory {
      * 初始化工厂
      */
     void init();
+
+    /**
+     * 注册规则信息
+     *
+     * @param ruleInfo 规则信息
+     */
+    void registerRuleInfo(RuleInfo ruleInfo);
+
+    /**
+     * 创建规则
+     *
+     * @param ruleInfo 规则信息
+     */
+    void createRule(RuleInfo ruleInfo);
 
     /**
      * 获取规则

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @author dengluwei
  */
 @Rule(ruleCode = "number_scope", desc = "规定的数值字段必须在限定的范围内")
-public class NumberScopeFieldRule<E> extends SingleFieldRule<E> {
+public class NumberScopeFieldRule<E> extends ScopeFieldRule<E> {
 
     public NumberScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         super(validConfiguration, ruleInfo);
@@ -41,7 +41,7 @@ public class NumberScopeFieldRule<E> extends SingleFieldRule<E> {
         Map<String, Object> map = validConfiguration.getNumberScopeValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return this.getReport(this.ruleInfo, element, map);
+        return Report.of(ruleInfo).putIllegal(map);
     }
 
     @Override
@@ -64,12 +64,9 @@ public class NumberScopeFieldRule<E> extends SingleFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrap(ValidInfo validInfo, Object value) {
+    protected Set<Map.Entry<String, Object>> wrap(E element, ValidInfo validInfo, Object value) {
         BigDecimal lowerLimit = validInfo.getLowerLimit();
         BigDecimal upperLimit = validInfo.getUpperLimit();
-        String lower = lowerLimit == null ? "-∞" : lowerLimit.toString();
-        String upper = upperLimit == null ? "+∞" : upperLimit.toString();
-        value = value + " (参考值: " + lower + " ~ " + upper + ")";
-        return super.wrap(validInfo, value);
+        return super.wrap(element, validInfo, this.appendReference(value, lowerLimit, upperLimit));
     }
 }

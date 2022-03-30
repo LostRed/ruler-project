@@ -1,7 +1,6 @@
 package com.ylzinfo.ruler.factory;
 
 import com.ylzinfo.ruler.constants.RulerConstants;
-import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.utils.JdbcUtils;
@@ -41,12 +40,15 @@ public class DatabaseRuleFactory extends AbstractRuleFactory {
                 String validClassName = ruleInfo.getValidClassName();
                 Class<?> validClass = this.getClass().getClassLoader().loadClass(validClassName);
                 ruleInfo.setValidClass(validClass);
+                this.registerRuleInfo(ruleInfo);
                 this.ruleInfoMap.put(ruleInfo.getRuleCode(), ruleInfo);
-                AbstractRule<?> rule = builder(super.validConfiguration, ruleInfo, validClass).build();
-                this.rules.put(ruleInfo.getRuleCode(), rule);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
+        }
+        for (String ruleCode : this.ruleInfoMap.keySet()) {
+            RuleInfo ruleInfo = this.ruleInfoMap.get(ruleCode);
+            this.createRule(ruleInfo);
         }
     }
 }

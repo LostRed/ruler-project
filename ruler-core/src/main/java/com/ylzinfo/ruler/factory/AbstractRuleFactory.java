@@ -26,6 +26,21 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     }
 
     @Override
+    public void registerRuleInfo(RuleInfo ruleInfo) {
+        if (ruleInfoMap.containsKey(ruleInfo.getRuleCode())) {
+            throw new RuntimeException("Rule code '" + ruleInfo.getRuleCode() + "' is repeat.");
+        }
+        ruleInfoMap.put(ruleInfo.getRuleCode(), ruleInfo);
+    }
+
+    @Override
+    public void createRule(RuleInfo ruleInfo) {
+        Class<?> validClass = ruleInfo.getValidClass();
+        AbstractRule<?> rule = builder(validConfiguration, ruleInfo, validClass).build();
+        this.rules.put(ruleInfo.getRuleCode(), rule);
+    }
+
+    @Override
     public ValidConfiguration getValidConfiguration() {
         return this.validConfiguration;
     }

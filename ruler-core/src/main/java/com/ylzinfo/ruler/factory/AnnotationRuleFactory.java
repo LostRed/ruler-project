@@ -29,44 +29,19 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
         this.init();
     }
 
-    /**
-     * 注册规则信息
-     *
-     * @param ruleClass 规则信息
-     */
-    private void registerRuleInfo(Class<?> ruleClass) {
-        if (ruleClass.isAnnotationPresent(Rule.class)) {
-            Rule rule = ruleClass.getAnnotation(Rule.class);
-            RuleInfo ruleInfo = new RuleInfo();
-            ruleInfo.setRuleCode(rule.ruleCode());
-            ruleInfo.setBusinessType(rule.businessType());
-            ruleInfo.setGrade(rule.validGrade().getText());
-            ruleInfo.setDesc(rule.desc());
-            ruleInfo.setSeq(rule.seq());
-            ruleInfo.setRequired(rule.required());
-            ruleInfo.setEnable(rule.enable());
-            ruleInfo.setRuleClassName(ruleClass.getName());
-            ruleInfo.setValidClass(rule.validClass());
-            ruleInfo.setValidClassName(rule.validClass().getName());
-            if (ruleInfoMap.containsKey(ruleInfo.getRuleCode())) {
-                throw new RuntimeException("Rule code '" + ruleInfo.getRuleCode() + "' is repeat.");
-            }
-            ruleInfoMap.put(ruleInfo.getRuleCode(), ruleInfo);
-        }
-    }
-
     @Override
     public void init() {
+        String[] mergedPackages;
         Stream<String> mergedStream = Stream.concat(Stream.of("com.ylzinfo.ruler.rule"), Arrays.stream(this.anotherPackages));
         if (this.configClass != null && this.configClass.isAnnotationPresent(RuleScan.class)) {
             String[] scanBasePackages = this.configClass.getAnnotation(RuleScan.class).value();
-            String[] mergedPackages = Stream.concat(mergedStream, Stream.of(scanBasePackages))
+            mergedPackages = Stream.concat(mergedStream, Stream.of(scanBasePackages))
                     .distinct()
                     .toArray(String[]::new);
-            this.register(mergedPackages);
         } else {
-            this.register(mergedStream.distinct().toArray(String[]::new));
+            mergedPackages = mergedStream.distinct().toArray(String[]::new);
         }
+        this.register(mergedPackages);
     }
 
     /**
@@ -82,6 +57,8 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
                         .map(PackageScanUtils::loadClass)
                         .filter(Objects::nonNull)
                         .filter(AbstractRule.class::isAssignableFrom)
+                        .filter(e -> e.isAnnotationPresent(Rule.class))
+                        .map(this::buildRuleInfo)
                         .forEach(this::registerRuleInfo);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -89,9 +66,28 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
         }
         for (String ruleCode : this.ruleInfoMap.keySet()) {
             RuleInfo ruleInfo = this.ruleInfoMap.get(ruleCode);
-            Class<?> validClass = ruleInfo.getValidClass();
-            AbstractRule<?> rule = builder(validConfiguration, ruleInfo, validClass).build();
-            this.rules.put(ruleCode, rule);
+            this.createRule(ruleInfo);
         }
+    }
+
+    /**
+     * 构建规则信息
+     *
+     * @param ruleClass 规则类
+     */
+    private RuleInfo buildRuleInfo(Class<?> ruleClass) {
+        Rule rule = ruleClass.getAnnotation(Rule.class);
+        RuleInfo ruleInfo = new RuleInfo();
+        ruleInfo.setRuleCode(rule.ruleCode());
+        ruleInfo.setBusinessType(rule.businessType());
+        ruleInfo.setGrade(rule.validGrade().getText());
+        ruleInfo.setDesc(rule.desc());
+        ruleInfo.setSeq(rule.seq());
+        ruleInfo.setRequired(rule.required());
+        ruleInfo.setEnable(rule.enable());
+        ruleInfo.setRuleClassName(ruleClass.getName());
+        ruleInfo.setValidClass(rule.validClass());
+        ruleInfo.setValidClassName(rule.validClass().getName());
+        return ruleInfo;
     }
 }
