@@ -74,9 +74,9 @@ public interface Reporter<E> {
                 //属性为对象且是非基本数据类型时
                 else if (this.isNotBaseType(field.getType())) {
                     sb.append(field.getName());
-                    fieldTrace = this.fieldTrace(field.getType(), validClass, fieldName, value, sb.append(".").toString());
-                    if (fieldTrace != null) {
-                        return fieldTrace;
+                    String subFieldTrace = this.fieldTrace(field.getType(), validClass, fieldName, value, sb.append(".").toString());
+                    if (subFieldTrace != null) {
+                        return subFieldTrace;
                     }
                 }
             }
