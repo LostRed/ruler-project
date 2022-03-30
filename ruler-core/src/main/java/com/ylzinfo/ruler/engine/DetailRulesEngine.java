@@ -24,16 +24,6 @@ public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements Ite
     }
 
     @Override
-    public boolean check(E element) {
-        for (AbstractRule<E> abstractRule : this.abstractRules) {
-            if (this.ruleJudge(element, abstractRule)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     public Result execute(E element) {
         this.checkBeforeExecute(element);
         Result result = Result.of();

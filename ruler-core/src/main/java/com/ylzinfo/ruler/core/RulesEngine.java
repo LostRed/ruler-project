@@ -41,7 +41,14 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      * @param element 规则约束的对象
      * @return 违规返回true，否则返回false
      */
-    public abstract boolean check(E element);
+    public boolean check(E element) {
+        for (AbstractRule<E> abstractRule : this.abstractRules) {
+            if (this.ruleJudge(element, abstractRule)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * 执行规则，生成结果

@@ -21,14 +21,6 @@ public class SimpleRulesEngine<E> extends RulesEngine<E> {
     }
 
     @Override
-    public boolean check(E element) {
-        for (AbstractRule<E> abstractRule : this.abstractRules) {
-            return this.ruleJudge(element, abstractRule);
-        }
-        return false;
-    }
-
-    @Override
     public Result execute(E element) {
         throw new UnsupportedOperationException("execute");
     }
