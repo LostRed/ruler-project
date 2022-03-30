@@ -1,4 +1,4 @@
-package com.ylzinfo.ruler.utils;
+package com.ylzinfo.ruler.util;
 
 import java.io.File;
 import java.io.IOException;

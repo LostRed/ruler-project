@@ -20,6 +20,6 @@ public abstract class ScopeFieldRule<E> extends SingleFieldRule<E> {
     protected Object appendReference(Object value, Object lower, Object upper) {
         lower = lower == null ? "-∞" : lower;
         upper = upper == null ? "+∞" : upper;
-        return value + " (" + lower + " ~ " + upper + ")";
+        return value + " (参考值: " + lower + " ~ " + upper + ")";
     }
 }

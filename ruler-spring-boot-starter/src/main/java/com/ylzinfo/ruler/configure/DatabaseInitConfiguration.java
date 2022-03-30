@@ -7,7 +7,7 @@ import com.ylzinfo.ruler.domain.ValidInfo;
 import com.ylzinfo.ruler.factory.DatabaseRuleFactory;
 import com.ylzinfo.ruler.factory.RuleFactory;
 import com.ylzinfo.ruler.jdbc.RulerDateSource;
-import com.ylzinfo.ruler.utils.JdbcUtils;
+import com.ylzinfo.ruler.util.JdbcUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

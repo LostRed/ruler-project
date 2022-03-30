@@ -32,4 +32,3 @@ public abstract class TypeReference<T> implements Comparable<TypeReference<T>> {
         return 0;
     }
 }
-

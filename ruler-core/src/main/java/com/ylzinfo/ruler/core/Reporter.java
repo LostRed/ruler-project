@@ -57,6 +57,7 @@ public interface Reporter<E> {
         StringBuilder sb = new StringBuilder(fieldTrace);
         if (validNodeClass.equals(validClass)) {
             sb.append(fieldName);
+            return sb.toString();
         } else {
             Field[] fields = validNodeClass.getDeclaredFields();
             for (Field field : fields) {
@@ -73,11 +74,14 @@ public interface Reporter<E> {
                 //属性为对象且是非基本数据类型时
                 else if (this.isNotBaseType(field.getType())) {
                     sb.append(field.getName());
-                    return this.fieldTrace(field.getType(), validClass, fieldName, value, sb.append(".").toString());
+                    fieldTrace = this.fieldTrace(field.getType(), validClass, fieldName, value, sb.append(".").toString());
+                    if (fieldTrace != null) {
+                        return fieldTrace;
+                    }
                 }
             }
+            return null;
         }
-        return sb.toString();
     }
 
     /**

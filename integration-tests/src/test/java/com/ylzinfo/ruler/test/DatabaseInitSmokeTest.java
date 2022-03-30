@@ -15,7 +15,7 @@ import com.ylzinfo.ruler.jdbc.RulerDateSource;
 import com.ylzinfo.ruler.support.TypeReference;
 import com.ylzinfo.ruler.test.domain.model.SubValidClass;
 import com.ylzinfo.ruler.test.domain.model.ValidClass;
-import com.ylzinfo.ruler.utils.JdbcUtils;
+import com.ylzinfo.ruler.util.JdbcUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

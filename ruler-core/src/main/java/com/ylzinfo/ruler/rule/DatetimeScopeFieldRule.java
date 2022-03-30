@@ -5,7 +5,7 @@ import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.domain.ValidInfo;
-import com.ylzinfo.ruler.utils.DatetimeUtils;
+import com.ylzinfo.ruler.util.DatetimeUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -106,8 +106,8 @@ public class DatetimeScopeFieldRule<E> extends ScopeFieldRule<E> {
         String format = this.formatter.format(localDateTime);
         LocalDateTime beginTime = validInfo.getBeginTime();
         LocalDateTime endTime = validInfo.getEndTime();
-        String lower = beginTime == null ? null : this.formatter.format(localDateTime);
-        String upper = endTime == null ? null : this.formatter.format(localDateTime);
+        String lower = beginTime == null ? null : this.formatter.format(beginTime);
+        String upper = endTime == null ? null : this.formatter.format(endTime);
         return super.wrap(element, validInfo, this.appendReference(format, lower, upper));
     }
 }

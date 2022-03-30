@@ -1,5 +1,7 @@
 package com.ylzinfo.ruler.domain;
 
+import com.ylzinfo.ruler.constants.RulerConstants;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -60,6 +62,16 @@ public class ValidInfo {
     private Class<?> validClass;
 
     public ValidInfo() {
+    }
+
+    public ValidInfo(String id, String validType, String fieldName, String validClassName) {
+        this.id = id;
+        this.businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
+        this.validType = validType;
+        this.fieldName = fieldName;
+        this.required = true;
+        this.enable = true;
+        this.validClassName = validClassName;
     }
 
     public ValidInfo(String id, String businessType, String validType, String fieldName, String validClassName) {

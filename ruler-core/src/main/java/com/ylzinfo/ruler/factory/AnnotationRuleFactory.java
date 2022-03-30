@@ -5,7 +5,7 @@ import com.ylzinfo.ruler.annotation.RuleScan;
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
-import com.ylzinfo.ruler.utils.PackageScanUtils;
+import com.ylzinfo.ruler.util.PackageScanUtils;
 
 import java.io.IOException;
 import java.util.Arrays;

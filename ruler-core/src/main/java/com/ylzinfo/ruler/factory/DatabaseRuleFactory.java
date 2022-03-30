@@ -3,7 +3,7 @@ package com.ylzinfo.ruler.factory;
 import com.ylzinfo.ruler.constants.RulerConstants;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
-import com.ylzinfo.ruler.utils.JdbcUtils;
+import com.ylzinfo.ruler.util.JdbcUtils;
 
 import javax.sql.DataSource;
 import java.util.List;

@@ -6,8 +6,8 @@ import com.ylzinfo.ruler.core.RulesEngine;
 import com.ylzinfo.ruler.core.RulesEngineFactory;
 import com.ylzinfo.ruler.domain.Result;
 import com.ylzinfo.ruler.test.entity.Area;
-import com.ylzinfo.ruler.test.entity.Country;
-import com.ylzinfo.ruler.test.entity.User;
+import com.ylzinfo.ruler.test.entity.Contact;
+import com.ylzinfo.ruler.test.entity.Person;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +19,7 @@ import java.util.Date;
 
 @SpringBootTest
 class ApplicationTests {
-    static String businessType = "user";
+    static String businessType = "person";
     @Autowired
     RulesEngineFactory rulesEngineFactory;
     @Autowired
@@ -31,22 +31,21 @@ class ApplicationTests {
 
     @Test
     void rulesEngineFactoryTest() throws JsonProcessingException, ParseException {
-        User user = new User();
-        user.setPassword("12312");
-        Area area = new Area();
-        Country country = new Country();
-        Country country2 = new Country();
-        country.setName("china");
-        country2.setName("china2");
-        user.setAge(10);
+        Person person = new Person();
+        person.setCertNo("12312");
+        person.setAge(10);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date parse = simpleDateFormat.parse("1992-01-01");
-        user.setBirthday(parse);
-        area.setCountries(Arrays.asList(country, country2));
-        user.setArea(area);
-        RulesEngine<User> rulesEngine = rulesEngineFactory.dispatch(businessType, user, User.class);
+        person.setBirthday(parse);
+        Area area = new Area();
+
+        person.setArea(area);
+        Contact contact = new Contact();
+        contact.setPassword("1234");
+        person.setContacts(Arrays.asList(contact));
+        RulesEngine<Person> rulesEngine = rulesEngineFactory.dispatch(businessType, person, Person.class);
         long s = System.currentTimeMillis();
-        Result result = rulesEngine.execute(user);
+        Result result = rulesEngine.execute(person);
         System.out.println(toJson(result));
         long e = System.currentTimeMillis();
         System.out.println("执行时间: " + (e - s) + " ms");

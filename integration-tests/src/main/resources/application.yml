@@ -1,6 +1,6 @@
 ruler:
-  default-business-type: user
-  default-valid-class: com.ylzinfo.ruler.test.entity.User
+  default-business-type: person
+  default-valid-class: com.ylzinfo.ruler.test.entity.Person
   valid-config:
     init-type: annotation
     table-name: ruler_valid_info

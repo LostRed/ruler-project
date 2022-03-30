@@ -40,7 +40,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
             else {
                 return this.valid(validNode, validInfo);
             }
-        } catch (IllegalAccessException ignored) {
+        } catch (IllegalAccessException | NoSuchFieldException ignored) {
             return false;
         }
     }
@@ -62,7 +62,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
             } else {
                 return this.collectFromValidNode(element, validNode, validInfo);
             }
-        } catch (IllegalAccessException ignored) {
+        } catch (IllegalAccessException | NoSuchFieldException ignored) {
             return new HashSet<>();
         }
     }
@@ -74,8 +74,9 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @param validClass 规则约束类的类对象
      * @return 待校验节点的值
      * @throws IllegalAccessException 无法获取字段的值
+     * @throws NoSuchFieldException   无法在类中找到字段
      */
-    protected Object findValidNode(Object validNode, Class<?> validClass) throws IllegalAccessException {
+    protected Object findValidNode(Object validNode, Class<?> validClass) throws IllegalAccessException, NoSuchFieldException {
         if (validNode.getClass() == validClass) {
             return validNode;
         } else {
@@ -94,10 +95,13 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
                 }
                 //属性为对象且是非基本数据类型时
                 else if (this.isNotBaseType(field.getType())) {
-                    return this.findValidNode(field.get(validNode), validClass);
+                    try {
+                        return this.findValidNode(field.get(validNode), validClass);
+                    } catch (NoSuchFieldException ignored) {
+                    }
                 }
             }
-            throw new IllegalAccessException("Cannot find the validClass in this validNode.");
+            throw new NoSuchFieldException("Cannot find the validClass in this validNode.");
         }
     }
 

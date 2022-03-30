@@ -1,4 +1,4 @@
-package com.ylzinfo.ruler.utils;
+package com.ylzinfo.ruler.util;
 
 import javax.sql.DataSource;
 import java.io.ByteArrayOutputStream;
