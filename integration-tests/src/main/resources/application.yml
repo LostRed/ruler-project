@@ -17,3 +17,7 @@ spring:
     url: jdbc:mysql://localhost:3306/rules_engine
     username: rules_engine
     password: 123456
+
+logging:
+  level:
+    com.ylzinfo.ruler.rule: debug

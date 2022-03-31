@@ -42,7 +42,7 @@ public class AbstractRuleProxy implements MethodInterceptor {
         Object result = methodProxy.invoke(target, args);
         if ("buildReport".equals(method.getName()) && result instanceof Report) {
             Report report = (Report) result;
-            logger.info(report.getIllegals().toString());
+            logger.config(report.getIllegals().toString());
         }
         return result;
     }
