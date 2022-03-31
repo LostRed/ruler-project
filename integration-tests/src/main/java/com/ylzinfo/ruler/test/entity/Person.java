@@ -1,5 +1,7 @@
 package com.ylzinfo.ruler.test.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +10,7 @@ public class Person {
     private String name;
     private String gender;
     private Integer age;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date birthday;
     private Area area;
     private List<Contact> contacts;

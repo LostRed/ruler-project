@@ -7,10 +7,7 @@ import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.domain.ValidInfo;
 import com.ylzinfo.ruler.util.DatetimeUtils;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
@@ -24,11 +21,12 @@ import java.util.stream.Collectors;
  * @author dengluwei
  */
 @Rule(ruleCode = "datetime_scope", desc = "规定的日期时间字段必须在限定的范围内")
-public class DatetimeScopeFieldRule<E> extends ScopeFieldRule<E> {
+public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public DatetimeScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
+    public DateTimeScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
         super(validConfiguration, ruleInfo);
     }
 
@@ -103,11 +101,21 @@ public class DatetimeScopeFieldRule<E> extends ScopeFieldRule<E> {
             localDateTime = DatetimeUtils.format(value.toString());
         }
         assert localDateTime != null;
-        String format = this.formatter.format(localDateTime);
+        String format;
+        String lower;
+        String upper;
         LocalDateTime beginTime = validInfo.getBeginTime();
         LocalDateTime endTime = validInfo.getEndTime();
-        String lower = beginTime == null ? null : this.formatter.format(beginTime);
-        String upper = endTime == null ? null : this.formatter.format(endTime);
+        System.out.println(localDateTime.atZone(ZoneId.systemDefault()).toLocalDateTime());
+        if (localDateTime.isEqual(localDateTime.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toLocalDateTime())) {
+            format = this.dateFormatter.format(localDateTime);
+            lower = beginTime == null ? null : this.dateFormatter.format(beginTime);
+            upper = endTime == null ? null : this.dateFormatter.format(endTime);
+        } else {
+            format = this.dateTimeFormatter.format(localDateTime);
+            lower = beginTime == null ? null : this.dateTimeFormatter.format(beginTime);
+            upper = endTime == null ? null : this.dateTimeFormatter.format(endTime);
+        }
         return super.wrap(element, validInfo, this.appendReference(format, lower, upper));
     }
 }

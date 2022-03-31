@@ -1,6 +1,7 @@
 package com.ylzinfo.ruler.factory;
 
 import com.ylzinfo.ruler.core.AbstractRule;
+import com.ylzinfo.ruler.core.AbstractRuleProxy;
 import com.ylzinfo.ruler.core.ValidConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 
@@ -103,7 +104,10 @@ public abstract class AbstractRuleFactory implements RuleFactory {
                 Constructor<?> constructor = ruleClass.getDeclaredConstructor(ValidConfiguration.class, RuleInfo.class);
                 Object object = constructor.newInstance(validConfiguration, ruleInfo);
                 if (object instanceof AbstractRule<?>) {
-                    return (AbstractRule<E>) object;
+                    //创建代理器
+                    AbstractRuleProxy proxy = new AbstractRuleProxy((AbstractRule<E>) object);
+                    //拿到代理对象
+                    return proxy.newProxyInstance();
                 }
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException("Internal error: " + ruleInfo.getRuleClassName() + " cannot be instantiated.", e);

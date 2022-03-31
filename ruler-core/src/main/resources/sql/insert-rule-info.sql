@@ -7,4 +7,4 @@ VALUES ('common_1', 'common', '违规', '规定的字段必须填写', 0, true, 
      , ('common_3', 'common', '违规', '规定的数值字段必须在限定的范围内', 2, true, true, 'com.ylzinfo.ruler.rule.NumberScopeFieldRule',
         'java.lang.Object')
      , ('common_4', 'common', '违规', '规定的日期时间字段必须在限定的范围内', 3, true, true,
-        'com.ylzinfo.ruler.rule.DatetimeScopeFieldRule', 'java.lang.Object')
+        'com.ylzinfo.ruler.rule.DateTimeScopeFieldRule', 'java.lang.Object')

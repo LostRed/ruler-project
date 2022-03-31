@@ -22,4 +22,4 @@
 - RequiredFieldRule 必填字段规则
 - DictFieldRule 字典字段规则
 - NumberScopeFieldRule 数值范围字段规则
-- DatetimeScopeFieldRule 日期时间范围字段规则
+- DateTimeScopeFieldRule 日期时间范围字段规则
