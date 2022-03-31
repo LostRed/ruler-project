@@ -38,7 +38,6 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
     @Override
     public boolean judge(E element) {
         return validConfiguration.getDatetimeScopeValidInfos().stream()
-                .filter(validInfo -> validInfo.getBusinessType().equals(this.ruleInfo.getBusinessType()))
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 

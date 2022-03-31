@@ -32,7 +32,6 @@ public class NumberScopeFieldRule<E> extends ScopeFieldRule<E> {
     @Override
     public boolean judge(E element) {
         return validConfiguration.getNumberScopeValidInfos().stream()
-                .filter(validInfo -> validInfo.getBusinessType().equals(this.ruleInfo.getBusinessType()))
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 

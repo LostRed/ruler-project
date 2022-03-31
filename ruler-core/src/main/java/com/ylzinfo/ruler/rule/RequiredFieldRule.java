@@ -31,7 +31,6 @@ public class RequiredFieldRule<E> extends SingleFieldRule<E> {
     @Override
     public boolean judge(E element) {
         return validConfiguration.getRequiredValidInfos().stream()
-                .filter(validInfo -> validInfo.getBusinessType().equals(this.ruleInfo.getBusinessType()))
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
