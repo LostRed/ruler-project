@@ -2,10 +2,10 @@ ruler:
   default-business-type: person
   default-valid-class: com.ylzinfo.ruler.test.entity.Person
   valid-config:
-    init-type: annotation
+    init-type: db
     table-name: ruler_valid_info
   rule-config:
-    init-type: annotation
+    init-type: db
     table-name: ruler_rule_info
     scan-base-packages: com.ylzinfo.ruler.rule
   rules-engine-config:

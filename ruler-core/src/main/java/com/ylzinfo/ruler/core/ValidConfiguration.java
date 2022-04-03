@@ -47,11 +47,13 @@ public final class ValidConfiguration {
      * @param validInfo 校验信息
      */
     public void addValidInfo(ValidInfo validInfo) {
-        try {
-            Class<?> validClass = this.getClass().getClassLoader().loadClass(validInfo.getValidClassName());
-            validInfo.setValidClass(validClass);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(e);
+        if (validInfo.getValidClass() == null) {
+            try {
+                Class<?> validClass = this.getClass().getClassLoader().loadClass(validInfo.getValidClassName());
+                validInfo.setValidClass(validClass);
+            } catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException(e);
+            }
         }
         if (ValidType.REQUIRED.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
             this.requiredValidInfos.add(validInfo);

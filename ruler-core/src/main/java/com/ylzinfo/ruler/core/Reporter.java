@@ -39,6 +39,6 @@ public interface Reporter<E> {
         } catch (NoSuchFieldException e) {
             map.put(fieldName, value);
         }
-        return Report.of(ruleInfo).putIllegal(map);
+        return Report.of(ruleInfo).putIllegals(map);
     }
 }

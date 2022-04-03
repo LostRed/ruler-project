@@ -5,7 +5,7 @@ package com.ylzinfo.ruler.domain;
  *
  * @author dengluwei
  */
-public class RuleInfo {
+public class RuleInfo implements Cloneable {
     /**
      * 规则编号
      */
@@ -125,5 +125,10 @@ public class RuleInfo {
 
     public void setValidClass(Class<?> validClass) {
         this.validClass = validClass;
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

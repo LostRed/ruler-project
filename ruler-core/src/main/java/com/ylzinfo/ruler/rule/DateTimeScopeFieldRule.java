@@ -46,7 +46,7 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
         Map<String, Object> map = validConfiguration.getDatetimeScopeValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        return Report.of(ruleInfo).putIllegal(map);
+        return Report.of(ruleInfo).putIllegals(map);
     }
 
     @Override

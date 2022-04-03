@@ -46,10 +46,10 @@ public class DatabaseInitSmokeTest {
     static ValidConfiguration buildValidInfos() {
         String createTableSql = JdbcUtils.parseSql(RulerConstants.CREATE_VALID_INFO_SQL);
         String insertDataSql1 = JdbcUtils.parseSql("insert-valid-info");
-        String insertDataSql2 = JdbcUtils.parseSql("insert-test-rule-info");
+//        String insertDataSql2 = JdbcUtils.parseSql("insert-test-rule-info");
         JdbcUtils.execute(dataSource, createTableSql);
         JdbcUtils.execute(dataSource, insertDataSql1);
-        JdbcUtils.execute(dataSource, insertDataSql2);
+//        JdbcUtils.execute(dataSource, insertDataSql2);
         String selectSql = JdbcUtils.parseSql(RulerConstants.SELECT_VALID_INFO_SQL);
         validInfos = JdbcUtils.query(dataSource, selectSql, ValidInfo.class);
         return new ValidConfiguration(validInfos);

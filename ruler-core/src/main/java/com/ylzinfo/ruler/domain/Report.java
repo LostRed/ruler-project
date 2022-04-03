@@ -1,5 +1,6 @@
 package com.ylzinfo.ruler.domain;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -13,52 +14,49 @@ public class Report {
     /**
      * 规则信息
      */
-    private RuleInfo ruleInfo;
+    private final RuleInfo ruleInfo;
     /**
      * 非法字段与值的映射
      */
-    private Map<String, Object> illegals = new HashMap<>();
-
-    private Report() {
-    }
+    private final Map<String, Object> illegals;
 
     public static Report of(RuleInfo ruleInfo) {
-        Report report = new Report();
-        report.ruleInfo = ruleInfo;
-        return report;
+        return new Report(ruleInfo);
     }
 
-    public Report putIllegal(String fieldName, Object value) {
+    private Report(RuleInfo ruleInfo) {
+        this.ruleInfo = ruleInfo;
+        this.illegals = new HashMap<>();
+    }
+
+    public Report putIllegals(String fieldName, Object value) {
         this.illegals.put(fieldName, value);
         return this;
     }
 
-    public Report putIllegal(Set<Map.Entry<String, Object>> entries) {
+    public Report putIllegals(Set<Map.Entry<String, Object>> entries) {
         for (Map.Entry<String, Object> entry : entries) {
             this.illegals.put(entry.getKey(), entry.getValue());
         }
         return this;
     }
 
-    public Report putIllegal(Map<String, Object> map) {
+    public Report putIllegals(Map<String, Object> map) {
         this.illegals.putAll(map);
         return this;
     }
 
     public RuleInfo getRuleInfo() {
-        return ruleInfo;
-    }
-
-    public void setRuleInfo(RuleInfo ruleInfo) {
-        this.ruleInfo = ruleInfo;
+        try {
+            return (RuleInfo) ruleInfo.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Map<String, Object> getIllegals() {
-        return illegals;
-    }
-
-    public void setIllegals(Map<String, Object> illegals) {
-        this.illegals = illegals;
+        return Collections.unmodifiableMap(this.illegals);
     }
 
     @Override
