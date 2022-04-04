@@ -1,5 +1,9 @@
 package com.ylzinfo.ruler.domain;
 
+import com.ylzinfo.ruler.annotation.Rule;
+
+import java.util.Objects;
+
 /**
  * 规则信息
  *
@@ -47,84 +51,106 @@ public class RuleInfo implements Cloneable {
      */
     private Class<?> validClass;
 
-    public String getRuleCode() {
-        return ruleCode;
+    public static RuleInfo of(Rule rule, Class<?> ruleClass) {
+        return of(rule.ruleCode(), rule.businessType(), rule.validGrade().getText(), rule.desc(),
+                rule.seq(), rule.required(), rule.enable(), ruleClass.getName(), rule.validClass().getName());
     }
 
-    public void setRuleCode(String ruleCode) {
+    public static RuleInfo of(String ruleCode, String businessType, String grade, String desc,
+                              Integer seq, boolean required, boolean enable,
+                              String ruleClassName, String validClassName) {
+        return new RuleInfo(ruleCode, businessType, grade, desc, seq, required, enable, ruleClassName, validClassName);
+    }
+
+    public RuleInfo() {
+    }
+
+    private RuleInfo(String ruleCode, String businessType, String grade, String desc,
+                     Integer seq, boolean required, boolean enable,
+                     String ruleClassName, String validClassName) {
         this.ruleCode = ruleCode;
+        this.businessType = businessType;
+        this.grade = grade;
+        this.desc = desc;
+        this.seq = seq;
+        this.required = required;
+        this.enable = enable;
+        this.ruleClassName = ruleClassName;
+        this.validClassName = validClassName;
+        try {
+            this.validClass = this.getClass().getClassLoader().loadClass(validClassName);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public String getRuleCode() {
+        return ruleCode;
     }
 
     public String getBusinessType() {
         return businessType;
     }
 
-    public void setBusinessType(String businessType) {
-        this.businessType = businessType;
-    }
-
     public String getGrade() {
         return grade;
-    }
-
-    public void setGrade(String grade) {
-        this.grade = grade;
     }
 
     public String getDesc() {
         return desc;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
     public Integer getSeq() {
         return seq;
-    }
-
-    public void setSeq(Integer seq) {
-        this.seq = seq;
     }
 
     public boolean isRequired() {
         return required;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
     public boolean isEnable() {
         return enable;
-    }
-
-    public void setEnable(boolean enable) {
-        this.enable = enable;
     }
 
     public String getRuleClassName() {
         return ruleClassName;
     }
 
-    public void setRuleClassName(String ruleClassName) {
-        this.ruleClassName = ruleClassName;
-    }
-
     public String getValidClassName() {
         return validClassName;
-    }
-
-    public void setValidClassName(String validClassName) {
-        this.validClassName = validClassName;
     }
 
     public Class<?> getValidClass() {
         return validClass;
     }
 
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
     public void setValidClass(Class<?> validClass) {
         this.validClass = validClass;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        RuleInfo ruleInfo = (RuleInfo) o;
+        return Objects.equals(ruleCode, ruleInfo.ruleCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ruleCode);
     }
 
     @Override

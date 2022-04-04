@@ -9,8 +9,8 @@ import com.ylzinfo.ruler.domain.ValidInfo;
 import com.ylzinfo.ruler.engine.CompleteRulesEngine;
 import com.ylzinfo.ruler.engine.DetailRulesEngine;
 import com.ylzinfo.ruler.factory.AnnotationRuleFactory;
-import com.ylzinfo.ruler.factory.DefaultRulesEngineFactory;
 import com.ylzinfo.ruler.factory.RuleFactory;
+import com.ylzinfo.ruler.factory.RulesEngineFactory;
 import com.ylzinfo.ruler.support.TypeReference;
 import com.ylzinfo.ruler.test.config.RulerConfig;
 import com.ylzinfo.ruler.test.domain.model.SubValidClass;
@@ -60,7 +60,7 @@ public class AnnotationInitSmokeTest {
         ruleFactory = new AnnotationRuleFactory(validConfiguration, RulerConfig.class);
         TypeReference<CompleteRulesEngine<ValidClass>> typeReference = new TypeReference<CompleteRulesEngine<ValidClass>>() {
         };
-        engine = DefaultRulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();
+        engine = RulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();
     }
 
     @Test

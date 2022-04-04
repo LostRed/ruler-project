@@ -36,8 +36,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
 
     @Override
     public void createRule(RuleInfo ruleInfo) {
-        Class<?> validClass = ruleInfo.getValidClass();
-        AbstractRule<?> rule = builder(validConfiguration, ruleInfo, validClass).build();
+        AbstractRule<?> rule = this.builder(validConfiguration, ruleInfo).build();
         this.rules.put(ruleInfo.getRuleCode(), rule);
     }
 
@@ -72,12 +71,11 @@ public abstract class AbstractRuleFactory implements RuleFactory {
      *
      * @param validConfiguration 规则配置
      * @param ruleInfo           规则信息
-     * @param validClass         规则约束类的类对象
      * @param <E>                规则约束的参数类型
      * @return 某个规则的建造者实例对象
      */
-    public static <E> Builder<E> builder(ValidConfiguration validConfiguration, RuleInfo ruleInfo, Class<E> validClass) {
-        return new Builder<>(validConfiguration, ruleInfo, validClass);
+    public <E> Builder<E> builder(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
+        return new Builder<>(validConfiguration, ruleInfo);
     }
 
     /**
@@ -86,20 +84,15 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     public static class Builder<E> {
         private final ValidConfiguration validConfiguration;
         private final RuleInfo ruleInfo;
-        private final Class<E> validClass;
 
-        public Builder(ValidConfiguration validConfiguration, RuleInfo ruleInfo, Class<E> validClass) {
+        public Builder(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
             this.validConfiguration = validConfiguration;
             this.ruleInfo = ruleInfo;
-            this.validClass = validClass;
         }
 
         @SuppressWarnings("unchecked")
         public AbstractRule<E> build() {
             try {
-                if (!validClass.equals(ruleInfo.getValidClass())) {
-                    throw new IllegalArgumentException("Rule info's 'ruleClassName' is different from the parameter passed in.");
-                }
                 Class<?> ruleClass = this.getClass().getClassLoader().loadClass(ruleInfo.getRuleClassName());
                 Constructor<?> constructor = ruleClass.getDeclaredConstructor(ValidConfiguration.class, RuleInfo.class);
                 Object object = constructor.newInstance(validConfiguration, ruleInfo);

@@ -4,12 +4,12 @@ import com.ylzinfo.ruler.configure.AnnotationInitConfiguration;
 import com.ylzinfo.ruler.configure.DatabaseInitConfiguration;
 import com.ylzinfo.ruler.constants.RulesEngineType;
 import com.ylzinfo.ruler.core.RulesEngine;
-import com.ylzinfo.ruler.core.RulesEngineFactory;
 import com.ylzinfo.ruler.engine.CompleteRulesEngine;
 import com.ylzinfo.ruler.engine.IncompleteRulesEngine;
 import com.ylzinfo.ruler.engine.SimpleRulesEngine;
 import com.ylzinfo.ruler.factory.DefaultRulesEngineFactory;
 import com.ylzinfo.ruler.factory.RuleFactory;
+import com.ylzinfo.ruler.factory.RulesEngineFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -51,7 +51,7 @@ public class RulerAutoConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
-        public RulesEngineFactory rulesEngineFactory(Collection<RulesEngine<?>> rulesEngines) {
+        public RulesEngineFactory defaultRulesEngineFactory(Collection<RulesEngine<?>> rulesEngines) {
             return new DefaultRulesEngineFactory(rulesEngines);
         }
 
@@ -64,11 +64,11 @@ public class RulerAutoConfiguration {
             String defaultBusinessType = rulerProperties.getDefaultBusinessType();
             Class<?> defaultValidClass = rulerProperties.getDefaultValidClass();
             if (RulesEngineType.COMPLETE.equals(RulesEngineType.valueOf(type))) {
-                return DefaultRulesEngineFactory.builder(ruleFactory, defaultBusinessType, CompleteRulesEngine.class, defaultValidClass).build();
+                return RulesEngineFactory.builder(ruleFactory, defaultBusinessType, CompleteRulesEngine.class, defaultValidClass).build();
             } else if (RulesEngineType.INCOMPLETE.equals(RulesEngineType.valueOf(type))) {
-                return DefaultRulesEngineFactory.builder(ruleFactory, defaultBusinessType, IncompleteRulesEngine.class, defaultValidClass).build();
+                return RulesEngineFactory.builder(ruleFactory, defaultBusinessType, IncompleteRulesEngine.class, defaultValidClass).build();
             } else {
-                return DefaultRulesEngineFactory.builder(ruleFactory, defaultBusinessType, SimpleRulesEngine.class, defaultValidClass).build();
+                return RulesEngineFactory.builder(ruleFactory, defaultBusinessType, SimpleRulesEngine.class, defaultValidClass).build();
             }
         }
     }

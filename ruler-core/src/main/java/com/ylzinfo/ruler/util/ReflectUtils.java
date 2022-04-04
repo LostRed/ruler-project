@@ -4,7 +4,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.time.temporal.Temporal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 反射工具
@@ -153,7 +156,7 @@ public final class ReflectUtils {
                     if (include(field, assigned)) {
                         field.setAccessible(true);
                         stringBuilder.append(field.getName())
-                                .append("[").append(value.hashCode()).append("]")
+                                .append("[").append(Integer.toHexString(value.hashCode())).append("]")
                                 .append(".").append(fieldName);
                         targetFields.add(field);
                     }

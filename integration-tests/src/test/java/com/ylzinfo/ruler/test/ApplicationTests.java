@@ -3,7 +3,7 @@ package com.ylzinfo.ruler.test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylzinfo.ruler.core.RulesEngine;
-import com.ylzinfo.ruler.core.RulesEngineFactory;
+import com.ylzinfo.ruler.factory.RulesEngineFactory;
 import com.ylzinfo.ruler.domain.Result;
 import com.ylzinfo.ruler.test.entity.Area;
 import com.ylzinfo.ruler.test.entity.Contact;
@@ -35,7 +35,7 @@ class ApplicationTests {
         person.setCertNo("12312");
         person.setAge(10);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date parse = simpleDateFormat.parse("1992-01-01");
+        Date parse = simpleDateFormat.parse("2011-01-01");
         person.setBirthday(parse);
         Area area = new Area();
 

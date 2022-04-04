@@ -8,12 +8,13 @@ import com.ylzinfo.ruler.test.entity.Area;
 import com.ylzinfo.ruler.test.entity.Contact;
 import com.ylzinfo.ruler.test.entity.Person;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
-//@Configuration
+@Configuration
 @RuleScan("com.ylzinfo.ruler.test.rule")
 public class RulerConfig {
 

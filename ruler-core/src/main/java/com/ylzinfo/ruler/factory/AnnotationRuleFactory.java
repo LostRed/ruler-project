@@ -77,17 +77,6 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
      */
     private RuleInfo buildRuleInfo(Class<?> ruleClass) {
         Rule rule = ruleClass.getAnnotation(Rule.class);
-        RuleInfo ruleInfo = new RuleInfo();
-        ruleInfo.setRuleCode(rule.ruleCode());
-        ruleInfo.setBusinessType(rule.businessType());
-        ruleInfo.setGrade(rule.validGrade().getText());
-        ruleInfo.setDesc(rule.desc());
-        ruleInfo.setSeq(rule.seq());
-        ruleInfo.setRequired(rule.required());
-        ruleInfo.setEnable(rule.enable());
-        ruleInfo.setRuleClassName(ruleClass.getName());
-        ruleInfo.setValidClass(rule.validClass());
-        ruleInfo.setValidClassName(rule.validClass().getName());
-        return ruleInfo;
+        return RuleInfo.of(rule, ruleClass);
     }
 }
