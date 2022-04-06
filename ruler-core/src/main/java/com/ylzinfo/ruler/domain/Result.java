@@ -3,6 +3,7 @@ package com.ylzinfo.ruler.domain;
 import com.ylzinfo.ruler.constants.ValidGrade;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -99,7 +100,7 @@ public class Result {
     }
 
     public List<Report> getReports() {
-        return reports;
+        return Collections.unmodifiableList(this.reports);
     }
 
     @Override

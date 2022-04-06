@@ -1,9 +1,6 @@
 package com.ylzinfo.ruler.domain;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 规则执行报告
@@ -50,9 +47,8 @@ public class Report {
         try {
             return (RuleInfo) ruleInfo.clone();
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public Map<String, Object> getIllegals() {

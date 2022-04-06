@@ -62,7 +62,28 @@ public class RuleInfo implements Cloneable {
         return new RuleInfo(ruleCode, businessType, grade, desc, seq, required, enable, ruleClassName, validClassName);
     }
 
+    public static RuleInfo of(String ruleCode, String businessType, String grade, String desc,
+                              Integer seq, boolean required, boolean enable,
+                              String ruleClassName, Class<?> validClass) {
+        return new RuleInfo(ruleCode, businessType, grade, desc, seq, required, enable, ruleClassName, validClass);
+    }
+
     public RuleInfo() {
+    }
+
+    private RuleInfo(String ruleCode, String businessType, String grade, String desc,
+                     Integer seq, boolean required, boolean enable,
+                     String ruleClassName, Class<?> validClass) {
+        this.ruleCode = ruleCode;
+        this.businessType = businessType;
+        this.grade = grade;
+        this.desc = desc;
+        this.seq = seq;
+        this.required = required;
+        this.enable = enable;
+        this.ruleClassName = ruleClassName;
+        this.validClassName = validClass.getName();
+        this.validClass = validClass;
     }
 
     private RuleInfo(String ruleCode, String businessType, String grade, String desc,
