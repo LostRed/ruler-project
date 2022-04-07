@@ -1,5 +1,6 @@
 package com.ylzinfo.ruler.core;
 
+import com.ylzinfo.ruler.constants.ValidGrade;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import net.sf.cglib.proxy.Enhancer;
@@ -7,6 +8,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -42,7 +44,18 @@ public class AbstractRuleProxy implements MethodInterceptor {
         Object result = methodProxy.invoke(target, args);
         if ("buildReport".equals(method.getName()) && result instanceof Report) {
             Report report = (Report) result;
-            logger.config(report.getIllegals().toString());
+            Map<String, Object> illegals = report.getIllegals();
+            if (illegals == null || illegals.isEmpty()) {
+                logger.config("grade=" + ValidGrade.QUALIFIED.getText() + ", report=" + illegals);
+            } else {
+                logger.config("grade=" + report.getRuleInfo().getGrade() + ", report=" + illegals);
+            }
+        } else if ("judge".equals(method.getName()) && result instanceof Boolean) {
+            if ((Boolean) result) {
+                logger.config("grade=" + target.getRuleInfo().getGrade());
+            } else {
+                logger.config("grade=" + ValidGrade.QUALIFIED.getText());
+            }
         }
         return result;
     }

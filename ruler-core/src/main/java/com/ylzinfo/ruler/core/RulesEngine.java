@@ -6,6 +6,7 @@ import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.factory.RuleFactory;
 
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -27,12 +28,17 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      * 规则集合
      */
     protected final LinkedList<AbstractRule<E>> abstractRules = new LinkedList<>();
+    /**
+     * 日志
+     */
+    protected final Logger logger;
 
     public RulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
         this.ruleFactory = ruleFactory;
         this.businessType = businessType;
         this.abstractRules.addAll(abstractRules);
         this.abstractRules.sort(Comparator.comparing(e -> e.getRuleInfo().getSeq()));
+        this.logger = Logger.getLogger(this.getClass().getName());
     }
 
     /**
@@ -42,6 +48,8 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      * @return 违规返回true，否则返回false
      */
     public boolean check(E element) {
+        this.checkBefore(element);
+        logger.config("invoke method=check, valid node=" + element);
         for (AbstractRule<E> abstractRule : this.abstractRules) {
             if (this.ruleJudge(element, abstractRule)) {
                 return true;
@@ -82,7 +90,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      *
      * @param element 规则约束的对象
      */
-    protected void checkBeforeExecute(E element) {
+    protected void checkBefore(E element) {
         if (element == null) {
             throw new NullPointerException("The valid node is null.");
         }

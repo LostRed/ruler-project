@@ -105,7 +105,6 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
         String upper;
         LocalDateTime beginTime = validInfo.getBeginTime();
         LocalDateTime endTime = validInfo.getEndTime();
-        System.out.println(localDateTime.atZone(ZoneId.systemDefault()).toLocalDateTime());
         if (localDateTime.isEqual(localDateTime.toLocalDate().atStartOfDay(ZoneId.systemDefault()).toLocalDateTime())) {
             format = this.dateFormatter.format(localDateTime);
             lower = beginTime == null ? null : this.dateFormatter.format(beginTime);

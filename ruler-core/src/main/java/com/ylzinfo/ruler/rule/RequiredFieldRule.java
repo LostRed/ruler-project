@@ -49,9 +49,6 @@ public class RequiredFieldRule<E> extends SingleFieldRule<E> {
 
     @Override
     protected Set<Map.Entry<String, Object>> wrap(E element, ValidInfo validInfo, Object value) {
-        if (value == null) {
-            return super.wrap(element, validInfo, "-");
-        }
-        return super.wrap(element, validInfo, value);
+        return super.wrap(element, validInfo, "-");
     }
 }

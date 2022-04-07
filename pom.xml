@@ -6,7 +6,7 @@
     <groupId>com.ylzinfo.ruler</groupId>
     <artifactId>ruler-project</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <modules>
         <module>integration-tests</module>
