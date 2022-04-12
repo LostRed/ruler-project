@@ -10,7 +10,7 @@
  * @see com.ylzinfo.ruler.core.AbstractRule
  * @see com.ylzinfo.ruler.rule.RequiredFieldRule
  * @see com.ylzinfo.ruler.rule.DictFieldRule
- * @see com.ylzinfo.ruler.core.ValidConfiguration
+ * @see com.ylzinfo.ruler.core.GlobalConfiguration
  * @see com.ylzinfo.ruler.domain.ValidInfo
  */
 package com.ylzinfo.ruler.rule;

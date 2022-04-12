@@ -49,7 +49,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      */
     public boolean check(E element) {
         this.checkBefore(element);
-        logger.config("invoke method=check, valid node=" + element);
+        logger.config("invoke method=check, valid object=" + element);
         for (AbstractRule<E> abstractRule : this.abstractRules) {
             if (this.ruleJudge(element, abstractRule)) {
                 return true;

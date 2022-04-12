@@ -2,7 +2,7 @@ package com.ylzinfo.ruler.configure;
 
 import com.ylzinfo.ruler.annotation.RuleScan;
 import com.ylzinfo.ruler.autoconfigure.RulerProperties;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.factory.AnnotationRuleFactory;
 import com.ylzinfo.ruler.factory.RuleFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -34,14 +34,14 @@ public class AnnotationInitConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "ruler.valid-config", name = "init-type", havingValue = "annotation", matchIfMissing = true)
-    public ValidConfiguration defaultValidConfiguration() {
-        return new ValidConfiguration(null);
+    public GlobalConfiguration defaultGlobalConfiguration() {
+        return new GlobalConfiguration(null);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "ruler.rule-config", name = "init-type", havingValue = "annotation", matchIfMissing = true)
-    public RuleFactory annotationRuleFactory(ValidConfiguration validConfiguration) {
+    public RuleFactory annotationRuleFactory(GlobalConfiguration globalConfiguration) {
         Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RuleScan.class);
         Class<?> configClass = null;
         Optional<Object> first = beans.values().stream().findFirst();
@@ -60,8 +60,8 @@ public class AnnotationInitConfiguration {
         }
         String[] scanBasePackages = rulerProperties.getRuleConfig().getScanBasePackages();
         if (scanBasePackages != null) {
-            return new AnnotationRuleFactory(validConfiguration, configClass, scanBasePackages);
+            return new AnnotationRuleFactory(globalConfiguration, configClass, scanBasePackages);
         }
-        return new AnnotationRuleFactory(validConfiguration, configClass);
+        return new AnnotationRuleFactory(globalConfiguration, configClass);
     }
 }

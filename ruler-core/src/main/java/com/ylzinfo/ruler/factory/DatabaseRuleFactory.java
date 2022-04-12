@@ -1,7 +1,7 @@
 package com.ylzinfo.ruler.factory;
 
 import com.ylzinfo.ruler.constants.RulerConstants;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.util.JdbcUtils;
 
@@ -17,8 +17,8 @@ public class DatabaseRuleFactory extends AbstractRuleFactory {
     private final DataSource dataSource;
     private final String ruleInfoTableName;
 
-    public DatabaseRuleFactory(ValidConfiguration validConfiguration, DataSource dataSource, String ruleInfoTableName) {
-        super(validConfiguration);
+    public DatabaseRuleFactory(GlobalConfiguration globalConfiguration, DataSource dataSource, String ruleInfoTableName) {
+        super(globalConfiguration);
         this.dataSource = dataSource;
         this.ruleInfoTableName = ruleInfoTableName;
         this.init();

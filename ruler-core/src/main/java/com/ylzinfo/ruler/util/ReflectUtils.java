@@ -16,7 +16,7 @@ import java.util.List;
  */
 public final class ReflectUtils {
     /**
-     * 从对象的字段中找到一个指定类的值
+     * 从对象的字段中找到一个指定类的值(节点)
      *
      * @param object   对象
      * @param assigned 指定类的类对象
@@ -24,12 +24,12 @@ public final class ReflectUtils {
      * @throws IllegalAccessException 无法获取字段的值
      * @throws NoSuchFieldException   无法在类中找到字段
      */
-    public static Object findFieldValueByType(Object object, Class<?> assigned) throws IllegalAccessException, NoSuchFieldException {
-        return findFieldValueByType(object, assigned, new ArrayList<>(2));
+    public static Object findNodeByType(Object object, Class<?> assigned) throws IllegalAccessException, NoSuchFieldException {
+        return findNodeByType(object, assigned, new ArrayList<>(2));
     }
 
     /**
-     * 从对象的字段中找到一个指定类的值
+     * 从对象的字段中找到一个指定类的值(节点)
      *
      * @param object       对象
      * @param assigned     指定类的类对象
@@ -38,7 +38,7 @@ public final class ReflectUtils {
      * @throws IllegalAccessException 无法获取字段的值
      * @throws NoSuchFieldException   无法在类中找到字段
      */
-    public static Object findFieldValueByType(Object object, Class<?> assigned, List<Field> targetFields) throws IllegalAccessException, NoSuchFieldException {
+    public static Object findNodeByType(Object object, Class<?> assigned, List<Field> targetFields) throws IllegalAccessException, NoSuchFieldException {
         if (object.getClass() == assigned) {
             return object;
         } else {
@@ -53,7 +53,7 @@ public final class ReflectUtils {
                     }
                 } else if (isEntity(field.getType())) {
                     try {
-                        return findFieldValueByType(field.get(object), assigned, targetFields);
+                        return findNodeByType(field.get(object), assigned, targetFields);
                     } catch (NoSuchFieldException ignored) {
                     }
                 }
@@ -65,6 +65,21 @@ public final class ReflectUtils {
             } else {
                 return targetFields.get(0).get(object);
             }
+        }
+    }
+
+    /**
+     * 从对象中找到指定类的字段并获取其值(节点)
+     *
+     * @param object   对象
+     * @param assigned 指定类的类对象
+     * @return 字段的值
+     */
+    public static Object searchAndGetNodeByType(Object object, Class<?> assigned) {
+        try {
+            return ReflectUtils.findNodeByType(object, assigned);
+        } catch (IllegalAccessException | NoSuchFieldException ignored) {
+            throw new RuntimeException("Failed to find valid node " + assigned.getName() + " from " + object.getClass().getName() + ".");
         }
     }
 
@@ -104,7 +119,7 @@ public final class ReflectUtils {
      * 从对象(包括其父类)中找到指定字段名的字段
      *
      * @param child     子类
-     * @param fieldName 指定的字段名
+     * @param fieldName 字段名
      * @return 字段
      * @throws NoSuchFieldException 无法在类中找到字段
      */
@@ -116,6 +131,25 @@ public final class ReflectUtils {
             return findFieldByName(parent, fieldName);
         } catch (NullPointerException ignored) {
             throw new NoSuchFieldException("Cannot find this fieldName.");
+        }
+    }
+
+    /**
+     * 从对象(包括其父类)中找到指定字段名的字段并获取其值
+     *
+     * @param object    对象
+     * @param fieldName 字段名
+     * @return 字段的值
+     */
+    public static Object searchAndGetValueByName(Object object, String fieldName) {
+        try {
+            Field field = findFieldByName(object.getClass(), fieldName);
+            field.setAccessible(true);
+            return field.get(object);
+        } catch (NoSuchFieldException ignored) {
+            throw new RuntimeException("Failed to find field '" + fieldName + "' from " + object.getClass().getName() + ".");
+        } catch (IllegalAccessException ignored) {
+            throw new RuntimeException("Failed to get value of '" + fieldName + "' from " + object.getClass().getName() + ".");
         }
     }
 

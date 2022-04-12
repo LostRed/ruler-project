@@ -1,12 +1,11 @@
 package com.ylzinfo.ruler.rule;
 
 import com.ylzinfo.ruler.core.AbstractRule;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.domain.ValidInfo;
 import com.ylzinfo.ruler.util.ReflectUtils;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,8 +17,8 @@ import java.util.stream.Collectors;
  */
 public abstract class SingleFieldRule<E> extends AbstractRule<E> {
 
-    public SingleFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
-        super(validConfiguration, ruleInfo);
+    public SingleFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
+        super(globalConfiguration, ruleInfo);
     }
 
     /**
@@ -30,19 +29,12 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 违规返回true，否则返回false
      */
     protected boolean check(E element, ValidInfo validInfo) {
-        try {
-            Object validNode = ReflectUtils.findFieldValueByType(element, validInfo.getValidClass());
-            //校验数组属性
-            if (validNode instanceof Collection) {
-                return ((Collection<?>) validNode)
-                        .stream().anyMatch(e -> this.valid(e, validInfo));
-            }
-            //校验对象属性
-            else {
-                return this.valid(validNode, validInfo);
-            }
-        } catch (IllegalAccessException | NoSuchFieldException ignored) {
-            return false;
+        Object validNode = ReflectUtils.searchAndGetNodeByType(element, validInfo.getValidClass());
+        if (validNode instanceof Collection) {
+            return ((Collection<?>) validNode)
+                    .stream().anyMatch(e -> this.valid(e, validInfo));
+        } else {
+            return this.valid(validNode, validInfo);
         }
     }
 
@@ -54,17 +46,13 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 非法字段与值
      */
     protected Set<Map.Entry<String, Object>> collectIllegals(E element, ValidInfo validInfo) {
-        try {
-            Object validNode = ReflectUtils.findFieldValueByType(element, validInfo.getValidClass());
-            if (validNode instanceof Collection) {
-                return ((Collection<?>) validNode).stream()
-                        .flatMap(node -> this.collectFromValidNode(element, node, validInfo).stream())
-                        .collect(Collectors.toSet());
-            } else {
-                return this.collectFromValidNode(element, validNode, validInfo);
-            }
-        } catch (IllegalAccessException | NoSuchFieldException ignored) {
-            return new HashSet<>();
+        Object validNode = ReflectUtils.searchAndGetNodeByType(element, validInfo.getValidClass());
+        if (validNode instanceof Collection) {
+            return ((Collection<?>) validNode).stream()
+                    .flatMap(node -> this.collectFromValidNode(element, node, validInfo).stream())
+                    .collect(Collectors.toSet());
+        } else {
+            return this.collectFromValidNode(element, validNode, validInfo);
         }
     }
 
@@ -76,13 +64,8 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 违规返回true，否则返回false
      */
     protected boolean valid(Object validNode, ValidInfo validInfo) {
-        try {
-            Field field = ReflectUtils.findFieldByName(validNode.getClass(), validInfo.getFieldName());
-            field.setAccessible(true);
-            return this.isNotMatch(validInfo, field.get(validNode));
-        } catch (NoSuchFieldException | IllegalAccessException ignored) {
-            return false;
-        }
+        Object value = ReflectUtils.searchAndGetValueByName(validNode, validInfo.getFieldName());
+        return this.isIllegal(validInfo, value);
     }
 
     /**
@@ -94,26 +77,22 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 非法的字段与值
      */
     protected Set<Map.Entry<String, Object>> collectFromValidNode(E element, Object validNode, ValidInfo validInfo) {
-        try {
-            Field field = ReflectUtils.findFieldByName(validNode.getClass(), validInfo.getFieldName());
-            field.setAccessible(true);
-            Object value = field.get(validNode);
-            if (this.isNotMatch(validInfo, value)) {
-                return this.wrap(element, validInfo, value);
-            }
-        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+        Object value = ReflectUtils.searchAndGetValueByName(validNode, validInfo.getFieldName());
+        if (this.isIllegal(validInfo, value)) {
+            return this.wrap(element, validInfo, value);
+        } else {
+            return new HashSet<>();
         }
-        return new HashSet<>();
     }
 
     /**
-     * 是否不匹配规则逻辑
+     * 待校验的值是否是非法的
      *
      * @param validInfo 校验信息
      * @param value     待校验的值
-     * @return 不匹配返回true，否则返回false
+     * @return 是返回true，否则返回false
      */
-    protected abstract boolean isNotMatch(ValidInfo validInfo, Object value);
+    protected abstract boolean isIllegal(ValidInfo validInfo, Object value);
 
     /**
      * 将非法字段与值包装成集合

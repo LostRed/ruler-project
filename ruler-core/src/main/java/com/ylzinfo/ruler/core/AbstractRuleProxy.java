@@ -36,7 +36,7 @@ public class AbstractRuleProxy implements MethodInterceptor {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(target.getClass());
         enhancer.setCallback(this);
-        return (T) enhancer.create(new Class[]{ValidConfiguration.class, RuleInfo.class}, new Object[]{null, null});
+        return (T) enhancer.create(new Class[]{GlobalConfiguration.class, RuleInfo.class}, new Object[]{null, null});
     }
 
     @Override

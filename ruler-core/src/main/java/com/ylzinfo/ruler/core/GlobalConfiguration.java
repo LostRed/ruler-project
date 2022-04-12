@@ -2,15 +2,18 @@ package com.ylzinfo.ruler.core;
 
 import com.ylzinfo.ruler.constants.ValidType;
 import com.ylzinfo.ruler.domain.ValidInfo;
+import com.ylzinfo.ruler.rule.SingleFieldRule;
 
 import java.util.*;
 
 /**
- * 校验配置
+ * ruler全局配置
+ * <p>主要是单字段校验规则依赖的配置</p>
  *
  * @author dengluwei
+ * @see SingleFieldRule
  */
-public final class ValidConfiguration {
+public final class GlobalConfiguration {
     /**
      * 所有校验信息列表
      */
@@ -30,14 +33,14 @@ public final class ValidConfiguration {
     /**
      * 日期时间范围字段校验的信息列表
      */
-    private final List<ValidInfo> datetimeScopeValidInfos = new ArrayList<>();
+    private final List<ValidInfo> dateTimeScopeValidInfos = new ArrayList<>();
     /**
      * 字典字段规则所依赖的字典集合
      * <p>key值是字典类型，value是改类型字典下的所有字典码值</p>
      */
     private final Map<ValidInfo, Set<Object>> dict = new HashMap<>();
 
-    public ValidConfiguration(Collection<ValidInfo> validInfos) {
+    public GlobalConfiguration(Collection<ValidInfo> validInfos) {
         this.addValidInfo(validInfos);
     }
 
@@ -62,7 +65,7 @@ public final class ValidConfiguration {
         } else if (ValidType.NUMBER_SCOPE.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
             this.numberScopeValidInfos.add(validInfo);
         } else if (ValidType.DATETIME_SCOPE.equals(ValidType.valueOf(validInfo.getValidType().toUpperCase()))) {
-            this.datetimeScopeValidInfos.add(validInfo);
+            this.dateTimeScopeValidInfos.add(validInfo);
         }
         this.validInfos.add(validInfo);
     }
@@ -92,7 +95,7 @@ public final class ValidConfiguration {
                 && (this.requiredValidInfos.remove(validInfo)
                 || this.dictValidInfos.remove(validInfo)
                 || this.numberScopeValidInfos.remove(validInfo)
-                || this.datetimeScopeValidInfos.remove(validInfo));
+                || this.dateTimeScopeValidInfos.remove(validInfo));
     }
 
     /**
@@ -130,8 +133,8 @@ public final class ValidConfiguration {
         return numberScopeValidInfos;
     }
 
-    public List<ValidInfo> getDatetimeScopeValidInfos() {
-        return datetimeScopeValidInfos;
+    public List<ValidInfo> getDateTimeScopeValidInfos() {
+        return dateTimeScopeValidInfos;
     }
 
     public Map<ValidInfo, Set<Object>> getDict() {

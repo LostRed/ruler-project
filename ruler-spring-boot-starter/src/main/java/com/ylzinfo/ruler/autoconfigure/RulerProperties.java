@@ -61,7 +61,7 @@ public class RulerProperties {
     }
 
     /**
-     * 校验配置
+     * ruler全局配置
      */
     public static class ValidConfig {
         private String tableName = RulerConstants.ORIGIN_VALID_INFO_TABLE_NAME;

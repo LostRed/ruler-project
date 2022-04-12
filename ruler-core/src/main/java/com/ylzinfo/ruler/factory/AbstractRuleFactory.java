@@ -2,7 +2,7 @@ package com.ylzinfo.ruler.factory;
 
 import com.ylzinfo.ruler.core.AbstractRule;
 import com.ylzinfo.ruler.core.AbstractRuleProxy;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 
 import java.lang.reflect.Constructor;
@@ -20,10 +20,10 @@ import java.util.stream.Collectors;
 public abstract class AbstractRuleFactory implements RuleFactory {
     protected final Map<String, RuleInfo> ruleInfoMap = new ConcurrentHashMap<>();
     protected final Map<String, AbstractRule<?>> rules = new ConcurrentHashMap<>();
-    protected final ValidConfiguration validConfiguration;
+    protected final GlobalConfiguration globalConfiguration;
 
-    public AbstractRuleFactory(ValidConfiguration validConfiguration) {
-        this.validConfiguration = validConfiguration;
+    public AbstractRuleFactory(GlobalConfiguration globalConfiguration) {
+        this.globalConfiguration = globalConfiguration;
     }
 
     @Override
@@ -36,13 +36,13 @@ public abstract class AbstractRuleFactory implements RuleFactory {
 
     @Override
     public void createRule(RuleInfo ruleInfo) {
-        AbstractRule<?> rule = this.builder(validConfiguration, ruleInfo).build();
+        AbstractRule<?> rule = this.builder(globalConfiguration, ruleInfo).build();
         this.rules.put(ruleInfo.getRuleCode(), rule);
     }
 
     @Override
-    public ValidConfiguration getValidConfiguration() {
-        return this.validConfiguration;
+    public GlobalConfiguration getGlobalConfiguration() {
+        return this.globalConfiguration;
     }
 
     @Override
@@ -69,24 +69,24 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     /**
      * 获取规则的建造者
      *
-     * @param validConfiguration 规则配置
+     * @param globalConfiguration 规则配置
      * @param ruleInfo           规则信息
      * @param <E>                规则约束的参数类型
      * @return 某个规则的建造者实例对象
      */
-    public <E> Builder<E> builder(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
-        return new Builder<>(validConfiguration, ruleInfo);
+    public <E> Builder<E> builder(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
+        return new Builder<>(globalConfiguration, ruleInfo);
     }
 
     /**
      * 规则建造者
      */
     public static class Builder<E> {
-        private final ValidConfiguration validConfiguration;
+        private final GlobalConfiguration globalConfiguration;
         private final RuleInfo ruleInfo;
 
-        public Builder(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
-            this.validConfiguration = validConfiguration;
+        public Builder(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
+            this.globalConfiguration = globalConfiguration;
             this.ruleInfo = ruleInfo;
         }
 
@@ -94,8 +94,8 @@ public abstract class AbstractRuleFactory implements RuleFactory {
         public AbstractRule<E> build() {
             try {
                 Class<?> ruleClass = this.getClass().getClassLoader().loadClass(ruleInfo.getRuleClassName());
-                Constructor<?> constructor = ruleClass.getDeclaredConstructor(ValidConfiguration.class, RuleInfo.class);
-                Object object = constructor.newInstance(validConfiguration, ruleInfo);
+                Constructor<?> constructor = ruleClass.getDeclaredConstructor(GlobalConfiguration.class, RuleInfo.class);
+                Object object = constructor.newInstance(globalConfiguration, ruleInfo);
                 if (object instanceof AbstractRule<?>) {
                     //创建代理器
                     AbstractRuleProxy proxy = new AbstractRuleProxy((AbstractRule<E>) object);

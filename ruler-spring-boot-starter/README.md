@@ -85,7 +85,7 @@ valid_type的填写可参考ValidType枚举类，字母全小写。
 
 ### 编写配置类(可选)
 
-使用注解初始化方式必须配置ValidConfiguration，单实例规则引擎不能满足项目时，可自定义规则引擎。
+使用注解初始化方式必须配置GlobalConfiguration，单实例规则引擎不能满足项目时，可自定义规则引擎。
 
 ```java
 
@@ -95,9 +95,9 @@ public class RulerConfig {
     private static final String validClassName = "com.ylzinfo.ruler.domain.model.SubValidClass";
     private static final String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
 
-    //如果不使用数据库初始化方式，则需要在spring容器中注册一个ValidConfiguration实例对象，记得设置dict，否则创建出的规则引擎校验配置中的校验信息列表将为空
+    //如果不使用数据库初始化方式，则需要在spring容器中注册一个GlobalConfiguration实例对象，记得设置dict，否则创建出的规则引擎ruler全局配置中的校验信息列表将为空
     @Bean
-    public ValidConfiguration validConfiguration() {
+    public GlobalConfiguration globalConfiguration() {
         Collection<ValidInfo> validInfos = new ArrayList<>();
         ValidInfo validInfo1 = new ValidInfo("1", businessType, ValidType.REQUIRED.name(), "string", validClassName);
         ValidInfo validInfo2 = new ValidInfo("2", businessType, ValidType.REQUIRED.name(), "number", validClassName);
@@ -113,12 +113,12 @@ public class RulerConfig {
         validInfos.add(validInfo4);
         validInfos.add(validInfo5);
         validInfos.add(validInfo6);
-        ValidConfiguration validConfiguration = new ValidConfiguration(validInfos);
+        GlobalConfiguration globalConfiguration = new GlobalConfiguration(validInfos);
         Map<String, Set<Object>> dict = new HashMap<>();
         Set<Object> set = new HashSet<>(Arrays.asList("hello", "world"));
         dict.put("string", set);
-        validConfiguration.addDict(dict);
-        return validConfiguration;
+        globalConfiguration.addDict(dict);
+        return globalConfiguration;
     }
 
     //选择适合的规则引擎注册到spring容器
@@ -169,8 +169,8 @@ public class NumberRule extends AbstractRule<ValidClass> {
 
     private final static String FIELD_NAME = "number";
 
-    public NumberRule(ValidConfiguration config, RuleInfo ruleInfo) {
-        super(config, ruleInfo);
+    public NumberRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
+        super(globalConfiguration, ruleInfo);
     }
 
     @Override

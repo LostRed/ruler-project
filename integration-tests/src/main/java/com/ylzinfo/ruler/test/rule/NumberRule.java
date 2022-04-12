@@ -2,7 +2,7 @@ package com.ylzinfo.ruler.test.rule;
 
 import com.ylzinfo.ruler.annotation.Rule;
 import com.ylzinfo.ruler.core.AbstractRule;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.test.domain.model.ValidClass;
@@ -12,7 +12,7 @@ public class NumberRule extends AbstractRule<ValidClass> {
 
     private final static String FIELD_NAME = "number";
 
-    public NumberRule(ValidConfiguration config, RuleInfo ruleInfo) {
+    public NumberRule(GlobalConfiguration config, RuleInfo ruleInfo) {
         super(config, ruleInfo);
     }
 

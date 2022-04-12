@@ -1,7 +1,7 @@
 package com.ylzinfo.ruler.rule;
 
 import com.ylzinfo.ruler.annotation.Rule;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.domain.ValidInfo;
@@ -19,31 +19,31 @@ import java.util.stream.Collectors;
 @Rule(ruleCode = "required", desc = "规定的字段必须填写")
 public class RequiredFieldRule<E> extends SingleFieldRule<E> {
 
-    public RequiredFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
-        super(validConfiguration, ruleInfo);
+    public RequiredFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
+        super(globalConfiguration, ruleInfo);
     }
 
     @Override
     public boolean isSupported(E element) {
-        return !validConfiguration.getRequiredValidInfos().isEmpty();
+        return !globalConfiguration.getRequiredValidInfos().isEmpty();
     }
 
     @Override
     public boolean judge(E element) {
-        return validConfiguration.getRequiredValidInfos().stream()
+        return globalConfiguration.getRequiredValidInfos().stream()
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
     @Override
     public Report buildReport(E element) {
-        Map<String, Object> map = validConfiguration.getRequiredValidInfos().stream()
+        Map<String, Object> map = globalConfiguration.getRequiredValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);
     }
 
     @Override
-    protected boolean isNotMatch(ValidInfo validInfo, Object value) {
+    protected boolean isIllegal(ValidInfo validInfo, Object value) {
         return value == null || "".equals(value);
     }
 

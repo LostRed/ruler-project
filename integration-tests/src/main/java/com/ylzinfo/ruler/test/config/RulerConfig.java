@@ -2,7 +2,7 @@ package com.ylzinfo.ruler.test.config;
 
 import com.ylzinfo.ruler.annotation.RuleScan;
 import com.ylzinfo.ruler.constants.ValidType;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.ValidInfo;
 import com.ylzinfo.ruler.test.entity.Area;
 import com.ylzinfo.ruler.test.entity.Contact;
@@ -19,7 +19,7 @@ import java.util.*;
 public class RulerConfig {
 
     @Bean
-    public ValidConfiguration validConfiguration() {
+    public GlobalConfiguration globalConfiguration() {
         Collection<ValidInfo> validInfos = new ArrayList<>();
         ValidInfo validInfo1 = ValidInfo.ofRequired("name", Person.class.getName());
         ValidInfo validInfo2 = ValidInfo.ofRequired("gender", Person.class.getName());
@@ -47,12 +47,12 @@ public class RulerConfig {
         validInfos.add(validInfo9);
         validInfos.add(validInfo10);
         validInfos.add(validInfo11);
-        ValidConfiguration validConfiguration = new ValidConfiguration(validInfos);
+        GlobalConfiguration globalConfiguration = new GlobalConfiguration(validInfos);
 
         Map<ValidInfo, Set<Object>> dict = new HashMap<>();
         Set<Object> set = new HashSet<>(Arrays.asList("1", "2"));
         dict.put(validInfo3, set);
-        validConfiguration.addDict(dict);
-        return validConfiguration;
+        globalConfiguration.addDict(dict);
+        return globalConfiguration;
     }
 }

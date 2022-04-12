@@ -26,7 +26,7 @@ public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements Ite
     @Override
     public Result execute(E element) {
         super.checkBefore(element);
-        logger.config("invoke method=execute, valid node=" + element);
+        logger.config("invoke method=execute, valid object=" + element);
         Result result = Result.of();
         Iterator<AbstractRule<E>> iterator = this.abstractRules.iterator();
         while (iterator.hasNext() && this.toNext(result.getGrade())) {

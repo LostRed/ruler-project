@@ -1,7 +1,7 @@
 package com.ylzinfo.ruler.rule;
 
 import com.ylzinfo.ruler.annotation.Rule;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.Report;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.domain.ValidInfo;
@@ -26,31 +26,31 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public DateTimeScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
-        super(validConfiguration, ruleInfo);
+    public DateTimeScopeFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
+        super(globalConfiguration, ruleInfo);
     }
 
     @Override
     public boolean isSupported(E element) {
-        return !validConfiguration.getDatetimeScopeValidInfos().isEmpty();
+        return !globalConfiguration.getDateTimeScopeValidInfos().isEmpty();
     }
 
     @Override
     public boolean judge(E element) {
-        return validConfiguration.getDatetimeScopeValidInfos().stream()
+        return globalConfiguration.getDateTimeScopeValidInfos().stream()
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
     @Override
     public Report buildReport(E element) {
-        Map<String, Object> map = validConfiguration.getDatetimeScopeValidInfos().stream()
+        Map<String, Object> map = globalConfiguration.getDateTimeScopeValidInfos().stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);
     }
 
     @Override
-    protected boolean isNotMatch(ValidInfo validInfo, Object value) {
+    protected boolean isIllegal(ValidInfo validInfo, Object value) {
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
             ZoneId zoneId = ZoneId.systemDefault();

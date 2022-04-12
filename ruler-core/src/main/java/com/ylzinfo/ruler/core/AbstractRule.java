@@ -12,19 +12,19 @@ public abstract class AbstractRule<T> implements Judgement<T>, Reporter<T> {
     /**
      * 规则配置
      */
-    protected final ValidConfiguration validConfiguration;
+    protected final GlobalConfiguration globalConfiguration;
     /**
      * 规则信息
      */
     protected final RuleInfo ruleInfo;
 
-    public AbstractRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
-        this.validConfiguration = validConfiguration;
+    public AbstractRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
+        this.globalConfiguration = globalConfiguration;
         this.ruleInfo = ruleInfo;
     }
 
-    public ValidConfiguration getValidConfiguration() {
-        return validConfiguration;
+    public GlobalConfiguration getValidConfiguration() {
+        return globalConfiguration;
     }
 
     public RuleInfo getRuleInfo() {

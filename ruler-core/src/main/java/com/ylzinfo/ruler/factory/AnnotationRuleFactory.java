@@ -3,7 +3,7 @@ package com.ylzinfo.ruler.factory;
 import com.ylzinfo.ruler.annotation.Rule;
 import com.ylzinfo.ruler.annotation.RuleScan;
 import com.ylzinfo.ruler.core.AbstractRule;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 import com.ylzinfo.ruler.util.PackageScanUtils;
 
@@ -22,8 +22,8 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
     private final Class<?> configClass;
     private final String[] anotherPackages;
 
-    public AnnotationRuleFactory(ValidConfiguration validConfiguration, Class<?> configClass, String... anotherPackages) {
-        super(validConfiguration);
+    public AnnotationRuleFactory(GlobalConfiguration globalConfiguration, Class<?> configClass, String... anotherPackages) {
+        super(globalConfiguration);
         this.configClass = configClass;
         this.anotherPackages = anotherPackages;
         this.init();

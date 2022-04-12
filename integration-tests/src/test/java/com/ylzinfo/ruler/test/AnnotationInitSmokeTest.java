@@ -3,7 +3,7 @@ package com.ylzinfo.ruler.test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ylzinfo.ruler.constants.RulerConstants;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.Result;
 import com.ylzinfo.ruler.domain.ValidInfo;
 import com.ylzinfo.ruler.engine.CompleteRulesEngine;
@@ -30,14 +30,14 @@ public class AnnotationInitSmokeTest {
     static RuleFactory ruleFactory;
     static DetailRulesEngine<ValidClass> engine;
     static Collection<ValidInfo> validInfos;
-    static ValidConfiguration validConfiguration;
+    static GlobalConfiguration globalConfiguration;
     ObjectMapper objectMapper = new ObjectMapper();
 
     String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
 
-    static ValidConfiguration buildValidInfos() {
+    static GlobalConfiguration buildValidInfos() {
         validInfos = new ArrayList<>();
         ValidInfo validInfo1 = ValidInfo.ofRequired("string", validClassName);
         ValidInfo validInfo2 = ValidInfo.ofRequired("number", validClassName);
@@ -51,13 +51,13 @@ public class AnnotationInitSmokeTest {
         validInfos.add(validInfo4);
         validInfos.add(validInfo5);
         validInfos.add(validInfo6);
-        return new ValidConfiguration(validInfos);
+        return new GlobalConfiguration(validInfos);
     }
 
     @BeforeAll
     static void init() {
-        validConfiguration = buildValidInfos();
-        ruleFactory = new AnnotationRuleFactory(validConfiguration, RulerConfig.class);
+        globalConfiguration = buildValidInfos();
+        ruleFactory = new AnnotationRuleFactory(globalConfiguration, RulerConfig.class);
         TypeReference<CompleteRulesEngine<ValidClass>> typeReference = new TypeReference<CompleteRulesEngine<ValidClass>>() {
         };
         engine = RulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();

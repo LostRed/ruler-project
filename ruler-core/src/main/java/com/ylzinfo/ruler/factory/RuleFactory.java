@@ -1,7 +1,7 @@
 package com.ylzinfo.ruler.factory;
 
 import com.ylzinfo.ruler.core.AbstractRule;
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 
 import java.util.List;
@@ -40,11 +40,11 @@ public interface RuleFactory {
     <E> AbstractRule<E> getRule(String ruleCode);
 
     /**
-     * 获取校验配置
+     * 获取ruler全局配置
      *
-     * @return 校验配置
+     * @return ruler全局配置
      */
-    ValidConfiguration getValidConfiguration();
+    GlobalConfiguration getGlobalConfiguration();
 
     /**
      * 获取规则集合

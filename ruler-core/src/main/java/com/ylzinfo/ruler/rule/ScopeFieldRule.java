@@ -1,12 +1,12 @@
 package com.ylzinfo.ruler.rule;
 
-import com.ylzinfo.ruler.core.ValidConfiguration;
+import com.ylzinfo.ruler.core.GlobalConfiguration;
 import com.ylzinfo.ruler.domain.RuleInfo;
 
 public abstract class ScopeFieldRule<E> extends SingleFieldRule<E> {
 
-    public ScopeFieldRule(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
-        super(validConfiguration, ruleInfo);
+    public ScopeFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
+        super(globalConfiguration, ruleInfo);
     }
 
     /**
