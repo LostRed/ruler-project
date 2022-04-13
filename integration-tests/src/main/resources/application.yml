@@ -1,13 +1,13 @@
 ruler:
   default-business-type: person
-  default-valid-class: com.ylzinfo.ruler.test.entity.Person
+  default-valid-class: info.lostred.ruler.test.entity.Person
   valid-config:
     init-type: annotation
     table-name: ruler_valid_info
   rule-config:
     init-type: annotation
     table-name: ruler_rule_info
-    scan-base-packages: com.ylzinfo.ruler.rule
+    scan-base-packages: info.lostred.ruler.rule
   rules-engine-config:
     type: complete
 
@@ -20,5 +20,5 @@ spring:
 
 logging:
   level:
-    com.ylzinfo.ruler.rule: debug
-    com.ylzinfo.ruler.engine: debug
+    info.lostred.ruler.rule: debug
+    info.lostred.ruler.engine: debug

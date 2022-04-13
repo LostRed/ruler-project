@@ -2,106 +2,106 @@
   "groups": [
     {
       "name": "ruler",
-      "type": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties"
+      "type": "info.lostred.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties"
     },
     {
       "name": "ruler.db-config",
-      "type": "com.ylzinfo.ruler.autoconfigure.RulerProperties$DbConfig",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties"
+      "type": "info.lostred.ruler.autoconfigure.RulerProperties$DbConfig",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties"
     },
     {
       "name": "ruler.valid-config",
-      "type": "com.ylzinfo.ruler.autoconfigure.RulerProperties$ValidConfig",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties"
+      "type": "info.lostred.ruler.autoconfigure.RulerProperties$ValidConfig",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties"
     },
     {
       "name": "ruler.rule-config",
-      "type": "com.ylzinfo.ruler.autoconfigure.RulerProperties$RuleConfig",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties"
+      "type": "info.lostred.ruler.autoconfigure.RulerProperties$RuleConfig",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties"
     },
     {
       "name": "ruler.rules-engine-config",
-      "type": "com.ylzinfo.ruler.autoconfigure.RulerProperties$RulesEngineConfig",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties"
+      "type": "info.lostred.ruler.autoconfigure.RulerProperties$RulesEngineConfig",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties"
     }
   ],
   "properties": [
     {
       "name": "ruler.default-business-type",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "默认的业务类型.",
       "defaultValue": "common"
     },
     {
       "name": "ruler.default-valid-class",
       "type": "java.lang.Class",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "默认的约束类."
     },
     {
       "name": "ruler.db-config.driver-class-name",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "数据源驱动类."
     },
     {
       "name": "ruler.db-config.url",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "数据源url."
     },
     {
       "name": "ruler.db-config.username",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "数据源用户名."
     },
     {
       "name": "ruler.db-config.password",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "数据源密码."
     },
     {
       "name": "ruler.valid-config.init-type",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
       "description": "校验信息的初始化方式.",
       "defaultValue": "annotation"
     },
     {
       "name": "ruler.valid-config.table-name",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "校验信息表名.",
       "defaultValue": "ruler_valid_info"
     },
     {
       "name": "ruler.rule-config.init-type",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerAutoConfiguration$RuleAutoConfiguration",
       "description": "规则信息的初始化方式.",
       "defaultValue": "annotation"
     },
     {
       "name": "ruler.rule-config.table-name",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "规则信息表名.",
       "defaultValue": "ruler_rule_info"
     },
     {
       "name": "ruler.rule-config.scan-base-packages",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "规则包扫描路径."
     },
     {
       "name": "ruler.rules-engine-config.type",
       "type": "java.lang.String",
-      "sourceType": "com.ylzinfo.ruler.autoconfigure.RulerProperties",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "容器单实例规则引擎的默认引擎类型.",
       "defaultValue": "simple"
     }

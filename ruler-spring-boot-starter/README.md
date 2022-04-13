@@ -7,7 +7,7 @@
 ```xml
 
 <dependency>
-    <groupId>com.ylzinfo.ruler</groupId>
+    <groupId>info.lostred.ruler</groupId>
     <artifactId>ruler-spring-boot-starter</artifactId>
     <version>{ruler.version}</version>
 </dependency>
@@ -25,14 +25,14 @@ ruler:
     username: rules_engine
     password: 123456
   default-business-type: common #业务类型，对应以下两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息，默认为common
-  default-valid-class: com.ylzinfo.ruler.domain.model.ValidClass #规则引擎所约束的java类型
+  default-valid-class: info.lostred.ruler.domain.model.ValidClass #规则引擎所约束的java类型
   valid-config:
     init-type: annotation #校验信息的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置校验信息，数据库方式需要引入数据库驱动包
     table-name: ruler_valid_info #校验信息配置表表名
   rule-config:
     init-type: annotation #规则信息的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置规则信息，数据库方式需要引入数据库驱动包
     table-name: ruler_rule_info #规则信息配置表表名
-    scan-base-packages: com.ylzinfo.ruler.rule #规则包扫描路径
+    scan-base-packages: info.lostred.ruler.rule #规则包扫描路径
   rules-engine-config:
     type: complete #上述提到的规则引擎类型，默认为simple
 ```
@@ -90,9 +90,9 @@ valid_type的填写可参考ValidType枚举类，字母全小写。
 ```java
 
 @Configuration
-@RuleScan("com.ylzinfo.ruler.rule")
+@RuleScan("info.lostred.ruler.rule")
 public class RulerConfig {
-    private static final String validClassName = "com.ylzinfo.ruler.domain.model.SubValidClass";
+    private static final String validClassName = "info.lostred.ruler.domain.model.SubValidClass";
     private static final String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
 
     //如果不使用数据库初始化方式，则需要在spring容器中注册一个GlobalConfiguration实例对象，记得设置dict，否则创建出的规则引擎ruler全局配置中的校验信息列表将为空
@@ -204,7 +204,7 @@ public class NumberRule extends AbstractRule<ValidClass> {
 ```java
 
 @Configuration
-@RuleScan("com.ylzinfo.ruler.rule")
+@RuleScan("info.lostred.ruler.rule")
 public class RulerConfig {
 }
 ```
