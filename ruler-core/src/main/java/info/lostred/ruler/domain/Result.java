@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 引擎执行的结果
  *
- * @author dengluwei
+ * @author lostred
  */
 public class Result {
     /**
@@ -40,7 +40,7 @@ public class Result {
      */
     public static Result of() {
         Result result = new Result();
-        result.grade = ValidGrade.QUALIFIED.getText();
+        result.grade = ValidGrade.QUALIFIED.name();
         result.reports = new ArrayList<>();
         return result;
     }
@@ -63,7 +63,7 @@ public class Result {
     public void updateGrade(Report report) {
         if (report != null) {
             String grade = report.getRuleInfo().getGrade();
-            if (!ValidGrade.ILLEGAL.getText().equals(this.grade)
+            if (!ValidGrade.ILLEGAL.name().equals(this.grade)
                     && !this.grade.equals(grade)) {
                 this.grade = grade;
             }
@@ -77,11 +77,11 @@ public class Result {
      */
     public Result statistic() {
         this.suspectedFieldCount = reports.stream()
-                .filter(e -> ValidGrade.SUSPECTED.getText().equals(e.getRuleInfo().getGrade()))
+                .filter(e -> ValidGrade.SUSPECTED.name().equals(e.getRuleInfo().getGrade()))
                 .mapToLong(e -> e.getIllegals().size())
                 .sum();
         this.illegalFieldCount = reports.stream()
-                .filter(e -> ValidGrade.ILLEGAL.getText().equals(e.getRuleInfo().getGrade()))
+                .filter(e -> ValidGrade.ILLEGAL.name().equals(e.getRuleInfo().getGrade()))
                 .mapToLong(e -> e.getIllegals().size())
                 .sum();
         return this;

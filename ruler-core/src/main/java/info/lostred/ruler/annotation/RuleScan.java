@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * 规则包扫描注解
  *
- * @author dengluwei
+ * @author lostred
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

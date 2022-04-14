@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 /**
  * ruler数据源
  *
- * @author dengluwei
+ * @author lostred
  */
 public class RulerDateSource implements DataSource {
     private String url;

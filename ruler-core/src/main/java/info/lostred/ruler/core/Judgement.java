@@ -1,25 +1,25 @@
 package info.lostred.ruler.core;
 
 /**
- * 判断器
+ * 判断器接口
  *
- * @param <E> 判断器需要判断参数类型
- * @author dengluwei
+ * @param <E> 判断器接口需要判断参数类型
+ * @author lostred
  */
 public interface Judgement<E> {
     /**
-     * 规则是否支持
+     * 判断器接口是否需要判断参数
      *
      * @param element 参数
-     * @return 支持返回true，否则返回false
+     * @return 需要返回true，否则返回false
      */
     boolean isSupported(E element);
 
     /**
-     * 判断参数是否违规
+     * 判断参数是否满足特定的条件
      *
      * @param element 参数
-     * @return 违规返回true，否则返回false
+     * @return 满足条件返回true，否则返回false
      */
     boolean judge(E element);
 }

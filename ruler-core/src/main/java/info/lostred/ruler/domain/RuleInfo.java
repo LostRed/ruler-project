@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * 规则信息
  *
- * @author dengluwei
+ * @author lostred
  */
 public class RuleInfo implements Cloneable {
     /**
@@ -52,7 +52,7 @@ public class RuleInfo implements Cloneable {
     private Class<?> validClass;
 
     public static RuleInfo of(Rule rule, Class<?> ruleClass) {
-        return of(rule.ruleCode(), rule.businessType(), rule.validGrade().getText(), rule.desc(),
+        return of(rule.ruleCode(), rule.businessType(), rule.validGrade().name(), rule.desc(),
                 rule.seq(), rule.required(), rule.enable(), ruleClass.getName(), rule.validClass().getName());
     }
 

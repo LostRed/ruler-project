@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * 校验信息
  *
- * @author dengluwei
+ * @author lostred
  */
 public class ValidInfo {
     /**

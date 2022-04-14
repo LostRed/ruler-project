@@ -3,7 +3,7 @@ package info.lostred.ruler.constants;
 /**
  * ruler常量
  *
- * @author dengluwei
+ * @author lostred
  */
 public class RulerConstants {
     public final static String ORIGIN_VALID_INFO_TABLE_NAME = "ruler_valid_info";

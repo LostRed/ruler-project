@@ -12,7 +12,7 @@ import java.util.Collection;
  * 简单执行的规则引擎
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 public class SimpleRulesEngine<E> extends RulesEngine<E> {
 
@@ -33,8 +33,8 @@ public class SimpleRulesEngine<E> extends RulesEngine<E> {
      */
     public boolean hasSuspicious(E element) {
         for (AbstractRule<E> abstractRule : this.abstractRules) {
-            if (abstractRule.isSupported(element) && ValidGrade.SUSPECTED.getText().equals(abstractRule.getRuleInfo().getGrade())) {
-                return this.ruleJudge(element, abstractRule);
+            if (abstractRule.isSupported(element) && ValidGrade.SUSPECTED.name().equals(abstractRule.getRuleInfo().getGrade())) {
+                return this.doJudge(element, abstractRule);
             }
         }
         return false;

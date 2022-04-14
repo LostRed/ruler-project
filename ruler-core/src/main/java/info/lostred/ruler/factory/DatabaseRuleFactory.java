@@ -3,6 +3,7 @@ package info.lostred.ruler.factory;
 import info.lostred.ruler.constants.RulerConstants;
 import info.lostred.ruler.core.GlobalConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.exception.RuleInitException;
 import info.lostred.ruler.util.JdbcUtils;
 
 import javax.sql.DataSource;
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * 数据库规则管理器
  *
- * @author dengluwei
+ * @author lostred
  */
 public class DatabaseRuleFactory extends AbstractRuleFactory {
     private final DataSource dataSource;
@@ -43,7 +44,7 @@ public class DatabaseRuleFactory extends AbstractRuleFactory {
                 this.registerRuleInfo(ruleInfo);
                 this.ruleInfoMap.put(ruleInfo.getRuleCode(), ruleInfo);
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                throw new RuleInitException(e, ruleInfo);
             }
         }
         for (String ruleCode : this.ruleInfoMap.keySet()) {

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * 必填字段校验规则
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 @Rule(ruleCode = "required", desc = "规定的字段必须填写")
 public class RequiredFieldRule<E> extends SingleFieldRule<E> {
@@ -48,7 +48,7 @@ public class RequiredFieldRule<E> extends SingleFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrap(E element, ValidInfo validInfo, Object value) {
-        return super.wrap(element, validInfo, "-");
+    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object value) {
+        return super.wrapToSet(element, validInfo, "-");
     }
 }

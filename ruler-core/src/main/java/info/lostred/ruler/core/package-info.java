@@ -5,6 +5,6 @@
  * @see info.lostred.ruler.core.ExecutionEngine
  * @see info.lostred.ruler.core.IterationEngine
  * @see info.lostred.ruler.core.Judgement
- * @see info.lostred.ruler.core.Reporter
+ * @see info.lostred.ruler.core.Reportable
  */
 package info.lostred.ruler.core;

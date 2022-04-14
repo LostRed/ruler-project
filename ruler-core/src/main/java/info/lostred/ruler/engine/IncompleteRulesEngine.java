@@ -6,13 +6,12 @@ import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.factory.RuleFactory;
 
 import java.util.Collection;
-import java.util.Optional;
 
 /**
  * 不完整执行的规则引擎
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
 
@@ -22,7 +21,7 @@ public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
 
     @Override
     public boolean toNext(String grade) {
-        return !ValidGrade.ILLEGAL.getText().equals(grade);
+        return !ValidGrade.ILLEGAL.name().equals(grade);
     }
 
     /**
@@ -31,12 +30,12 @@ public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
      * @param element 规则约束的对象
      * @return 有返回true，否则返回false
      */
-    public Optional<Report> findSuspiciousReport(E element) {
+    public Report findSuspiciousReport(E element) {
         for (AbstractRule<E> abstractRule : this.abstractRules) {
-            if (abstractRule.isSupported(element) && ValidGrade.SUSPECTED.getText().equals(abstractRule.getRuleInfo().getGrade())) {
-                return this.ruleReport(element, abstractRule);
+            if (abstractRule.isSupported(element) && ValidGrade.SUSPECTED.name().equals(abstractRule.getRuleInfo().getGrade())) {
+                return this.doBuildReport(element, abstractRule);
             }
         }
-        return Optional.empty();
+        return null;
     }
 }

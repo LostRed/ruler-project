@@ -3,6 +3,7 @@ package info.lostred.ruler.factory;
 import info.lostred.ruler.constants.RulerConstants;
 import info.lostred.ruler.core.AbstractRule;
 import info.lostred.ruler.core.RulesEngine;
+import info.lostred.ruler.exception.RulesEngineInitException;
 import info.lostred.ruler.support.TypeReference;
 
 import java.lang.reflect.Constructor;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * 规则引擎工厂
  *
- * @author dengluwei
+ * @author lostred
  */
 public interface RulesEngineFactory {
     /**
@@ -29,7 +30,7 @@ public interface RulesEngineFactory {
      * @param <E>             规则约束的参数类型
      * @return 某个规则引擎类型的建造者实例对象
      */
-    static  <T extends RulesEngine<E>, E> Builder<T, E> builder(RuleFactory ruleFactory, String businessType, Class<T> rulesEngineType, Class<E> validClass) {
+    static <T extends RulesEngine<E>, E> Builder<T, E> builder(RuleFactory ruleFactory, String businessType, Class<T> rulesEngineType, Class<E> validClass) {
         return new Builder<>(ruleFactory, businessType, rulesEngineType, validClass);
     }
 
@@ -113,7 +114,8 @@ public interface RulesEngineFactory {
                     rules.addAll(ruleFactory.getRules(businessType, validClass));
                 }
                 if (rules.isEmpty()) {
-                    throw new IllegalArgumentException("This engine's business type is '" + businessType + "', has not available rules.");
+                    throw new RulesEngineInitException("This engine's business type is '" + businessType + "', has not available rules.",
+                            this.businessType, this.rulesEngineType);
                 }
                 return constructor.newInstance(ruleFactory, businessType, rules);
             } catch (NoSuchMethodException e) {

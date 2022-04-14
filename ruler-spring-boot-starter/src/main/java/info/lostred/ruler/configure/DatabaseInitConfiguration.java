@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * 数据库初始化配置
  *
- * @author dengluwei
+ * @author lostred
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(DataSource.class)

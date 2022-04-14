@@ -10,7 +10,7 @@ import java.util.jar.JarEntry;
 /**
  * 包扫描工具
  *
- * @author dengluwei
+ * @author lostred
  */
 public final class PackageScanUtils {
     /**

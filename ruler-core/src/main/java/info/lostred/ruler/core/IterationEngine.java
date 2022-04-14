@@ -3,7 +3,7 @@ package info.lostred.ruler.core;
 /**
  * 规则迭代引擎接口
  *
- * @author dengluwei
+ * @author lostred
  */
 public interface IterationEngine {
     /**

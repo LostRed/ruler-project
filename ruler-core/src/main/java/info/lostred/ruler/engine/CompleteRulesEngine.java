@@ -9,7 +9,7 @@ import java.util.Collection;
  * 完整执行的规则引擎
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 public class CompleteRulesEngine<E> extends DetailRulesEngine<E> {
 

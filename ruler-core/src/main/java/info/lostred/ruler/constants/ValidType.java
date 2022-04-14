@@ -3,7 +3,7 @@ package info.lostred.ruler.constants;
 /**
  * 校验类型
  *
- * @author dengluwei
+ * @author lostred
  */
 public enum ValidType {
     REQUIRED,

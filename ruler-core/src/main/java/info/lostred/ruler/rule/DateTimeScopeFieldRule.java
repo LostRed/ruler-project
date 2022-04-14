@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * 日期时间范围字段校验规则
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 @Rule(ruleCode = "datetime_scope", desc = "规定的日期时间字段必须在限定的范围内")
 public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
@@ -86,7 +86,7 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrap(E element, ValidInfo validInfo, Object value) {
+    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object value) {
         LocalDateTime localDateTime = null;
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
@@ -114,6 +114,6 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
             lower = beginTime == null ? null : this.dateTimeFormatter.format(beginTime);
             upper = endTime == null ? null : this.dateTimeFormatter.format(endTime);
         }
-        return super.wrap(element, validInfo, this.appendReference(format, lower, upper));
+        return super.wrapToSet(element, validInfo, this.appendReference(format, lower, upper));
     }
 }

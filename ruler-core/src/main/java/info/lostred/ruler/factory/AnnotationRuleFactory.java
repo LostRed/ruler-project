@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 /**
  * 应用上下文规则工厂
  *
- * @author dengluwei
+ * @author lostred
  */
 public class AnnotationRuleFactory extends AbstractRuleFactory {
     private final Class<?> configClass;

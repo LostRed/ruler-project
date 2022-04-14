@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * 默认规则引擎工厂
  *
- * @author dengluwei
+ * @author lostred
  */
 public class DefaultRulesEngineFactory implements RulesEngineFactory {
     private final Map<String, ? extends RulesEngine<?>> rulesEngines;

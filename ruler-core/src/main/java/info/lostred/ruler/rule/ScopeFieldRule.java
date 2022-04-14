@@ -3,6 +3,12 @@ package info.lostred.ruler.rule;
 import info.lostred.ruler.core.GlobalConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 
+/**
+ * 范围字段校验规则
+ *
+ * @param <E> 规则约束的参数类型
+ * @author lostred
+ */
 public abstract class ScopeFieldRule<E> extends SingleFieldRule<E> {
 
     public ScopeFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {

@@ -27,7 +27,7 @@ public class CertNoLengthRule extends AbstractRule<Person> {
     @Override
     public Report buildReport(Person element) {
         if (this.judge(element)) {
-            return this.getReport(ruleInfo, element, "certNo", element.getCertNo());
+            return this.wrapToReport(ruleInfo, element, "certNo", element.getCertNo());
         }
         return null;
     }

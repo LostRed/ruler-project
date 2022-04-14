@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 /**
  * jdbc工具
  *
- * @author dengluwei
+ * @author lostred
  */
 public final class JdbcUtils {
     /**
@@ -129,10 +129,10 @@ public final class JdbcUtils {
                 }
                 return os.toString();
             }
+            throw new NullPointerException("Unable to find this resource.");
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Unable to parse this sql.", e);
         }
-        throw new IllegalArgumentException("Unable to parse this sql.");
     }
 
     /**

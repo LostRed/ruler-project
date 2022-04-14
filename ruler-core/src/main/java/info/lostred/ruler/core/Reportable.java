@@ -8,12 +8,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 校验报告生成接口
+ * 可生成报告接口
  *
  * @param <E> 报告数据来源的参数类型
- * @author dengluwei
+ * @author lostred
  */
-public interface Reporter<E> {
+public interface Reportable<E> {
     /**
      * 生成校验报告
      *
@@ -31,7 +31,7 @@ public interface Reporter<E> {
      * @param value     违规值
      * @return 非法字段与值的集合
      */
-    default Report getReport(RuleInfo ruleInfo, E element, String fieldName, Object value) {
+    default Report wrapToReport(RuleInfo ruleInfo, E element, String fieldName, Object value) {
         Map<String, Object> map = new HashMap<>();
         try {
             String fieldTrace = ReflectUtils.getFieldTrace(element.getClass(), element.getClass(),

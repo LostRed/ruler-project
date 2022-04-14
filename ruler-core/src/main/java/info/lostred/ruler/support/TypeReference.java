@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
  * 类型引用
  *
  * @param <T> 泛型类型
- * @author dengluwei
+ * @author lostred
  */
 public abstract class TypeReference<T> implements Comparable<TypeReference<T>> {
     /**

@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * ruler配置类
  *
- * @author dengluwei
+ * @author lostred
  */
 @ConfigurationProperties("ruler")
 public class RulerProperties {

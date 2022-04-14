@@ -10,7 +10,7 @@ import java.util.*;
  * ruler全局配置
  * <p>主要是单字段校验规则依赖的配置</p>
  *
- * @author dengluwei
+ * @author lostred
  * @see SingleFieldRule
  */
 public final class GlobalConfiguration {

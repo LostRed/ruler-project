@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 规则工厂
  *
- * @author dengluwei
+ * @author lostred
  */
 public interface RuleFactory {
     /**

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * 单字段校验规则
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 public abstract class SingleFieldRule<E> extends AbstractRule<E> {
 
@@ -79,7 +79,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
     protected Set<Map.Entry<String, Object>> collectFromValidNode(E element, Object validNode, ValidInfo validInfo) {
         Object value = ReflectUtils.searchAndGetValueByName(validNode, validInfo.getFieldName());
         if (this.isIllegal(validInfo, value)) {
-            return this.wrap(element, validInfo, value);
+            return this.wrapToSet(element, validInfo, value);
         } else {
             return new HashSet<>();
         }
@@ -102,7 +102,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @param value     违规值
      * @return 非法字段与值的集合
      */
-    protected Set<Map.Entry<String, Object>> wrap(E element, ValidInfo validInfo, Object value) {
+    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object value) {
         Map<String, Object> map = new HashMap<>();
         try {
             String fieldTrace = ReflectUtils.getFieldTrace(element.getClass(), validInfo.getValidClass(),

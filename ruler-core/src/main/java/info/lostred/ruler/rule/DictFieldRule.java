@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * 字典字段校验规则
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 @Rule(ruleCode = "dict", desc = "规定的字段必须填写字典中的值")
 public class DictFieldRule<E> extends SingleFieldRule<E> {

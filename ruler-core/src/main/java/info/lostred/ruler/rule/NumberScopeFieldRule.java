@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * 数值范围字段校验规则
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 @Rule(ruleCode = "number_scope", desc = "规定的数值字段必须在限定的范围内")
 public class NumberScopeFieldRule<E> extends ScopeFieldRule<E> {
@@ -63,9 +63,9 @@ public class NumberScopeFieldRule<E> extends ScopeFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrap(E element, ValidInfo validInfo, Object value) {
+    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object value) {
         BigDecimal lowerLimit = validInfo.getLowerLimit();
         BigDecimal upperLimit = validInfo.getUpperLimit();
-        return super.wrap(element, validInfo, this.appendReference(value, lowerLimit, upperLimit));
+        return super.wrapToSet(element, validInfo, this.appendReference(value, lowerLimit, upperLimit));
     }
 }

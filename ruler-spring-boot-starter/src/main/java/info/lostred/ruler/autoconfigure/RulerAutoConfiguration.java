@@ -23,7 +23,7 @@ import java.util.Collection;
 /**
  * ruler自动配置类
  *
- * @author dengluwei
+ * @author lostred
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(prefix = "ruler", name = "default-valid-class")

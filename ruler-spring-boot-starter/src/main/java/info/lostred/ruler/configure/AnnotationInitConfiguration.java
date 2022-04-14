@@ -18,7 +18,7 @@ import java.util.Optional;
 /**
  * 注解初始化配置
  *
- * @author dengluwei
+ * @author lostred
  */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(RulerProperties.class)
@@ -54,8 +54,7 @@ public class AnnotationInitConfiguration {
             }
             try {
                 configClass = this.getClass().getClassLoader().loadClass(className);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            } catch (ClassNotFoundException ignored) {
             }
         }
         String[] scanBasePackages = rulerProperties.getRuleConfig().getScanBasePackages();

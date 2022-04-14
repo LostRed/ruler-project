@@ -29,7 +29,7 @@ public class NumberRule extends AbstractRule<ValidClass> {
     @Override
     public Report buildReport(ValidClass element) {
         if (this.judge(element)) {
-            return this.getReport(ruleInfo, element, FIELD_NAME, element.getNumber());
+            return this.wrapToReport(ruleInfo, element, FIELD_NAME, element.getNumber());
         }
         return null;
     }

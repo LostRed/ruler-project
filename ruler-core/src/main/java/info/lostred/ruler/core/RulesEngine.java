@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * 抽象规则引擎
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     /**
@@ -51,7 +51,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
         this.checkBefore(element);
         logger.config("invoke method=check, valid object=" + element);
         for (AbstractRule<E> abstractRule : this.abstractRules) {
-            if (this.ruleJudge(element, abstractRule)) {
+            if (this.doJudge(element, abstractRule)) {
                 return true;
             }
         }
@@ -67,22 +67,17 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     public abstract Result execute(E element);
 
     @Override
-    public boolean ruleJudge(E element, AbstractRule<E> abstractRule) {
-        if (abstractRule.isSupported(element)) {
-            return abstractRule.judge(element);
-        }
-        return false;
+    public boolean doJudge(E element, Judgement<E> judgement) {
+        return judgement.isSupported(element) && judgement.judge(element);
     }
 
     @Override
-    public Optional<Report> ruleReport(E element, AbstractRule<E> abstractRule) {
-        if (abstractRule.isSupported(element)) {
-            Report report = abstractRule.buildReport(element);
-            if (report != null && !report.getIllegals().isEmpty()) {
-                return Optional.of(report);
-            }
+    public Report doBuildReport(E element, Reportable<E> reportable) {
+        Report report = reportable.buildReport(element);
+        if (report != null && !report.getIllegals().isEmpty()) {
+            return report;
         }
-        return Optional.empty();
+        return null;
     }
 
     /**

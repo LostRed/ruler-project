@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * 抽象规则代理
  *
- * @author dengluwei
+ * @author lostred
  */
 public class AbstractRuleProxy implements MethodInterceptor {
     /**
@@ -46,7 +46,7 @@ public class AbstractRuleProxy implements MethodInterceptor {
             Report report = (Report) result;
             Map<String, Object> illegals = report.getIllegals();
             if (illegals == null || illegals.isEmpty()) {
-                logger.config("grade=" + ValidGrade.QUALIFIED.getText() + ", report=" + illegals);
+                logger.config("grade=" + ValidGrade.QUALIFIED.name() + ", report=" + illegals);
             } else {
                 logger.config("grade=" + report.getRuleInfo().getGrade() + ", report=" + illegals);
             }
@@ -54,7 +54,7 @@ public class AbstractRuleProxy implements MethodInterceptor {
             if ((Boolean) result) {
                 logger.config("grade=" + target.getRuleInfo().getGrade());
             } else {
-                logger.config("grade=" + ValidGrade.QUALIFIED.getText());
+                logger.config("grade=" + ValidGrade.QUALIFIED.name());
             }
         }
         return result;

@@ -9,13 +9,12 @@ import info.lostred.ruler.factory.RuleFactory;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Optional;
 
 /**
  * 详细执行的规则引擎
  *
  * @param <E> 规则约束的参数类型
- * @author dengluwei
+ * @author lostred
  */
 public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements IterationEngine {
 
@@ -31,9 +30,13 @@ public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements Ite
         Iterator<AbstractRule<E>> iterator = this.abstractRules.iterator();
         while (iterator.hasNext() && this.toNext(result.getGrade())) {
             AbstractRule<E> abstractRule = iterator.next();
-            Optional<Report> report = this.ruleReport(element, abstractRule);
-            report.ifPresent(result::addReport);
-            result.updateGrade(report.orElse(null));
+            if (abstractRule.isSupported(element)) {
+                Report report = this.doBuildReport(element, abstractRule);
+                if (report != null) {
+                    result.addReport(report);
+                    result.updateGrade(report);
+                }
+            }
         }
         return result.statistic();
     }

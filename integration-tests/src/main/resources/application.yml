@@ -2,17 +2,15 @@ ruler:
   default-business-type: person
   default-valid-class: info.lostred.ruler.test.entity.Person
   valid-config:
-    init-type: annotation
+    init-type: db
     table-name: ruler_valid_info
   rule-config:
-    init-type: annotation
+    init-type: db
     table-name: ruler_rule_info
     scan-base-packages: info.lostred.ruler.rule
   rules-engine-config:
     type: complete
-
-spring:
-  datasource:
+  db-config:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/rules_engine
     username: rules_engine
