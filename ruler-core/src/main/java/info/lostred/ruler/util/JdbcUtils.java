@@ -119,8 +119,7 @@ public final class JdbcUtils {
      * @return sql
      */
     public static String parseSql(String filename) {
-        try {
-            InputStream is = JdbcUtils.class.getClassLoader().getResourceAsStream("sql/" + filename + ".sql");
+        try (InputStream is = JdbcUtils.class.getClassLoader().getResourceAsStream("sql/" + filename + ".sql")) {
             if (is != null) {
                 OutputStream os = new ByteArrayOutputStream();
                 int i;
