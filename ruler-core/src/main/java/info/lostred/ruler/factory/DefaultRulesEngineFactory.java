@@ -21,16 +21,16 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
     }
 
     @Override
-    public <E> RulesEngine<E> dispatch(Object validRootNode, Class<E> validClass) {
-        return this.dispatch(RulerConstants.DEFAULT_BUSINESS_TYPE, validRootNode, validClass);
+    public <E> RulesEngine<E> getEngine(Object validRootNode, Class<E> validClass) {
+        return this.getEngine(RulerConstants.DEFAULT_BUSINESS_TYPE, validRootNode, validClass);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> RulesEngine<E> dispatch(String businessType, Object validRootNode, Class<E> validClass) {
+    public <E> RulesEngine<E> getEngine(String businessType, Object validRootNode, Class<E> validClass) {
         RulesEngine<E> rulesEngine = (RulesEngine<E>) this.rulesEngines.get(businessType);
         if (rulesEngine == null) {
-            throw new RuntimeException("Cannot dispatch this business type, because has not available rules engine.");
+            throw new RuntimeException("There is not available rules engine for '" + businessType + "' business type.");
         }
         return rulesEngine;
     }

@@ -2,10 +2,10 @@ ruler:
   default-business-type: person
   default-valid-class: info.lostred.ruler.test.entity.Person
   valid-config:
-    init-type: db
+    init-type: annotation
     table-name: ruler_valid_info
   rule-config:
-    init-type: db
+    init-type: annotation
     table-name: ruler_rule_info
     scan-base-packages: info.lostred.ruler.rule
   rules-engine-config:

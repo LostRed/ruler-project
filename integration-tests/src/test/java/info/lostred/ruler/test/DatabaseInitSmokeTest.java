@@ -25,7 +25,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
-public class DatabaseInitSmokeTest {
+class DatabaseInitSmokeTest {
     static String driverClassName = "com.mysql.cj.jdbc.Driver";
     static String url = "jdbc:mysql://localhost:3306/rules_engine";
     static String user = "rules_engine";

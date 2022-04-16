@@ -56,7 +56,7 @@ public interface RulesEngineFactory {
      * @param <E>           规则约束的参数类型
      * @return 规则引擎
      */
-    <E> RulesEngine<E> dispatch(Object validRootNode, Class<E> validClass);
+    <E> RulesEngine<E> getEngine(Object validRootNode, Class<E> validClass);
 
     /**
      * 分配规则引擎
@@ -67,7 +67,7 @@ public interface RulesEngineFactory {
      * @param <E>           规则约束的参数类型
      * @return 规则引擎
      */
-    <E> RulesEngine<E> dispatch(String businessType, Object validRootNode, Class<E> validClass);
+    <E> RulesEngine<E> getEngine(String businessType, Object validRootNode, Class<E> validClass);
 
     /**
      * 规则引擎建造者
@@ -81,7 +81,7 @@ public interface RulesEngineFactory {
         private final Class<E> validClass;
         private final Class<T> rulesEngineType;
 
-        public Builder(RuleFactory ruleFactory, String businessType, Class<T> rulesEngineType, Class<E> validClass) {
+        private Builder(RuleFactory ruleFactory, String businessType, Class<T> rulesEngineType, Class<E> validClass) {
             this.rulesEngineType = rulesEngineType;
             this.validClass = validClass;
             this.ruleFactory = ruleFactory;
@@ -89,7 +89,7 @@ public interface RulesEngineFactory {
         }
 
         @SuppressWarnings("unchecked")
-        public Builder(RuleFactory ruleFactory, String businessType, TypeReference<T> typeReference) {
+        private Builder(RuleFactory ruleFactory, String businessType, TypeReference<T> typeReference) {
             Type type = typeReference.getType();
             if (type instanceof ParameterizedType) {
                 this.rulesEngineType = (Class<T>) ((ParameterizedType) type).getRawType();
@@ -101,6 +101,14 @@ public interface RulesEngineFactory {
             this.businessType = businessType;
         }
 
+        private List<AbstractRule<E>> mergeRules() {
+            List<AbstractRule<E>> rules = ruleFactory.findRules(RulerConstants.DEFAULT_BUSINESS_TYPE, validClass);
+            if (!RulerConstants.DEFAULT_BUSINESS_TYPE.equals(businessType)) {
+                rules.addAll(ruleFactory.findRules(businessType, validClass));
+            }
+            return rules;
+        }
+
         /**
          * 实例化规则引擎
          *
@@ -109,10 +117,7 @@ public interface RulesEngineFactory {
         public T build() {
             try {
                 Constructor<T> constructor = rulesEngineType.getDeclaredConstructor(RuleFactory.class, String.class, Collection.class);
-                List<AbstractRule<E>> rules = ruleFactory.getRules(RulerConstants.DEFAULT_BUSINESS_TYPE, validClass);
-                if (!RulerConstants.DEFAULT_BUSINESS_TYPE.equals(businessType)) {
-                    rules.addAll(ruleFactory.getRules(businessType, validClass));
-                }
+                List<AbstractRule<E>> rules = this.mergeRules();
                 if (rules.isEmpty()) {
                     throw new RulesEngineInitException("This engine's business type is '" + businessType + "', has not available rules.",
                             this.businessType, this.rulesEngineType);

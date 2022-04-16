@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 @SpringBootTest
-class ApplicationTests {
+class ApplicationTest {
     static String businessType = "person";
     @Autowired
     RulesEngineFactory rulesEngineFactory;
@@ -43,7 +43,7 @@ class ApplicationTests {
         Contact contact = new Contact();
         contact.setPassword("1234");
         person.setContacts(Arrays.asList(contact));
-        RulesEngine<Person> rulesEngine = rulesEngineFactory.dispatch(businessType, person, Person.class);
+        RulesEngine<Person> rulesEngine = rulesEngineFactory.getEngine(businessType, person, Person.class);
         long s = System.currentTimeMillis();
         Result result = rulesEngine.execute(person);
         System.out.println(toJson(result));

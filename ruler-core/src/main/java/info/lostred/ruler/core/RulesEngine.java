@@ -5,7 +5,10 @@ import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.factory.RuleFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -27,7 +30,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     /**
      * 规则集合
      */
-    protected final LinkedList<AbstractRule<E>> abstractRules = new LinkedList<>();
+    protected final List<AbstractRule<E>> abstractRules = new CopyOnWriteArrayList<>();
     /**
      * 日志
      */
@@ -148,7 +151,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
         return businessType;
     }
 
-    public LinkedList<AbstractRule<E>> getRules() {
+    public List<AbstractRule<E>> getRules() {
         return abstractRules;
     }
 }

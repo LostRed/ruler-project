@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class AnnotationInitSmokeTest {
+class AnnotationInitSmokeTest {
     static String validClassName = SubValidClass.class.getName();
     static String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
     static RuleFactory ruleFactory;

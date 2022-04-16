@@ -48,7 +48,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> List<AbstractRule<E>> getRules(String businessType, Class<E> validClass) {
+    public <E> List<AbstractRule<E>> findRules(String businessType, Class<E> validClass) {
         return this.rules.values().stream()
                 .filter(e -> e.getRuleInfo().getBusinessType().equals(businessType)
                         && (e.getRuleInfo().getValidClass().equals(validClass)
@@ -82,11 +82,11 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     /**
      * 规则建造者
      */
-    public static class Builder<E> {
+    private static class Builder<E> {
         private final GlobalConfiguration globalConfiguration;
         private final RuleInfo ruleInfo;
 
-        public Builder(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
+        private Builder(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
             this.globalConfiguration = globalConfiguration;
             this.ruleInfo = ruleInfo;
         }
