@@ -184,7 +184,7 @@ public final class ReflectUtils {
                                        String fieldName, Object value,
                                        StringBuilder stringBuilder, List<Field> targetFields) throws NoSuchFieldException {
         if (current.equals(assigned)) {
-            return fieldName;
+            return stringBuilder.append(fieldName).toString();
         } else {
             Field[] fields = current.getDeclaredFields();
             for (Field field : fields) {

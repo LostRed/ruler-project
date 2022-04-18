@@ -64,9 +64,9 @@ public class NumberScopeFieldRule<E> extends ScopeFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object value) {
+    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object validNode, Object value) {
         BigDecimal lowerLimit = validInfo.getLowerLimit();
         BigDecimal upperLimit = validInfo.getUpperLimit();
-        return super.wrapToSet(element, validInfo, this.appendReference(value, lowerLimit, upperLimit));
+        return super.wrapToSet(element, validInfo, validNode, this.appendReference(value, lowerLimit, upperLimit));
     }
 }

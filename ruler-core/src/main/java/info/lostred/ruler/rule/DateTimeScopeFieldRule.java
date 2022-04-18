@@ -87,7 +87,7 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object value) {
+    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object validNode, Object value) {
         LocalDateTime localDateTime = null;
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
@@ -115,6 +115,6 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
             lower = beginTime == null ? null : this.dateTimeFormatter.format(beginTime);
             upper = endTime == null ? null : this.dateTimeFormatter.format(endTime);
         }
-        return super.wrapToSet(element, validInfo, this.appendReference(format, lower, upper));
+        return super.wrapToSet(element, validInfo, validNode, this.appendReference(format, lower, upper));
     }
 }

@@ -138,7 +138,7 @@ public class RulerConfig {
 ```java
 
 @SpringBootTest
-class ApplicationTests {
+class ApplicationTest {
     @Autowired
     RulesEngineFactory rulesEngineFactory;
 

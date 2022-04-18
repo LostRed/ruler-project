@@ -84,7 +84,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
     protected Set<Map.Entry<String, Object>> collectFromValidNode(E element, Object validNode, ValidInfo validInfo) {
         Object value = ReflectUtils.searchAndGetValueByName(validNode, validInfo.getFieldName());
         if (this.isIllegal(validInfo, value)) {
-            return this.wrapToSet(element, validInfo, value);
+            return this.wrapToSet(element, validInfo, validNode, value);
         } else {
             return new HashSet<>();
         }
@@ -104,14 +104,15 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      *
      * @param element   规则约束的对象
      * @param validInfo 校验信息
+     * @param validNode 校验节点
      * @param value     违规值
      * @return 非法字段与值的集合
      */
-    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object value) {
+    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object validNode, Object value) {
         Map<String, Object> map = new HashMap<>();
         try {
             String fieldTrace = ReflectUtils.getFieldTrace(element.getClass(), validInfo.getValidClass(),
-                    validInfo.getFieldName(), value);
+                    validInfo.getFieldName(), validNode);
             map.put(fieldTrace, value);
         } catch (NoSuchFieldException e) {
             map.put(validInfo.getFieldName(), value);
