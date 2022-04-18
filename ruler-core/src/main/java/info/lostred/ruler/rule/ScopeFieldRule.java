@@ -1,6 +1,6 @@
 package info.lostred.ruler.rule;
 
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 
 /**
@@ -11,8 +11,8 @@ import info.lostred.ruler.domain.RuleInfo;
  */
 public abstract class ScopeFieldRule<E> extends SingleFieldRule<E> {
 
-    public ScopeFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
-        super(globalConfiguration, ruleInfo);
+    public ScopeFieldRule(RuleInfo ruleInfo, ValidConfiguration validConfiguration) {
+        super(ruleInfo, validConfiguration);
     }
 
     /**

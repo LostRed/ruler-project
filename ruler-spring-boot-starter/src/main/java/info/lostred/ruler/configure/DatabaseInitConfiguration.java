@@ -2,7 +2,7 @@ package info.lostred.ruler.configure;
 
 import info.lostred.ruler.autoconfigure.RulerProperties;
 import info.lostred.ruler.constants.RulerConstants;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.ValidInfo;
 import info.lostred.ruler.factory.DatabaseRuleFactory;
 import info.lostred.ruler.factory.RuleFactory;
@@ -47,20 +47,21 @@ public class DatabaseInitConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "ruler.valid-config", name = "init-type", havingValue = "db")
-    public GlobalConfiguration defaultGlobalConfiguration(DataSource dataSource) {
+    public ValidConfiguration defaultValidConfiguration(DataSource dataSource) {
         String validInfoTableName = rulerProperties.getValidConfig().getTableName();
         String createTableSql = JdbcUtils.parseSql(RulerConstants.CREATE_VALID_INFO_SQL,
                 RulerConstants.ORIGIN_VALID_INFO_TABLE_NAME, validInfoTableName);
         JdbcUtils.execute(dataSource, createTableSql);
         String selectSql = JdbcUtils.parseSql(RulerConstants.SELECT_VALID_INFO_SQL);
-        List<ValidInfo> validInfos = JdbcUtils.query(dataSource, selectSql, ValidInfo.class);
-        return new GlobalConfiguration(validInfos);
+        String defaultBusinessType = rulerProperties.getDefaultBusinessType();
+        List<ValidInfo> validInfos = JdbcUtils.query(dataSource, selectSql, ValidInfo.class, defaultBusinessType);
+        return new ValidConfiguration(validInfos);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "ruler.rule-config", name = "init-type", havingValue = "db")
-    public RuleFactory dbRuleFactory(GlobalConfiguration globalConfiguration, DataSource dataSource) {
-        return new DatabaseRuleFactory(globalConfiguration, dataSource, rulerProperties.getRuleConfig().getTableName());
+    public RuleFactory dbRuleFactory(ValidConfiguration validConfiguration, DataSource dataSource) {
+        return new DatabaseRuleFactory(validConfiguration, dataSource, rulerProperties.getRuleConfig().getTableName());
     }
 }

@@ -2,7 +2,6 @@ package info.lostred.ruler.test.rule;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.core.AbstractRule;
-import info.lostred.ruler.core.GlobalConfiguration;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.test.domain.model.ValidClass;
@@ -12,8 +11,8 @@ public class StringRule extends AbstractRule<ValidClass> {
 
     private final static String FIELD_NAME = "string";
 
-    public StringRule(GlobalConfiguration config, RuleInfo ruleInfo) {
-        super(config, ruleInfo);
+    public StringRule(RuleInfo ruleInfo) {
+        super(ruleInfo);
     }
 
     @Override

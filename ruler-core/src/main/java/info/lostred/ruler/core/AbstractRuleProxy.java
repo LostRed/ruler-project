@@ -3,6 +3,7 @@ package info.lostred.ruler.core;
 import info.lostred.ruler.constants.ValidGrade;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.rule.SingleFieldRule;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
@@ -36,7 +37,11 @@ public class AbstractRuleProxy implements MethodInterceptor {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(target.getClass());
         enhancer.setCallback(this);
-        return (T) enhancer.create(new Class[]{GlobalConfiguration.class, RuleInfo.class}, new Object[]{null, null});
+        if (target instanceof SingleFieldRule) {
+            return (T) enhancer.create(new Class[]{RuleInfo.class, ValidConfiguration.class}, new Object[]{null, null});
+        } else {
+            return (T) enhancer.create(new Class[]{RuleInfo.class}, new Object[]{null});
+        }
     }
 
     @Override

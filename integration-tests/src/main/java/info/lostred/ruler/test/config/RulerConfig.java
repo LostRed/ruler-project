@@ -2,7 +2,7 @@ package info.lostred.ruler.test.config;
 
 import info.lostred.ruler.annotation.RuleScan;
 import info.lostred.ruler.constants.ValidType;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.ValidInfo;
 import info.lostred.ruler.test.entity.Area;
 import info.lostred.ruler.test.entity.Contact;
@@ -17,9 +17,8 @@ import java.util.*;
 @Configuration
 @RuleScan("info.lostred.ruler.test.rule")
 public class RulerConfig {
-
     @Bean
-    public GlobalConfiguration globalConfiguration() {
+    public ValidConfiguration validConfiguration() {
         Collection<ValidInfo> validInfos = new ArrayList<>();
         ValidInfo validInfo1 = ValidInfo.ofRequired("name", Person.class.getName());
         ValidInfo validInfo2 = ValidInfo.ofRequired("gender", Person.class.getName());
@@ -47,12 +46,10 @@ public class RulerConfig {
         validInfos.add(validInfo9);
         validInfos.add(validInfo10);
         validInfos.add(validInfo11);
-        GlobalConfiguration globalConfiguration = new GlobalConfiguration(validInfos);
+        ValidConfiguration validConfiguration = new ValidConfiguration(validInfos);
 
-        Map<ValidInfo, Set<Object>> dict = new HashMap<>();
         Set<Object> set = new HashSet<>(Arrays.asList("1", "2"));
-        dict.put(validInfo3, set);
-        globalConfiguration.addDict(dict);
-        return globalConfiguration;
+        validInfo3.setDict(set);
+        return validConfiguration;
     }
 }

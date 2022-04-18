@@ -3,7 +3,7 @@ package info.lostred.ruler.test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import info.lostred.ruler.constants.RulerConstants;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.ValidInfo;
 import info.lostred.ruler.engine.CompleteRulesEngine;
@@ -30,14 +30,14 @@ class AnnotationInitSmokeTest {
     static RuleFactory ruleFactory;
     static DetailRulesEngine<ValidClass> engine;
     static Collection<ValidInfo> validInfos;
-    static GlobalConfiguration globalConfiguration;
+    static ValidConfiguration validConfiguration;
     ObjectMapper objectMapper = new ObjectMapper();
 
     String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
 
-    static GlobalConfiguration buildValidInfos() {
+    static ValidConfiguration buildValidInfos() {
         validInfos = new ArrayList<>();
         ValidInfo validInfo1 = ValidInfo.ofRequired("string", validClassName);
         ValidInfo validInfo2 = ValidInfo.ofRequired("number", validClassName);
@@ -51,13 +51,13 @@ class AnnotationInitSmokeTest {
         validInfos.add(validInfo4);
         validInfos.add(validInfo5);
         validInfos.add(validInfo6);
-        return new GlobalConfiguration(validInfos);
+        return new ValidConfiguration(validInfos);
     }
 
     @BeforeAll
     static void init() {
-        globalConfiguration = buildValidInfos();
-        ruleFactory = new AnnotationRuleFactory(globalConfiguration, RulerConfig.class);
+        validConfiguration = buildValidInfos();
+        ruleFactory = new AnnotationRuleFactory(validConfiguration, RulerConfig.class);
         TypeReference<CompleteRulesEngine<ValidClass>> typeReference = new TypeReference<CompleteRulesEngine<ValidClass>>() {
         };
         engine = RulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();

@@ -6,6 +6,7 @@ import info.lostred.ruler.constants.ValidType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -62,6 +63,8 @@ public class ValidInfo {
      * 规则约束的类
      */
     private Class<?> validClass;
+
+    private Set<Object> dict;
 
     public static ValidInfo ofRequired(String fieldName, String validClassName) {
         return ofRequired(RulerConstants.DEFAULT_BUSINESS_TYPE, fieldName, validClassName);
@@ -185,6 +188,10 @@ public class ValidInfo {
         return validClass;
     }
 
+    public Set<Object> getDict() {
+        return dict;
+    }
+
     public void setRequired(boolean required) {
         this.required = required;
     }
@@ -195,6 +202,10 @@ public class ValidInfo {
 
     public void setValidClass(Class<?> validClass) {
         this.validClass = validClass;
+    }
+
+    public void setDict(Set<Object> dict) {
+        this.dict = dict;
     }
 
     @Override

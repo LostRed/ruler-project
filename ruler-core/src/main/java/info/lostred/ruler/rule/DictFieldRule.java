@@ -1,7 +1,8 @@
 package info.lostred.ruler.rule;
 
 import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.constants.ValidType;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.domain.ValidInfo;
@@ -19,25 +20,24 @@ import java.util.stream.Collectors;
 @Rule(ruleCode = "dict", desc = "规定的字段必须填写字典中的值")
 public class DictFieldRule<E> extends SingleFieldRule<E> {
 
-    public DictFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
-        super(globalConfiguration, ruleInfo);
+    public DictFieldRule(RuleInfo ruleInfo, ValidConfiguration validConfiguration) {
+        super(ruleInfo, validConfiguration);
     }
 
     @Override
     public boolean isSupported(E element) {
-        return !globalConfiguration.getDictValidInfos().isEmpty()
-                && !globalConfiguration.getDict().isEmpty();
+        return !validConfiguration.getValidInfos(ValidType.DICT.name()).isEmpty();
     }
 
     @Override
     public boolean judge(E element) {
-        return globalConfiguration.getDictValidInfos().stream()
+        return validConfiguration.getValidInfos(ValidType.DICT.name()).stream()
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
     @Override
     public Report buildReport(E element) {
-        Map<String, Object> map = globalConfiguration.getDictValidInfos().stream()
+        Map<String, Object> map = validConfiguration.getValidInfos(ValidType.DICT.name()).stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);
@@ -45,9 +45,9 @@ public class DictFieldRule<E> extends SingleFieldRule<E> {
 
     @Override
     protected boolean isIllegal(ValidInfo validInfo, Object value) {
-        Set<Object> set = globalConfiguration.getDict().get(validInfo);
-        if (set != null && value != null && !"".equals(value)) {
-            return !set.contains(value);
+        Set<Object> dict = validInfo.getDict();
+        if (dict != null && value != null && !"".equals(value)) {
+            return !dict.contains(value);
         }
         return false;
     }

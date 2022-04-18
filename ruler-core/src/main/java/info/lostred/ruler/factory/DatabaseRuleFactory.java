@@ -1,7 +1,7 @@
 package info.lostred.ruler.factory;
 
 import info.lostred.ruler.constants.RulerConstants;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.exception.RuleInitException;
 import info.lostred.ruler.util.JdbcUtils;
@@ -18,8 +18,8 @@ public class DatabaseRuleFactory extends AbstractRuleFactory {
     private final DataSource dataSource;
     private final String ruleInfoTableName;
 
-    public DatabaseRuleFactory(GlobalConfiguration globalConfiguration, DataSource dataSource, String ruleInfoTableName) {
-        super(globalConfiguration);
+    public DatabaseRuleFactory(ValidConfiguration validConfiguration, DataSource dataSource, String ruleInfoTableName) {
+        super(validConfiguration);
         this.dataSource = dataSource;
         this.ruleInfoTableName = ruleInfoTableName;
         this.init();

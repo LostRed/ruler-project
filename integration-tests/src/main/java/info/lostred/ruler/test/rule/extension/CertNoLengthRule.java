@@ -2,7 +2,6 @@ package info.lostred.ruler.test.rule.extension;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.core.AbstractRule;
-import info.lostred.ruler.core.GlobalConfiguration;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.test.entity.Person;
@@ -10,8 +9,8 @@ import info.lostred.ruler.test.entity.Person;
 @Rule(ruleCode = "test", businessType = "person", desc = "身份证长度必须为18位", validClass = Person.class)
 public class CertNoLengthRule extends AbstractRule<Person> {
 
-    public CertNoLengthRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
-        super(globalConfiguration, ruleInfo);
+    public CertNoLengthRule(RuleInfo ruleInfo) {
+        super(ruleInfo);
     }
 
     @Override

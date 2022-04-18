@@ -33,6 +33,7 @@ class ApplicationTest {
     void rulesEngineFactoryTest() throws JsonProcessingException, ParseException {
         Person person = new Person();
         person.setCertNo("12312");
+        person.setGender("男");
         person.setAge(10);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date parse = simpleDateFormat.parse("2011-01-01");
@@ -40,9 +41,11 @@ class ApplicationTest {
         Area area = new Area();
 
         person.setArea(area);
-        Contact contact = new Contact();
-        contact.setPassword("1234");
-        person.setContacts(Arrays.asList(contact));
+        Contact contact1 = new Contact();
+        contact1.setPassword("1234");
+        Contact contact2 = new Contact();
+        contact2.setPassword("1234");
+        person.setContacts(Arrays.asList(contact1, contact2));
         RulesEngine<Person> rulesEngine = rulesEngineFactory.getEngine(businessType, person, Person.class);
         long s = System.currentTimeMillis();
         Result result = rulesEngine.execute(person);

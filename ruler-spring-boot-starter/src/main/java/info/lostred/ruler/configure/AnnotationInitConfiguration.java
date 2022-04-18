@@ -2,7 +2,7 @@ package info.lostred.ruler.configure;
 
 import info.lostred.ruler.annotation.RuleScan;
 import info.lostred.ruler.autoconfigure.RulerProperties;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.factory.AnnotationRuleFactory;
 import info.lostred.ruler.factory.RuleFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -34,14 +34,14 @@ public class AnnotationInitConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "ruler.valid-config", name = "init-type", havingValue = "annotation", matchIfMissing = true)
-    public GlobalConfiguration defaultGlobalConfiguration() {
-        return new GlobalConfiguration(null);
+    public ValidConfiguration defaultGlobalConfiguration() {
+        return new ValidConfiguration(null);
     }
 
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "ruler.rule-config", name = "init-type", havingValue = "annotation", matchIfMissing = true)
-    public RuleFactory annotationRuleFactory(GlobalConfiguration globalConfiguration) {
+    public RuleFactory annotationRuleFactory(ValidConfiguration rulesEngineConfiguration) {
         Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RuleScan.class);
         Class<?> configClass = null;
         Optional<Object> first = beans.values().stream().findFirst();
@@ -59,8 +59,8 @@ public class AnnotationInitConfiguration {
         }
         String[] scanBasePackages = rulerProperties.getRuleConfig().getScanBasePackages();
         if (scanBasePackages != null) {
-            return new AnnotationRuleFactory(globalConfiguration, configClass, scanBasePackages);
+            return new AnnotationRuleFactory(rulesEngineConfiguration, configClass, scanBasePackages);
         }
-        return new AnnotationRuleFactory(globalConfiguration, configClass);
+        return new AnnotationRuleFactory(rulesEngineConfiguration, configClass);
     }
 }

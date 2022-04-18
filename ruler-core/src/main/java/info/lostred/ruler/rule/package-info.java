@@ -10,7 +10,7 @@
  * @see info.lostred.ruler.core.AbstractRule
  * @see info.lostred.ruler.rule.RequiredFieldRule
  * @see info.lostred.ruler.rule.DictFieldRule
- * @see info.lostred.ruler.core.GlobalConfiguration
+ * @see info.lostred.ruler.core.ValidConfiguration
  * @see info.lostred.ruler.domain.ValidInfo
  */
 package info.lostred.ruler.rule;

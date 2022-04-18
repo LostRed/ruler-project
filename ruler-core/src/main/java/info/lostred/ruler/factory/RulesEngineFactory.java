@@ -49,7 +49,7 @@ public interface RulesEngineFactory {
     }
 
     /**
-     * 分配规则引擎
+     * 从引擎单例池中获取规则引擎
      *
      * @param validRootNode 校验根节点
      * @param validClass    规则约束类的类对象
@@ -59,7 +59,7 @@ public interface RulesEngineFactory {
     <E> RulesEngine<E> getEngine(Object validRootNode, Class<E> validClass);
 
     /**
-     * 分配规则引擎
+     * 从引擎单例池中获取规则引擎
      *
      * @param businessType  业务类型
      * @param validRootNode 校验根节点

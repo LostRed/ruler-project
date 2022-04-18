@@ -10,21 +10,12 @@ import info.lostred.ruler.domain.RuleInfo;
  */
 public abstract class AbstractRule<E> implements Judgement<E>, Reportable<E> {
     /**
-     * 规则配置
-     */
-    protected final GlobalConfiguration globalConfiguration;
-    /**
      * 规则信息
      */
     protected final RuleInfo ruleInfo;
 
-    public AbstractRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
-        this.globalConfiguration = globalConfiguration;
+    public AbstractRule(RuleInfo ruleInfo) {
         this.ruleInfo = ruleInfo;
-    }
-
-    public GlobalConfiguration getValidConfiguration() {
-        return globalConfiguration;
     }
 
     public RuleInfo getRuleInfo() {

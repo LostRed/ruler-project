@@ -3,7 +3,7 @@ package info.lostred.ruler.factory;
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.annotation.RuleScan;
 import info.lostred.ruler.core.AbstractRule;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.util.PackageScanUtils;
 
@@ -22,8 +22,8 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
     private final Class<?> configClass;
     private final String[] anotherPackages;
 
-    public AnnotationRuleFactory(GlobalConfiguration globalConfiguration, Class<?> configClass, String... anotherPackages) {
-        super(globalConfiguration);
+    public AnnotationRuleFactory(ValidConfiguration validConfiguration, Class<?> configClass, String... anotherPackages) {
+        super(validConfiguration);
         this.configClass = configClass;
         this.anotherPackages = anotherPackages;
         this.init();

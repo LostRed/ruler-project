@@ -1,7 +1,8 @@
 package info.lostred.ruler.rule;
 
 import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.constants.ValidType;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.domain.ValidInfo;
@@ -19,24 +20,24 @@ import java.util.stream.Collectors;
 @Rule(ruleCode = "required", desc = "规定的字段必须填写")
 public class RequiredFieldRule<E> extends SingleFieldRule<E> {
 
-    public RequiredFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
-        super(globalConfiguration, ruleInfo);
+    public RequiredFieldRule(RuleInfo ruleInfo, ValidConfiguration validConfiguration) {
+        super(ruleInfo, validConfiguration);
     }
 
     @Override
     public boolean isSupported(E element) {
-        return !globalConfiguration.getRequiredValidInfos().isEmpty();
+        return !validConfiguration.getValidInfos(ValidType.REQUIRED.name()).isEmpty();
     }
 
     @Override
     public boolean judge(E element) {
-        return globalConfiguration.getRequiredValidInfos().stream()
+        return validConfiguration.getValidInfos(ValidType.REQUIRED.name()).stream()
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
     @Override
     public Report buildReport(E element) {
-        Map<String, Object> map = globalConfiguration.getRequiredValidInfos().stream()
+        Map<String, Object> map = validConfiguration.getValidInfos(ValidType.REQUIRED.name()).stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);

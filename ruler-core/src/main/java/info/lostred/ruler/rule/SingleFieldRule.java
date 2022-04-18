@@ -1,7 +1,7 @@
 package info.lostred.ruler.rule;
 
 import info.lostred.ruler.core.AbstractRule;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.domain.ValidInfo;
 import info.lostred.ruler.util.ReflectUtils;
@@ -16,9 +16,14 @@ import java.util.stream.Collectors;
  * @author lostred
  */
 public abstract class SingleFieldRule<E> extends AbstractRule<E> {
+    /**
+     * 校验配置
+     */
+    protected final ValidConfiguration validConfiguration;
 
-    public SingleFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
-        super(globalConfiguration, ruleInfo);
+    public SingleFieldRule(RuleInfo ruleInfo, ValidConfiguration validConfiguration) {
+        super(ruleInfo);
+        this.validConfiguration = validConfiguration;
     }
 
     /**

@@ -3,7 +3,7 @@ package info.lostred.ruler.test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import info.lostred.ruler.constants.RulerConstants;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.ValidInfo;
 import info.lostred.ruler.engine.CompleteRulesEngine;
@@ -36,30 +36,30 @@ class DatabaseInitSmokeTest {
     static RuleFactory ruleFactory;
     static DetailRulesEngine<ValidClass> engine;
     static Collection<ValidInfo> validInfos;
-    static GlobalConfiguration globalConfiguration;
+    static ValidConfiguration validConfiguration;
     ObjectMapper objectMapper = new ObjectMapper();
 
     String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
     }
 
-    static GlobalConfiguration buildValidInfos() {
+    static ValidConfiguration buildValidInfos() {
         String createTableSql = JdbcUtils.parseSql(RulerConstants.CREATE_VALID_INFO_SQL);
         String insertDataSql1 = JdbcUtils.parseSql("insert-valid-info");
-//        String insertDataSql2 = JdbcUtils.parseSql("insert-test-rule-info");
+        String insertDataSql2 = JdbcUtils.parseSql("insert-test-rule-info");
         JdbcUtils.execute(dataSource, createTableSql);
         JdbcUtils.execute(dataSource, insertDataSql1);
-//        JdbcUtils.execute(dataSource, insertDataSql2);
+        JdbcUtils.execute(dataSource, insertDataSql2);
         String selectSql = JdbcUtils.parseSql(RulerConstants.SELECT_VALID_INFO_SQL);
-        validInfos = JdbcUtils.query(dataSource, selectSql, ValidInfo.class);
-        return new GlobalConfiguration(validInfos);
+        validInfos = JdbcUtils.query(dataSource, selectSql, ValidInfo.class, businessType);
+        return new ValidConfiguration(validInfos);
     }
 
     @BeforeAll
     static void init() {
         dataSource = new RulerDateSource(driverClassName, url, user, password);
-        globalConfiguration = buildValidInfos();
-        ruleFactory = new DatabaseRuleFactory(globalConfiguration, dataSource, RulerConstants.ORIGIN_RULE_INFO_TABLE_NAME);
+        validConfiguration = buildValidInfos();
+        ruleFactory = new DatabaseRuleFactory(validConfiguration, dataSource, RulerConstants.ORIGIN_RULE_INFO_TABLE_NAME);
         TypeReference<CompleteRulesEngine<ValidClass>> typeReference = new TypeReference<CompleteRulesEngine<ValidClass>>() {
         };
         engine = RulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();

@@ -6,7 +6,16 @@ package info.lostred.ruler.constants;
  * @author lostred
  */
 public enum ValidGrade {
+    /**
+     * 合格
+     */
     QUALIFIED,
+    /**
+     * 可疑
+     */
     SUSPECTED,
+    /**
+     * 违规
+     */
     ILLEGAL
 }

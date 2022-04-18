@@ -1,7 +1,6 @@
 package info.lostred.ruler.factory;
 
 import info.lostred.ruler.core.AbstractRule;
-import info.lostred.ruler.core.GlobalConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 
 import java.util.List;
@@ -39,13 +38,6 @@ public interface RuleFactory {
      * @return 规则
      */
     <E> AbstractRule<E> getRule(String ruleCode);
-
-    /**
-     * 获取ruler全局配置
-     *
-     * @return ruler全局配置
-     */
-    GlobalConfiguration getGlobalConfiguration();
 
     /**
      * 根据业务类型与约束对象类型查找规则集合

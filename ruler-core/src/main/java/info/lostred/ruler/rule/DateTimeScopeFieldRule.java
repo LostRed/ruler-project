@@ -1,7 +1,8 @@
 package info.lostred.ruler.rule;
 
 import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.core.GlobalConfiguration;
+import info.lostred.ruler.constants.ValidType;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.domain.ValidInfo;
@@ -26,24 +27,24 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public DateTimeScopeFieldRule(GlobalConfiguration globalConfiguration, RuleInfo ruleInfo) {
-        super(globalConfiguration, ruleInfo);
+    public DateTimeScopeFieldRule(RuleInfo ruleInfo, ValidConfiguration validConfiguration) {
+        super(ruleInfo, validConfiguration);
     }
 
     @Override
     public boolean isSupported(E element) {
-        return !globalConfiguration.getDateTimeScopeValidInfos().isEmpty();
+        return !validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).isEmpty();
     }
 
     @Override
     public boolean judge(E element) {
-        return globalConfiguration.getDateTimeScopeValidInfos().stream()
+        return validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).stream()
                 .anyMatch(validInfo -> this.check(element, validInfo));
     }
 
     @Override
     public Report buildReport(E element) {
-        Map<String, Object> map = globalConfiguration.getDateTimeScopeValidInfos().stream()
+        Map<String, Object> map = validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).stream()
                 .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);
