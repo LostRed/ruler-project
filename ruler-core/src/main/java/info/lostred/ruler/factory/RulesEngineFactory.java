@@ -3,7 +3,7 @@ package info.lostred.ruler.factory;
 import info.lostred.ruler.constants.RulerConstants;
 import info.lostred.ruler.core.AbstractRule;
 import info.lostred.ruler.core.RulesEngine;
-import info.lostred.ruler.exception.RulesEngineInitException;
+import info.lostred.ruler.exception.RulesEngineInitializationException;
 import info.lostred.ruler.support.TypeReference;
 
 import java.lang.reflect.Constructor;
@@ -119,7 +119,7 @@ public interface RulesEngineFactory {
                 Constructor<T> constructor = rulesEngineType.getDeclaredConstructor(RuleFactory.class, String.class, Collection.class);
                 List<AbstractRule<E>> rules = this.mergeRules();
                 if (rules.isEmpty()) {
-                    throw new RulesEngineInitException("This engine's business type is '" + businessType + "', has not available rules.",
+                    throw new RulesEngineInitializationException("This engine's business type is '" + businessType + "', has not available rules.",
                             this.businessType, this.rulesEngineType);
                 }
                 return constructor.newInstance(ruleFactory, businessType, rules);

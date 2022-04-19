@@ -23,15 +23,15 @@ public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements Ite
     }
 
     @Override
-    public Result execute(E element) {
-        super.checkBefore(element);
-        logger.config("invoke method=execute, valid object=" + element);
+    public Result execute(E object) {
+        super.checkBefore(object);
+        logger.config("invoke method=execute, valid object=" + object);
         Result result = Result.of();
         Iterator<AbstractRule<E>> iterator = this.abstractRules.iterator();
         while (iterator.hasNext() && this.toNext(result.getGrade())) {
             AbstractRule<E> abstractRule = iterator.next();
-            if (abstractRule.isSupported(element)) {
-                Report report = this.doBuildReport(element, abstractRule);
+            if (abstractRule.isSupported(object)) {
+                Report report = this.doBuildReport(object, abstractRule);
                 if (report != null) {
                     result.addReport(report);
                     result.updateGrade(report);

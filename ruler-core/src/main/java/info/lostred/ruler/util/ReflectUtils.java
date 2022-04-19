@@ -69,7 +69,7 @@ public final class ReflectUtils {
             } else {
                 Field field = targetFields.get(0);
                 nodeInfo.setNode(field.get(object));
-                nodeInfo.getStringBuilder().append(field.getName()).append(".");
+                nodeInfo.getTracer().append(field.getName()).append(".");
                 return nodeInfo;
             }
         }
@@ -99,7 +99,7 @@ public final class ReflectUtils {
      * @return 集合元素的节点信息
      */
     public static NodeInfo getNodeInfoFromCollection(NodeInfo nodeInfo, Object node) {
-        String s = nodeInfo.getNodeTrace() + Integer.toHexString(node.hashCode());
+        String s = nodeInfo.getTrace() + Integer.toHexString(node.hashCode()) + ".";
         return new NodeInfo(node, new StringBuilder(s));
     }
 
@@ -160,7 +160,7 @@ public final class ReflectUtils {
             Field field = findFieldByName(object.getClass(), fieldName);
             field.setAccessible(true);
             nodeInfo.setNode(field.get(object));
-            nodeInfo.getStringBuilder().append(fieldName);
+            nodeInfo.getTracer().append(fieldName);
             return nodeInfo;
         } catch (NoSuchFieldException ignored) {
             throw new RuntimeException("Failed to find field '" + fieldName + "' from " + object.getClass().getName() + ".");

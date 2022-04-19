@@ -19,20 +19,20 @@ public class StringRule extends AbstractRule<ValidClass> {
     }
 
     @Override
-    public boolean isSupported(ValidClass element) {
-        return element.getNumber() != null
-                && element.getNumber().intValue() > 3;
+    public boolean isSupported(ValidClass object) {
+        return object.getNumber() != null
+                && object.getNumber().intValue() > 3;
     }
 
     @Override
-    public boolean judge(ValidClass element) {
-        return "test".equals(element.getString());
+    public boolean judge(ValidClass object) {
+        return "test".equals(object.getString());
     }
 
     @Override
-    public Report buildReport(ValidClass element) {
-        if (this.judge(element)) {
-            Set<Map.Entry<String, Object>> set = this.getEntry(FIELD_NAME, element.getString());
+    public Report buildReport(ValidClass object) {
+        if (this.judge(object)) {
+            Set<Map.Entry<String, Object>> set = this.getEntry(FIELD_NAME, object.getString());
             return Report.of(ruleInfo).putIllegals(set);
         }
         return null;

@@ -35,20 +35,20 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
     }
 
     @Override
-    public boolean isSupported(E element) {
+    public boolean isSupported(E object) {
         return !validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).isEmpty();
     }
 
     @Override
-    public boolean judge(E element) {
+    public boolean judge(E object) {
         return validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).stream()
-                .anyMatch(validInfo -> this.check(element, validInfo));
+                .anyMatch(validInfo -> this.check(object, validInfo));
     }
 
     @Override
-    public Report buildReport(E element) {
+    public Report buildReport(E object) {
         Map<String, Object> map = validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).stream()
-                .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
+                .flatMap(validInfo -> this.collectIllegals(object, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);
     }
@@ -90,7 +90,7 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrapToSet(ValidInfo validInfo, String nodeTrace, Object value) {
+    protected Set<Map.Entry<String, Object>> collect(ValidInfo validInfo, String nodeTrace, Object value) {
         LocalDateTime localDateTime = null;
         if (value instanceof Date) {
             Instant instant = ((Date) value).toInstant();
@@ -118,6 +118,6 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
             lower = beginTime == null ? null : this.dateTimeFormatter.format(beginTime);
             upper = endTime == null ? null : this.dateTimeFormatter.format(endTime);
         }
-        return super.wrapToSet(validInfo, nodeTrace, this.appendReference(format, lower, upper));
+        return super.collect(validInfo, nodeTrace, this.appendReference(format, lower, upper));
     }
 }

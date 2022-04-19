@@ -19,19 +19,19 @@ public class NumberRule extends AbstractRule<ValidClass> {
     }
 
     @Override
-    public boolean isSupported(ValidClass element) {
-        return element.getNumber() != null;
+    public boolean isSupported(ValidClass object) {
+        return object.getNumber() != null;
     }
 
     @Override
-    public boolean judge(ValidClass element) {
-        return element.getNumber().intValue() <= 0;
+    public boolean judge(ValidClass object) {
+        return object.getNumber().intValue() <= 0;
     }
 
     @Override
-    public Report buildReport(ValidClass element) {
-        if (this.judge(element)) {
-            Set<Map.Entry<String, Object>> set = this.getEntry(FIELD_NAME, element.getNumber());
+    public Report buildReport(ValidClass object) {
+        if (this.judge(object)) {
+            Set<Map.Entry<String, Object>> set = this.getEntry(FIELD_NAME, object.getNumber());
             return Report.of(ruleInfo).putIllegals(set);
         }
         return null;

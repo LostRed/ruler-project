@@ -7,30 +7,30 @@ import info.lostred.ruler.domain.RuleInfo;
  *
  * @author lostred
  */
-public class RuleInitException extends RuntimeException {
+public class RuleInitializationException extends RuntimeException {
     private final RuleInfo ruleInfo;
 
-    public RuleInitException(RuleInfo ruleInfo) {
+    public RuleInitializationException(RuleInfo ruleInfo) {
         super();
         this.ruleInfo = ruleInfo;
     }
 
-    public RuleInitException(String message, RuleInfo ruleInfo) {
+    public RuleInitializationException(String message, RuleInfo ruleInfo) {
         super(message);
         this.ruleInfo = ruleInfo;
     }
 
-    public RuleInitException(String message, Throwable cause, RuleInfo ruleInfo) {
+    public RuleInitializationException(String message, Throwable cause, RuleInfo ruleInfo) {
         super(message, cause);
         this.ruleInfo = ruleInfo;
     }
 
-    public RuleInitException(Throwable cause, RuleInfo ruleInfo) {
+    public RuleInitializationException(Throwable cause, RuleInfo ruleInfo) {
         super(cause);
         this.ruleInfo = ruleInfo;
     }
 
-    public RuleInitException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, RuleInfo ruleInfo) {
+    public RuleInitializationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, RuleInfo ruleInfo) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.ruleInfo = ruleInfo;
     }

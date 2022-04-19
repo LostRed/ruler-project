@@ -34,27 +34,26 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     /**
      * 日志
      */
-    protected final Logger logger;
+    protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
     public RulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
         this.ruleFactory = ruleFactory;
         this.businessType = businessType;
         this.abstractRules.addAll(abstractRules);
         this.abstractRules.sort(Comparator.comparing(e -> e.getRuleInfo().getSeq()));
-        this.logger = Logger.getLogger(this.getClass().getName());
     }
 
     /**
      * 执行规则，生成是否违规的结果
      *
-     * @param element 规则约束的对象
+     * @param object 规则约束的对象
      * @return 违规返回true，否则返回false
      */
-    public boolean check(E element) {
-        this.checkBefore(element);
-        logger.config("invoke method=check, valid object=" + element);
+    public boolean check(E object) {
+        this.checkBefore(object);
+        logger.config("invoke method=check, valid object=" + object);
         for (AbstractRule<E> abstractRule : this.abstractRules) {
-            if (this.doJudge(element, abstractRule)) {
+            if (this.doJudge(object, abstractRule)) {
                 return true;
             }
         }
@@ -64,19 +63,19 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     /**
      * 执行规则，生成结果
      *
-     * @param element 规则约束的对象
+     * @param object 规则约束的对象
      * @return 结果
      */
-    public abstract Result execute(E element);
+    public abstract Result execute(E object);
 
     @Override
-    public boolean doJudge(E element, Judgement<E> judgement) {
-        return judgement.isSupported(element) && judgement.judge(element);
+    public boolean doJudge(E object, Judgement<E> judgement) {
+        return judgement.isSupported(object) && judgement.judge(object);
     }
 
     @Override
-    public Report doBuildReport(E element, Reportable<E> reportable) {
-        Report report = reportable.buildReport(element);
+    public Report doBuildReport(E object, Reportable<E> reportable) {
+        Report report = reportable.buildReport(object);
         if (report != null && !report.getIllegals().isEmpty()) {
             return report;
         }
@@ -86,10 +85,10 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     /**
      * 执行前检查
      *
-     * @param element 规则约束的对象
+     * @param object 规则约束的对象
      */
-    protected void checkBefore(E element) {
-        if (element == null) {
+    protected void checkBefore(E object) {
+        if (object == null) {
             throw new NullPointerException("The valid node is null.");
         }
     }

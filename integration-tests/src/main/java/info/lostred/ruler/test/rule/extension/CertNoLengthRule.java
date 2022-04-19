@@ -17,19 +17,19 @@ public class CertNoLengthRule extends AbstractRule<Person> {
     }
 
     @Override
-    public boolean isSupported(Person element) {
-        return element.getCertNo() != null && !"".equals(element.getCertNo());
+    public boolean isSupported(Person object) {
+        return object.getCertNo() != null && !"".equals(object.getCertNo());
     }
 
     @Override
-    public boolean judge(Person element) {
-        return element.getCertNo().length() != 18;
+    public boolean judge(Person object) {
+        return object.getCertNo().length() != 18;
     }
 
     @Override
-    public Report buildReport(Person element) {
-        if (this.judge(element)) {
-            Set<Map.Entry<String, Object>> set = this.getEntry("certNo", element.getCertNo());
+    public Report buildReport(Person object) {
+        if (this.judge(object)) {
+            Set<Map.Entry<String, Object>> set = this.getEntry("certNo", object.getCertNo());
             return Report.of(ruleInfo).putIllegals(set);
         }
         return null;

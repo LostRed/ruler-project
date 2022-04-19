@@ -7,10 +7,8 @@ import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.domain.ValidInfo;
 import info.lostred.ruler.util.ReflectUtils;
 
-import java.text.AttributedString;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 单字段校验规则
@@ -37,12 +35,13 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 违规返回true，否则返回false
      */
     protected boolean check(E element, ValidInfo validInfo) {
-        Object validNode = ReflectUtils.searchAndGetNodeByType(element, validInfo.getValidClass());
-        if (validNode instanceof Collection) {
-            return ((Collection<?>) validNode)
-                    .stream().anyMatch(e -> this.valid(e, validInfo));
+        NodeInfo nodeInfo = ReflectUtils.searchAndGetNodeByType(element, validInfo.getValidClass());
+        Object node = nodeInfo.getNode();
+        if (node instanceof Collection) {
+            return ((Collection<?>) node).stream()
+                    .anyMatch(e -> this.validCollection(nodeInfo, validInfo, e));
         } else {
-            return this.valid(validNode, validInfo);
+            return this.valid(nodeInfo, validInfo);
         }
     }
 
@@ -55,40 +54,56 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      */
     protected Set<Map.Entry<String, Object>> collectIllegals(E element, ValidInfo validInfo) {
         NodeInfo nodeInfo = ReflectUtils.searchAndGetNodeByType(element, validInfo.getValidClass());
-        Object validNode = nodeInfo.getNode();
-        if (validNode instanceof Collection) {
-            return ((Collection<?>) validNode).stream()
-                    .flatMap(node -> this.streamEntryFromCollection(nodeInfo, validInfo, node))
+        Object node = nodeInfo.getNode();
+        if (node instanceof Collection) {
+            return ((Collection<?>) node).stream()
+                    .flatMap(e -> this.collectEntryFromCollection(nodeInfo, validInfo, e).stream())
                     .collect(Collectors.toSet());
         } else {
-            return this.collectEntrySetFromObject(nodeInfo, validInfo);
+            return this.collectEntryFromObject(nodeInfo, validInfo);
         }
+    }
+
+    //simple rules engine will invoke these methods below.
+
+    /**
+     * 校验集合中的数据
+     *
+     * @param nodeInfo  集合的节点信息
+     * @param validInfo 校验信息
+     * @param element   集合中的元素
+     * @return 违规返回true，否则返回false
+     */
+    protected boolean validCollection(NodeInfo nodeInfo, ValidInfo validInfo, Object element) {
+        NodeInfo subNodeInfo = ReflectUtils.getNodeInfoFromCollection(nodeInfo, element);
+        return this.valid(subNodeInfo, validInfo);
     }
 
     /**
      * 校验对象数据
      *
-     * @param validNode 校验节点
+     * @param nodeInfo  节点信息
      * @param validInfo 校验信息
      * @return 违规返回true，否则返回false
      */
-    protected boolean valid(Object validNode, ValidInfo validInfo) {
-        NodeInfo nodeInfo = new NodeInfo(validNode);
-        Object value = ReflectUtils.searchAndGetValueByName(nodeInfo, validInfo.getFieldName());
-        return this.isIllegal(validInfo, value);
+    protected boolean valid(NodeInfo nodeInfo, ValidInfo validInfo) {
+        NodeInfo subNodeInfo = ReflectUtils.searchAndGetValueByName(nodeInfo, validInfo.getFieldName());
+        return this.isIllegal(validInfo, subNodeInfo);
     }
 
+    //detail rules engine will invoke these methods below.
+
     /**
-     * 从集合类节点收集非法的字段与值并转换为流
+     * 从集合类节点收集非法的字段与值
      *
      * @param nodeInfo  集合的节点信息
      * @param validInfo 校验信息
      * @param element   集合中的元素
      * @return 键值对的流
      */
-    protected Stream<Map.Entry<String, Object>> streamEntryFromCollection(NodeInfo nodeInfo, ValidInfo validInfo, Object element) {
+    protected Set<Map.Entry<String, Object>> collectEntryFromCollection(NodeInfo nodeInfo, ValidInfo validInfo, Object element) {
         NodeInfo subNodeInfo = ReflectUtils.getNodeInfoFromCollection(nodeInfo, element);
-        return this.collectEntrySetFromObject(subNodeInfo, validInfo).stream();
+        return this.collectEntryFromObject(subNodeInfo, validInfo);
     }
 
     /**
@@ -98,14 +113,16 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @param validInfo 校验信息
      * @return 非法的字段与值
      */
-    protected Set<Map.Entry<String, Object>> collectEntrySetFromObject(NodeInfo nodeInfo, ValidInfo validInfo) {
-        NodeInfo newNodeInfo = ReflectUtils.searchAndGetValueByName(nodeInfo, validInfo.getFieldName());
-        if (this.isIllegal(validInfo, newNodeInfo.getNode())) {
-            return this.wrapToSet(validInfo, newNodeInfo.getNodeTrace(), newNodeInfo.getNode());
+    protected Set<Map.Entry<String, Object>> collectEntryFromObject(NodeInfo nodeInfo, ValidInfo validInfo) {
+        NodeInfo subNodeInfo = ReflectUtils.searchAndGetValueByName(nodeInfo, validInfo.getFieldName());
+        if (this.isIllegal(validInfo, subNodeInfo.getNode())) {
+            return this.collect(validInfo, subNodeInfo.getTrace(), subNodeInfo.getNode());
         } else {
-            return new HashSet<>();
+            return new HashSet<>(0);
         }
     }
+
+    //methods to handle result.
 
     /**
      * 待校验的值是否是非法的
@@ -124,13 +141,10 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @param value     违规值
      * @return 非法字段与值的集合
      */
-    protected Set<Map.Entry<String, Object>> wrapToSet(ValidInfo validInfo, String nodeTrace, Object value) {
-        Map<String, Object> map = new HashMap<>();
-        if ("".equals(nodeTrace)) {
-            map.put(validInfo.getFieldName(), value);
-        } else {
-            map.put(nodeTrace, value);
+    protected Set<Map.Entry<String, Object>> collect(ValidInfo validInfo, String nodeTrace, Object value) {
+        if (nodeTrace == null || "".equals(nodeTrace)) {
+            return this.getEntry(validInfo.getFieldName(), value);
         }
-        return map.entrySet();
+        return this.getEntry(nodeTrace, value);
     }
 }

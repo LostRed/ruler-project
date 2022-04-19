@@ -6,20 +6,27 @@ package info.lostred.ruler.domain;
  * @author lostred
  */
 public class NodeInfo {
+    /**
+     * 节点
+     */
     private Object node;
-    private StringBuilder stringBuilder = new StringBuilder();
+    /**
+     * 链路建造者
+     * <p>记录父节点字段名</p>
+     */
+    private StringBuilder tracer = new StringBuilder();
 
     public NodeInfo(Object node) {
         this.node = node;
     }
 
-    public NodeInfo(Object node, StringBuilder stringBuilder) {
+    public NodeInfo(Object node, StringBuilder tracer) {
         this.node = node;
-        this.stringBuilder = stringBuilder;
+        this.tracer = tracer;
     }
 
-    public StringBuilder getStringBuilder() {
-        return stringBuilder;
+    public StringBuilder getTracer() {
+        return tracer;
     }
 
     public Object getNode() {
@@ -30,7 +37,7 @@ public class NodeInfo {
         this.node = node;
     }
 
-    public String getNodeTrace() {
-        return this.stringBuilder.toString();
+    public String getTrace() {
+        return this.tracer.toString();
     }
 }

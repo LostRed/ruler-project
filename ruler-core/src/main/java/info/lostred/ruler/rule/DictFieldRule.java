@@ -25,20 +25,20 @@ public class DictFieldRule<E> extends SingleFieldRule<E> {
     }
 
     @Override
-    public boolean isSupported(E element) {
+    public boolean isSupported(E object) {
         return !validConfiguration.getValidInfos(ValidType.DICT.name()).isEmpty();
     }
 
     @Override
-    public boolean judge(E element) {
+    public boolean judge(E object) {
         return validConfiguration.getValidInfos(ValidType.DICT.name()).stream()
-                .anyMatch(validInfo -> this.check(element, validInfo));
+                .anyMatch(validInfo -> this.check(object, validInfo));
     }
 
     @Override
-    public Report buildReport(E element) {
+    public Report buildReport(E object) {
         Map<String, Object> map = validConfiguration.getValidInfos(ValidType.DICT.name()).stream()
-                .flatMap(validInfo -> this.collectIllegals(element, validInfo).stream())
+                .flatMap(validInfo -> this.collectIllegals(object, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);
     }

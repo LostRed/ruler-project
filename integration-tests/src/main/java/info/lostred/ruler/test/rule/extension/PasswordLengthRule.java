@@ -6,7 +6,6 @@ import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.test.entity.Contact;
 import info.lostred.ruler.test.entity.Person;
-import info.lostred.ruler.util.ReflectUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,23 +19,20 @@ public class PasswordLengthRule extends AbstractRule<Person> {
     }
 
     @Override
-    public boolean isSupported(Person element) {
-        return element.getContacts() != null && !element.getContacts().isEmpty();
+    public boolean isSupported(Person object) {
+        return object.getContacts() != null && !object.getContacts().isEmpty();
     }
 
     @Override
-    public boolean judge(Person element) {
-        return element.getContacts().stream()
+    public boolean judge(Person object) {
+        return object.getContacts().stream()
                 .anyMatch(contact -> contact.getPassword().length() < 6);
     }
 
     @Override
-    public Report buildReport(Person element) {
-        Set<Map.Entry<String, Object>> set = element.getContacts().stream()
-                .flatMap(e -> {
-                    String nodeTrace = ReflectUtils.concatNodeTrace("contacts", e, "password");
-                    return this.getEntry(nodeTrace, e.getPassword()).stream();
-                })
+    public Report buildReport(Person object) {
+        Set<Map.Entry<String, Object>> set = object.getContacts().stream()
+                .flatMap(e -> this.getEntryFromCollection("contacts", e, "password", e.getPassword()).stream())
                 .collect(Collectors.toSet());
         if (!set.isEmpty()) {
             return Report.of(ruleInfo).putIllegals(set);

@@ -21,20 +21,20 @@ public class SimpleRulesEngine<E> extends RulesEngine<E> {
     }
 
     @Override
-    public Result execute(E element) {
+    public Result execute(E object) {
         throw new UnsupportedOperationException("execute");
     }
 
     /**
      * 检查是否有可疑的报告
      *
-     * @param element 规则约束的对象
+     * @param object 规则约束的对象
      * @return 有返回true，否则返回false
      */
-    public boolean hasSuspicious(E element) {
+    public boolean hasSuspicious(E object) {
         for (AbstractRule<E> abstractRule : this.abstractRules) {
-            if (abstractRule.isSupported(element) && ValidGrade.SUSPECTED.name().equals(abstractRule.getRuleInfo().getGrade())) {
-                return this.doJudge(element, abstractRule);
+            if (abstractRule.isSupported(object) && ValidGrade.SUSPECTED.name().equals(abstractRule.getRuleInfo().getGrade())) {
+                return this.doJudge(object, abstractRule);
             }
         }
         return false;

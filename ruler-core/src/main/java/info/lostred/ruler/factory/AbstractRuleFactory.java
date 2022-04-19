@@ -4,7 +4,7 @@ import info.lostred.ruler.core.AbstractRule;
 import info.lostred.ruler.core.AbstractRuleProxy;
 import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
-import info.lostred.ruler.exception.RuleInitException;
+import info.lostred.ruler.exception.RuleInitializationException;
 import info.lostred.ruler.rule.SingleFieldRule;
 
 import java.lang.reflect.Constructor;
@@ -31,7 +31,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     @Override
     public void registerRuleInfo(RuleInfo ruleInfo) {
         if (ruleInfoMap.containsKey(ruleInfo.getRuleCode())) {
-            throw new RuleInitException("Rule code '" + ruleInfo.getRuleCode() + "' is repeat.", ruleInfo);
+            throw new RuleInitializationException("Rule code '" + ruleInfo.getRuleCode() + "' is repeat.", ruleInfo);
         }
         ruleInfoMap.put(ruleInfo.getRuleCode(), ruleInfo);
     }
@@ -46,8 +46,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     @SuppressWarnings("unchecked")
     public <E> List<AbstractRule<E>> findRules(String businessType) {
         return this.rules.values().stream()
-                .filter(e -> e.getRuleInfo().getBusinessType().equals(businessType)
-                        || e.getRuleInfo().getValidClass().equals(Object.class))
+                .filter(e -> e.getRuleInfo().getBusinessType().equals(businessType))
                 .map(e -> (AbstractRule<E>) e)
                 .collect(Collectors.toList());
     }
@@ -104,11 +103,11 @@ public abstract class AbstractRuleFactory implements RuleFactory {
                     //拿到代理对象
                     return proxy.newProxyInstance();
                 }
-                throw new RuleInitException("Internal error: " + ruleInfo.getRuleClassName() +
+                throw new RuleInitializationException("Internal error: " + ruleInfo.getRuleClassName() +
                         " cannot be instantiated, because it is not instance of Rule.", this.ruleInfo);
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                      IllegalAccessException | ClassNotFoundException e) {
-                throw new RuleInitException("Internal error: " + ruleInfo.getRuleClassName() +
+                throw new RuleInitializationException("Internal error: " + ruleInfo.getRuleClassName() +
                         " cannot be instantiated.", e, this.ruleInfo);
             }
         }

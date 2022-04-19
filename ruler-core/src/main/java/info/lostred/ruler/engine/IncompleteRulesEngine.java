@@ -27,13 +27,13 @@ public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
     /**
      * 检查是否有可疑的报告
      *
-     * @param element 规则约束的对象
+     * @param object 规则约束的对象
      * @return 有返回true，否则返回false
      */
-    public Report findSuspiciousReport(E element) {
+    public Report findSuspiciousReport(E object) {
         for (AbstractRule<E> abstractRule : this.abstractRules) {
-            if (abstractRule.isSupported(element) && ValidGrade.SUSPECTED.name().equals(abstractRule.getRuleInfo().getGrade())) {
-                return this.doBuildReport(element, abstractRule);
+            if (abstractRule.isSupported(object) && ValidGrade.SUSPECTED.name().equals(abstractRule.getRuleInfo().getGrade())) {
+                return this.doBuildReport(object, abstractRule);
             }
         }
         return null;
