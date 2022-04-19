@@ -32,6 +32,7 @@ public class PasswordLengthRule extends AbstractRule<Person> {
     @Override
     public Report buildReport(Person object) {
         Set<Map.Entry<String, Object>> set = object.getContacts().stream()
+                .filter(contact -> contact.getPassword() != null && contact.getPassword().length() < 6)
                 .flatMap(e -> this.getEntryFromCollection("contacts", e, "password", e.getPassword()).stream())
                 .collect(Collectors.toSet());
         if (!set.isEmpty()) {
