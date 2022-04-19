@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS ruler_valid_info
 ) COMMENT '校验信息配置表';
 ```
 
-valid_type的填写可参考ValidType枚举类，字母全小写。
+valid_type的填写可参考ValidType枚举类，字母全大写。
 
 ### 编写配置类(可选)
 
