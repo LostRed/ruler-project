@@ -1,11 +1,13 @@
 package info.lostred.ruler.util;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.*;
 import java.util.jar.JarEntry;
+import java.util.logging.Logger;
 
 /**
  * 包扫描工具
@@ -13,6 +15,8 @@ import java.util.jar.JarEntry;
  * @author lostred
  */
 public final class PackageScanUtils {
+    private static final Logger logger = Logger.getLogger(PackageScanUtils.class.getName());
+
     /**
      * 找到包扫描路径下的所有全限定类名
      *
@@ -106,6 +110,7 @@ public final class PackageScanUtils {
         try {
             return classLoader.loadClass(className);
         } catch (ClassNotFoundException ignored) {
+            logger.warning("Unable to find class: " + className);
         }
         return null;
     }

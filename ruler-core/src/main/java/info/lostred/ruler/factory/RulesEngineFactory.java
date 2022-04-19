@@ -102,9 +102,9 @@ public interface RulesEngineFactory {
         }
 
         private List<AbstractRule<E>> mergeRules() {
-            List<AbstractRule<E>> rules = ruleFactory.findRules(RulerConstants.DEFAULT_BUSINESS_TYPE, validClass);
+            List<AbstractRule<E>> rules = ruleFactory.findRules(RulerConstants.DEFAULT_BUSINESS_TYPE);
             if (!RulerConstants.DEFAULT_BUSINESS_TYPE.equals(businessType)) {
-                rules.addAll(ruleFactory.findRules(businessType, validClass));
+                rules.addAll(ruleFactory.findRules(businessType));
             }
             return rules;
         }

@@ -43,9 +43,8 @@ public interface RuleFactory {
      * 根据业务类型与约束对象类型查找规则集合
      *
      * @param businessType 业务类型
-     * @param validClass   规则约束类的类对象
      * @param <E>          规则约束的参数类型
      * @return 规则集合
      */
-    <E> List<AbstractRule<E>> findRules(String businessType, Class<E> validClass);
+    <E> List<AbstractRule<E>> findRules(String businessType);
 }

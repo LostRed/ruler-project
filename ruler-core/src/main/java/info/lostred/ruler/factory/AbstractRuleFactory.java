@@ -44,11 +44,10 @@ public abstract class AbstractRuleFactory implements RuleFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> List<AbstractRule<E>> findRules(String businessType, Class<E> validClass) {
+    public <E> List<AbstractRule<E>> findRules(String businessType) {
         return this.rules.values().stream()
                 .filter(e -> e.getRuleInfo().getBusinessType().equals(businessType)
-                        && (e.getRuleInfo().getValidClass().equals(validClass)
-                        || e.getRuleInfo().getValidClass().equals(Object.class)))
+                        || e.getRuleInfo().getValidClass().equals(Object.class))
                 .map(e -> (AbstractRule<E>) e)
                 .collect(Collectors.toList());
     }

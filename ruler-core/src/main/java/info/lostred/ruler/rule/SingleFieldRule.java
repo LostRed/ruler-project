@@ -2,12 +2,15 @@ package info.lostred.ruler.rule;
 
 import info.lostred.ruler.core.AbstractRule;
 import info.lostred.ruler.core.ValidConfiguration;
+import info.lostred.ruler.domain.NodeInfo;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.domain.ValidInfo;
 import info.lostred.ruler.util.ReflectUtils;
 
+import java.text.AttributedString;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 单字段校验规则
@@ -51,13 +54,14 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 非法字段与值
      */
     protected Set<Map.Entry<String, Object>> collectIllegals(E element, ValidInfo validInfo) {
-        Object validNode = ReflectUtils.searchAndGetNodeByType(element, validInfo.getValidClass());
+        NodeInfo nodeInfo = ReflectUtils.searchAndGetNodeByType(element, validInfo.getValidClass());
+        Object validNode = nodeInfo.getNode();
         if (validNode instanceof Collection) {
             return ((Collection<?>) validNode).stream()
-                    .flatMap(node -> this.collectFromValidNode(element, node, validInfo).stream())
+                    .flatMap(node -> this.streamEntryFromCollection(nodeInfo, validInfo, node))
                     .collect(Collectors.toSet());
         } else {
-            return this.collectFromValidNode(element, validNode, validInfo);
+            return this.collectEntrySetFromObject(nodeInfo, validInfo);
         }
     }
 
@@ -69,22 +73,35 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @return 违规返回true，否则返回false
      */
     protected boolean valid(Object validNode, ValidInfo validInfo) {
-        Object value = ReflectUtils.searchAndGetValueByName(validNode, validInfo.getFieldName());
+        NodeInfo nodeInfo = new NodeInfo(validNode);
+        Object value = ReflectUtils.searchAndGetValueByName(nodeInfo, validInfo.getFieldName());
         return this.isIllegal(validInfo, value);
     }
 
     /**
-     * 从校验对象数据收集非法的字段与值
+     * 从集合类节点收集非法的字段与值并转换为流
      *
-     * @param element   规则约束的对象
-     * @param validNode 校验节点
+     * @param nodeInfo  集合的节点信息
+     * @param validInfo 校验信息
+     * @param element   集合中的元素
+     * @return 键值对的流
+     */
+    protected Stream<Map.Entry<String, Object>> streamEntryFromCollection(NodeInfo nodeInfo, ValidInfo validInfo, Object element) {
+        NodeInfo subNodeInfo = ReflectUtils.getNodeInfoFromCollection(nodeInfo, element);
+        return this.collectEntrySetFromObject(subNodeInfo, validInfo).stream();
+    }
+
+    /**
+     * 从对象类节点收集非法的字段与值
+     *
+     * @param nodeInfo  节点信息
      * @param validInfo 校验信息
      * @return 非法的字段与值
      */
-    protected Set<Map.Entry<String, Object>> collectFromValidNode(E element, Object validNode, ValidInfo validInfo) {
-        Object value = ReflectUtils.searchAndGetValueByName(validNode, validInfo.getFieldName());
-        if (this.isIllegal(validInfo, value)) {
-            return this.wrapToSet(element, validInfo, validNode, value);
+    protected Set<Map.Entry<String, Object>> collectEntrySetFromObject(NodeInfo nodeInfo, ValidInfo validInfo) {
+        NodeInfo newNodeInfo = ReflectUtils.searchAndGetValueByName(nodeInfo, validInfo.getFieldName());
+        if (this.isIllegal(validInfo, newNodeInfo.getNode())) {
+            return this.wrapToSet(validInfo, newNodeInfo.getNodeTrace(), newNodeInfo.getNode());
         } else {
             return new HashSet<>();
         }
@@ -102,20 +119,17 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
     /**
      * 将非法字段与值包装成集合
      *
-     * @param element   规则约束的对象
      * @param validInfo 校验信息
-     * @param validNode 校验节点
+     * @param nodeTrace 节点链路
      * @param value     违规值
      * @return 非法字段与值的集合
      */
-    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object validNode, Object value) {
+    protected Set<Map.Entry<String, Object>> wrapToSet(ValidInfo validInfo, String nodeTrace, Object value) {
         Map<String, Object> map = new HashMap<>();
-        try {
-            String fieldTrace = ReflectUtils.getFieldTrace(element.getClass(), validInfo.getValidClass(),
-                    validInfo.getFieldName(), validNode);
-            map.put(fieldTrace, value);
-        } catch (NoSuchFieldException e) {
+        if ("".equals(nodeTrace)) {
             map.put(validInfo.getFieldName(), value);
+        } else {
+            map.put(nodeTrace, value);
         }
         return map.entrySet();
     }

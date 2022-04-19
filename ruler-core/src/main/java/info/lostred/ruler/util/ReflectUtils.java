@@ -1,5 +1,7 @@
 package info.lostred.ruler.util;
 
+import info.lostred.ruler.domain.NodeInfo;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -18,29 +20,30 @@ public final class ReflectUtils {
     /**
      * 从对象的字段中找到一个指定类的值(节点)
      *
-     * @param object   对象
+     * @param nodeInfo 节点信息
      * @param assigned 指定类的类对象
-     * @return 指定类的值
+     * @return 节点信息
      * @throws IllegalAccessException 无法获取字段的值
      * @throws NoSuchFieldException   无法在类中找到字段
      */
-    public static Object findNodeByType(Object object, Class<?> assigned) throws IllegalAccessException, NoSuchFieldException {
-        return findNodeByType(object, assigned, new ArrayList<>(2));
+    public static NodeInfo findNodeByType(NodeInfo nodeInfo, Class<?> assigned) throws IllegalAccessException, NoSuchFieldException {
+        return findNodeByType(nodeInfo, assigned, new ArrayList<>(2));
     }
 
     /**
      * 从对象的字段中找到一个指定类的值(节点)
      *
-     * @param object       对象
+     * @param nodeInfo     节点信息
      * @param assigned     指定类的类对象
      * @param targetFields 目标字段集合
      * @return 指定类的值
      * @throws IllegalAccessException 无法获取字段的值
      * @throws NoSuchFieldException   无法在类中找到字段
      */
-    public static Object findNodeByType(Object object, Class<?> assigned, List<Field> targetFields) throws IllegalAccessException, NoSuchFieldException {
-        if (object.getClass() == assigned) {
-            return object;
+    public static NodeInfo findNodeByType(NodeInfo nodeInfo, Class<?> assigned, List<Field> targetFields) throws IllegalAccessException, NoSuchFieldException {
+        Object object = nodeInfo.getNode();
+        if (nodeInfo.getNode().getClass() == assigned) {
+            return nodeInfo;
         } else {
             Field[] fields = object.getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -53,7 +56,8 @@ public final class ReflectUtils {
                     }
                 } else if (isEntity(field.getType())) {
                     try {
-                        return findNodeByType(field.get(object), assigned, targetFields);
+                        nodeInfo.setNode(field.get(object));
+                        return findNodeByType(nodeInfo, assigned, targetFields);
                     } catch (NoSuchFieldException ignored) {
                     }
                 }
@@ -63,7 +67,10 @@ public final class ReflectUtils {
             } else if (targetFields.size() > 1) {
                 throw new RuntimeException("Find 2 or more assigned class in this object.");
             } else {
-                return targetFields.get(0).get(object);
+                Field field = targetFields.get(0);
+                nodeInfo.setNode(field.get(object));
+                nodeInfo.getStringBuilder().append(field.getName()).append(".");
+                return nodeInfo;
             }
         }
     }
@@ -73,14 +80,39 @@ public final class ReflectUtils {
      *
      * @param object   对象
      * @param assigned 指定类的类对象
-     * @return 字段的值
+     * @return 节点信息
      */
-    public static Object searchAndGetNodeByType(Object object, Class<?> assigned) {
+    public static NodeInfo searchAndGetNodeByType(Object object, Class<?> assigned) {
         try {
-            return ReflectUtils.findNodeByType(object, assigned);
+            NodeInfo nodeInfo = new NodeInfo(object);
+            return ReflectUtils.findNodeByType(nodeInfo, assigned);
         } catch (IllegalAccessException | NoSuchFieldException ignored) {
             throw new RuntimeException("Failed to find valid node " + assigned.getName() + " from " + object.getClass().getName() + ".");
         }
+    }
+
+    /**
+     * 集合字段中是否有包含指定类的字段
+     *
+     * @param nodeInfo 集合的节点信息
+     * @param node     节点
+     * @return 集合元素的节点信息
+     */
+    public static NodeInfo getNodeInfoFromCollection(NodeInfo nodeInfo, Object node) {
+        String s = nodeInfo.getNodeTrace() + Integer.toHexString(node.hashCode());
+        return new NodeInfo(node, new StringBuilder(s));
+    }
+
+    /**
+     * 拼接节点链路
+     *
+     * @param nodeTrace 集合节点的链路
+     * @param node      集合元素节点
+     * @param fieldName 集合元素的某个字段名
+     * @return 节点链路
+     */
+    public static String concatNodeTrace(String nodeTrace, Object node, String fieldName) {
+        return nodeTrace + "." + Integer.toHexString(node.hashCode()) + "." + fieldName;
     }
 
     /**
@@ -116,6 +148,28 @@ public final class ReflectUtils {
     }
 
     /**
+     * 从对象(包括其父类)中找到指定字段名的字段并获取其值
+     *
+     * @param nodeInfo  节点信息
+     * @param fieldName 字段名
+     * @return 节点信息
+     */
+    public static NodeInfo searchAndGetValueByName(NodeInfo nodeInfo, String fieldName) {
+        Object object = nodeInfo.getNode();
+        try {
+            Field field = findFieldByName(object.getClass(), fieldName);
+            field.setAccessible(true);
+            nodeInfo.setNode(field.get(object));
+            nodeInfo.getStringBuilder().append(fieldName);
+            return nodeInfo;
+        } catch (NoSuchFieldException ignored) {
+            throw new RuntimeException("Failed to find field '" + fieldName + "' from " + object.getClass().getName() + ".");
+        } catch (IllegalAccessException ignored) {
+            throw new RuntimeException("Failed to get value of '" + fieldName + "' from " + object.getClass().getName() + ".");
+        }
+    }
+
+    /**
      * 从对象(包括其父类)中找到指定字段名的字段
      *
      * @param child     子类
@@ -131,88 +185,6 @@ public final class ReflectUtils {
             return findFieldByName(parent, fieldName);
         } catch (NullPointerException ignored) {
             throw new NoSuchFieldException("Cannot find this fieldName.");
-        }
-    }
-
-    /**
-     * 从对象(包括其父类)中找到指定字段名的字段并获取其值
-     *
-     * @param object    对象
-     * @param fieldName 字段名
-     * @return 字段的值
-     */
-    public static Object searchAndGetValueByName(Object object, String fieldName) {
-        try {
-            Field field = findFieldByName(object.getClass(), fieldName);
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (NoSuchFieldException ignored) {
-            throw new RuntimeException("Failed to find field '" + fieldName + "' from " + object.getClass().getName() + ".");
-        } catch (IllegalAccessException ignored) {
-            throw new RuntimeException("Failed to get value of '" + fieldName + "' from " + object.getClass().getName() + ".");
-        }
-    }
-
-    /**
-     * 从当前类中获取指定类中指定字段的链路字符串
-     *
-     * @param current   当前类的类对象
-     * @param assigned  指定类的类对象
-     * @param fieldName 指定的字段名
-     * @param value     指定字段的值
-     * @return 校验字段的链路
-     * @throws NoSuchFieldException 无法在类中找到字段
-     */
-    public static String getFieldTrace(Class<?> current, Class<?> assigned,
-                                       String fieldName, Object value) throws NoSuchFieldException {
-        return getFieldTrace(current, assigned, fieldName, value, new StringBuilder(), new ArrayList<>(2));
-    }
-
-    /**
-     * 从当前类中获取指定类中指定字段的链路字符串
-     *
-     * @param current       当前类的类对象
-     * @param assigned      指定类的类对象
-     * @param fieldName     指定的字段名
-     * @param value         指定字段的值
-     * @param stringBuilder 字符串拼接
-     * @param targetFields  目标字段集合
-     * @return 校验字段的链路
-     * @throws NoSuchFieldException 无法在类中找到字段
-     */
-    public static String getFieldTrace(Class<?> current, Class<?> assigned,
-                                       String fieldName, Object value,
-                                       StringBuilder stringBuilder, List<Field> targetFields) throws NoSuchFieldException {
-        if (current.equals(assigned)) {
-            return stringBuilder.append(fieldName).toString();
-        } else {
-            Field[] fields = current.getDeclaredFields();
-            for (Field field : fields) {
-                if (Collection.class.isAssignableFrom(field.getType())) {
-                    if (include(field, assigned)) {
-                        field.setAccessible(true);
-                        stringBuilder.append(field.getName())
-                                .append("[").append(Integer.toHexString(value.hashCode())).append("]")
-                                .append(".").append(fieldName);
-                        targetFields.add(field);
-                    }
-                } else if (isEntity(field.getType())) {
-                    stringBuilder.append(field.getName());
-                    try {
-                        return getFieldTrace(field.getType(), assigned,
-                                fieldName, value,
-                                stringBuilder.append("."), targetFields);
-                    } catch (NoSuchFieldException ignored) {
-                    }
-                }
-            }
-            if (targetFields.isEmpty()) {
-                throw new NoSuchFieldException("Cannot find the assigned class in root class.");
-            } else if (targetFields.size() > 1) {
-                throw new RuntimeException("Find 2 or more assigned class in root class.");
-            } else {
-                return stringBuilder.toString();
-            }
         }
     }
 }

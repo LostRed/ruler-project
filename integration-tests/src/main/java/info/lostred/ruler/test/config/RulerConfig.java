@@ -35,17 +35,17 @@ public class RulerConfig {
         ValidInfo validInfo10 = ValidInfo.ofRequired(ValidType.REQUIRED.name(), "province", Area.class.getName());
         ValidInfo validInfo11 = ValidInfo.ofRequired(ValidType.REQUIRED.name(), "city", Area.class.getName());
 
-        validInfos.add(validInfo1);
-        validInfos.add(validInfo2);
-        validInfos.add(validInfo3);
-        validInfos.add(validInfo4);
-        validInfos.add(validInfo5);
-        validInfos.add(validInfo6);
-        validInfos.add(validInfo7);
-        validInfos.add(validInfo8);
-        validInfos.add(validInfo9);
-        validInfos.add(validInfo10);
-        validInfos.add(validInfo11);
+//        validInfos.add(validInfo1);
+//        validInfos.add(validInfo2);
+//        validInfos.add(validInfo3);
+//        validInfos.add(validInfo4);
+//        validInfos.add(validInfo5);
+//        validInfos.add(validInfo6);
+//        validInfos.add(validInfo7);
+//        validInfos.add(validInfo8);
+//        validInfos.add(validInfo9);
+//        validInfos.add(validInfo10);
+//        validInfos.add(validInfo11);
         ValidConfiguration validConfiguration = new ValidConfiguration(validInfos);
 
         Set<Object> set = new HashSet<>(Arrays.asList("1", "2"));

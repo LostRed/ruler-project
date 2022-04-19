@@ -49,7 +49,7 @@ public class RequiredFieldRule<E> extends SingleFieldRule<E> {
     }
 
     @Override
-    protected Set<Map.Entry<String, Object>> wrapToSet(E element, ValidInfo validInfo, Object validNode, Object value) {
-        return super.wrapToSet(element, validInfo, validNode, "-");
+    protected Set<Map.Entry<String, Object>> wrapToSet(ValidInfo validInfo, String nodeTrace, Object value) {
+        return super.wrapToSet(validInfo, nodeTrace, "-");
     }
 }

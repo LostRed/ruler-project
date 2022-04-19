@@ -6,7 +6,10 @@ import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.test.domain.model.ValidClass;
 
-@Rule(ruleCode = "test_2", desc = "number>0时，string不能为test", validClass = ValidClass.class)
+import java.util.Map;
+import java.util.Set;
+
+@Rule(ruleCode = "test_2", businessType = "test", desc = "number>0时，string不能为test", validClass = ValidClass.class)
 public class StringRule extends AbstractRule<ValidClass> {
 
     private final static String FIELD_NAME = "string";
@@ -29,7 +32,8 @@ public class StringRule extends AbstractRule<ValidClass> {
     @Override
     public Report buildReport(ValidClass element) {
         if (this.judge(element)) {
-            return this.wrapToReport(ruleInfo, element, FIELD_NAME, element.getString());
+            Set<Map.Entry<String, Object>> set = this.getEntry(FIELD_NAME, element.getString());
+            return Report.of(ruleInfo).putIllegals(set);
         }
         return null;
     }

@@ -1,11 +1,10 @@
 package info.lostred.ruler.core;
 
 import info.lostred.ruler.domain.Report;
-import info.lostred.ruler.domain.RuleInfo;
-import info.lostred.ruler.util.ReflectUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 可生成报告接口
@@ -23,23 +22,15 @@ public interface Reportable<E> {
     Report buildReport(E element);
 
     /**
-     * 将非法字段与值包装成报告
+     * 获取非法字段与值的键值对
      *
-     * @param ruleInfo  规则信息
-     * @param element   规则约束的对象
-     * @param fieldName 字段名
+     * @param nodeTrace 节点链路
      * @param value     违规值
      * @return 非法字段与值的集合
      */
-    default Report wrapToReport(RuleInfo ruleInfo, E element, String fieldName, Object value) {
+    default Set<Map.Entry<String, Object>> getEntry(String nodeTrace, Object value) {
         Map<String, Object> map = new HashMap<>();
-        try {
-            String fieldTrace = ReflectUtils.getFieldTrace(element.getClass(), element.getClass(),
-                    fieldName, value);
-            map.put(fieldTrace, value);
-        } catch (NoSuchFieldException e) {
-            map.put(fieldName, value);
-        }
-        return Report.of(ruleInfo).putIllegals(map);
+        map.put(nodeTrace, value);
+        return map.entrySet();
     }
 }

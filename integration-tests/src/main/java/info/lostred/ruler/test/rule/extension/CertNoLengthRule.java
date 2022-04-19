@@ -6,7 +6,10 @@ import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.test.entity.Person;
 
-@Rule(ruleCode = "test", businessType = "person", desc = "身份证长度必须为18位", validClass = Person.class)
+import java.util.Map;
+import java.util.Set;
+
+@Rule(ruleCode = "test1", businessType = "person", desc = "身份证长度必须为18位", validClass = Person.class)
 public class CertNoLengthRule extends AbstractRule<Person> {
 
     public CertNoLengthRule(RuleInfo ruleInfo) {
@@ -26,7 +29,8 @@ public class CertNoLengthRule extends AbstractRule<Person> {
     @Override
     public Report buildReport(Person element) {
         if (this.judge(element)) {
-            return this.wrapToReport(ruleInfo, element, "certNo", element.getCertNo());
+            Set<Map.Entry<String, Object>> set = this.getEntry("certNo", element.getCertNo());
+            return Report.of(ruleInfo).putIllegals(set);
         }
         return null;
     }
