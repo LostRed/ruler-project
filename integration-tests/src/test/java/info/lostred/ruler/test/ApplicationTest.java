@@ -2,8 +2,8 @@ package info.lostred.ruler.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import info.lostred.ruler.core.RulesEngine;
 import info.lostred.ruler.domain.Result;
+import info.lostred.ruler.engine.RulesEngine;
 import info.lostred.ruler.factory.RulesEngineFactory;
 import info.lostred.ruler.test.entity.Area;
 import info.lostred.ruler.test.entity.Contact;

@@ -1,14 +1,21 @@
-package info.lostred.ruler.core;
+package info.lostred.ruler.engine;
 
+import info.lostred.ruler.constants.RulerConstants;
+import info.lostred.ruler.core.Judgement;
+import info.lostred.ruler.core.Reportable;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.exception.RulesEngineInitializationException;
 import info.lostred.ruler.factory.RuleFactory;
+import info.lostred.ruler.proxy.DynamicRuleProxy;
+import info.lostred.ruler.rule.AbstractRule;
+import info.lostred.ruler.rule.DynamicRule;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -36,11 +43,30 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      */
     protected final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public RulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
+    public RulesEngine(RuleFactory ruleFactory, String businessType) {
         this.ruleFactory = ruleFactory;
         this.businessType = businessType;
-        this.abstractRules.addAll(abstractRules);
+        List<AbstractRule<E>> rules = this.mergeRules();
+        if (rules.isEmpty()) {
+            throw new RulesEngineInitializationException("This engine's business type is '" + businessType + "', has not available rules.",
+                    this.businessType, this.getClass());
+        }
+        this.abstractRules.addAll(rules);
         this.abstractRules.sort(Comparator.comparing(e -> e.getRuleInfo().getSeq()));
+    }
+
+    /**
+     * 将该引擎的业务规则与common业务规则合并
+     *
+     * @return 规则集合
+     */
+    private List<AbstractRule<E>> mergeRules() {
+        List<AbstractRule<E>> rules = ruleFactory.findRules(businessType);
+        if (ruleFactory.getValidConfiguration() != null
+                && !RulerConstants.DEFAULT_BUSINESS_TYPE.equals(businessType)) {
+            rules.addAll(ruleFactory.findRules(RulerConstants.DEFAULT_BUSINESS_TYPE));
+        }
+        return rules;
     }
 
     /**
@@ -94,18 +120,70 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     }
 
     /**
+     * 注册规则
+     *
+     * @param ruleInfo       规则信息
+     * @param getNode        获取单个校验节点的函数
+     * @param getCollection  获取多个校验节点的集合的函数
+     * @param isSupported    规则是否支持的断定
+     * @param judge          校验结果为违规的断定
+     * @param collectEntries 收集非法键值对的函数
+     * @param validClass     规则约束类的类对象
+     * @param nodeClass      节点类的类对象
+     * @param <Node>         节点类型
+     */
+    public <Node> void registerRule(RuleInfo ruleInfo,
+                                    Class<E> validClass,
+                                    Class<Node> nodeClass,
+                                    Function<E, Node> getNode,
+                                    Function<E, Collection<Node>> getCollection,
+                                    Predicate<Node> isSupported,
+                                    Predicate<Node> judge,
+                                    Function<Node, Set<Map.Entry<String, Object>>> collectEntries) {
+        boolean isCollection = getCollection != null && getNode == null;
+        DynamicRule<E, Node> rule = DynamicRuleProxy.builder(ruleInfo, validClass, nodeClass, isCollection)
+                .setGetNode(getNode)
+                .setGetCollection(getCollection)
+                .setIsSupported(isSupported)
+                .setJudge(judge)
+                .setCollectEntries(collectEntries)
+                .build();
+        this.registerRule(rule);
+    }
+
+    /**
+     * 注册规则
+     *
+     * @param rule 规则
+     */
+    public void registerRule(AbstractRule<E> rule) {
+        this.ruleFactory.registerRule(rule);
+        this.addRule(rule);
+    }
+
+    /**
      * 添加规则并按顺序号排序
      *
-     * @param ruleCode 规则编号
+     * @param rule 规则
      */
-    public void addRule(String ruleCode) {
+    public void addRule(AbstractRule<E> rule) {
         for (int i = 0; i < this.abstractRules.size(); i++) {
-            AbstractRule<E> rule = this.ruleFactory.getRule(ruleCode);
             if (this.abstractRules.get(i).getRuleInfo().getSeq() > rule.getRuleInfo().getSeq()) {
                 this.abstractRules.add(i, rule);
                 break;
             }
         }
+        this.abstractRules.add(rule);
+    }
+
+    /**
+     * 添加规则并按顺序号排序
+     *
+     * @param ruleCode 规则编号
+     */
+    public void addRule(String ruleCode) {
+        AbstractRule<E> rule = this.ruleFactory.getRule(ruleCode);
+        this.addRule(rule);
     }
 
     /**

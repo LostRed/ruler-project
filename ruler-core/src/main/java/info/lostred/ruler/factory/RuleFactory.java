@@ -1,7 +1,8 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.core.AbstractRule;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.rule.AbstractRule;
 
 import java.util.List;
 
@@ -22,6 +23,13 @@ public interface RuleFactory {
      * @param ruleInfo 规则信息
      */
     void registerRuleInfo(RuleInfo ruleInfo);
+
+    /**
+     * 注册规则
+     *
+     * @param abstractRule 规则
+     */
+    void registerRule(AbstractRule<?> abstractRule);
 
     /**
      * 创建规则
@@ -47,4 +55,11 @@ public interface RuleFactory {
      * @return 规则集合
      */
     <E> List<AbstractRule<E>> findRules(String businessType);
+
+    /**
+     * 获取校验配置
+     *
+     * @return 校验配置
+     */
+    ValidConfiguration getValidConfiguration();
 }

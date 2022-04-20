@@ -1,6 +1,5 @@
 package info.lostred.ruler.rule;
 
-import info.lostred.ruler.core.AbstractRule;
 import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.NodeInfo;
 import info.lostred.ruler.domain.RuleInfo;
@@ -52,15 +51,15 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @param validInfo 校验信息
      * @return 非法字段与值
      */
-    protected Set<Map.Entry<String, Object>> collectIllegals(E element, ValidInfo validInfo) {
+    protected Set<Map.Entry<String, Object>> collectEntries(E element, ValidInfo validInfo) {
         NodeInfo nodeInfo = ReflectUtils.searchAndGetNodeByType(element, validInfo.getValidClass());
         Object node = nodeInfo.getNode();
         if (node instanceof Collection) {
             return ((Collection<?>) node).stream()
-                    .flatMap(e -> this.collectEntryFromCollection(nodeInfo, validInfo, e).stream())
+                    .flatMap(e -> this.collectEntriesFromCollection(nodeInfo, validInfo, e).stream())
                     .collect(Collectors.toSet());
         } else {
-            return this.collectEntryFromObject(nodeInfo, validInfo);
+            return this.collectEntriesFromObject(nodeInfo, validInfo);
         }
     }
 
@@ -105,9 +104,9 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @param element   集合中的元素
      * @return 键值对的流
      */
-    protected Set<Map.Entry<String, Object>> collectEntryFromCollection(NodeInfo nodeInfo, ValidInfo validInfo, Object element) {
+    protected Set<Map.Entry<String, Object>> collectEntriesFromCollection(NodeInfo nodeInfo, ValidInfo validInfo, Object element) {
         NodeInfo subNodeInfo = ReflectUtils.getNodeInfoFromCollection(nodeInfo, element);
-        return this.collectEntryFromObject(subNodeInfo, validInfo);
+        return this.collectEntriesFromObject(subNodeInfo, validInfo);
     }
 
     /**
@@ -117,7 +116,7 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
      * @param validInfo 校验信息
      * @return 非法的字段与值
      */
-    protected Set<Map.Entry<String, Object>> collectEntryFromObject(NodeInfo nodeInfo, ValidInfo validInfo) {
+    protected Set<Map.Entry<String, Object>> collectEntriesFromObject(NodeInfo nodeInfo, ValidInfo validInfo) {
         NodeInfo subNodeInfo = ReflectUtils.searchAndGetValueByName(nodeInfo, validInfo.getFieldName());
         if (this.isIllegal(validInfo, subNodeInfo.getNode())) {
             return this.collect(validInfo, subNodeInfo.getTrace(), subNodeInfo.getNode());

@@ -2,7 +2,7 @@ package info.lostred.ruler.factory;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.annotation.RuleScan;
-import info.lostred.ruler.core.AbstractRule;
+import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.util.PackageScanUtils;

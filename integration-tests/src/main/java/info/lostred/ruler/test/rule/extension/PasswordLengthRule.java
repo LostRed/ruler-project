@@ -1,7 +1,7 @@
 package info.lostred.ruler.test.rule.extension;
 
 import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.core.AbstractRule;
+import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.test.entity.Contact;

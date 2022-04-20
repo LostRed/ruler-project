@@ -1,9 +1,6 @@
 package info.lostred.ruler.engine;
 
-import info.lostred.ruler.core.AbstractRule;
 import info.lostred.ruler.factory.RuleFactory;
-
-import java.util.Collection;
 
 /**
  * 完整执行的规则引擎
@@ -13,8 +10,8 @@ import java.util.Collection;
  */
 public class CompleteRulesEngine<E> extends DetailRulesEngine<E> {
 
-    public CompleteRulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
-        super(ruleFactory, businessType, abstractRules);
+    public CompleteRulesEngine(RuleFactory ruleFactory, String businessType) {
+        super(ruleFactory, businessType);
     }
 
     @Override

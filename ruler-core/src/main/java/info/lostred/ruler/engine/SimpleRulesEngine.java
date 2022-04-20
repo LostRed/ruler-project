@@ -1,12 +1,9 @@
 package info.lostred.ruler.engine;
 
 import info.lostred.ruler.constants.ValidGrade;
-import info.lostred.ruler.core.AbstractRule;
-import info.lostred.ruler.core.RulesEngine;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.factory.RuleFactory;
-
-import java.util.Collection;
+import info.lostred.ruler.rule.AbstractRule;
 
 /**
  * 简单执行的规则引擎
@@ -16,8 +13,8 @@ import java.util.Collection;
  */
 public class SimpleRulesEngine<E> extends RulesEngine<E> {
 
-    public SimpleRulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
-        super(ruleFactory, businessType, abstractRules);
+    public SimpleRulesEngine(RuleFactory ruleFactory, String businessType) {
+        super(ruleFactory, businessType);
     }
 
     @Override

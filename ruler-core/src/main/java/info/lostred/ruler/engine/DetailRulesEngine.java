@@ -1,13 +1,10 @@
 package info.lostred.ruler.engine;
 
-import info.lostred.ruler.core.AbstractRule;
-import info.lostred.ruler.core.IterationEngine;
-import info.lostred.ruler.core.RulesEngine;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.factory.RuleFactory;
+import info.lostred.ruler.rule.AbstractRule;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -18,8 +15,8 @@ import java.util.Iterator;
  */
 public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements IterationEngine {
 
-    public DetailRulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
-        super(ruleFactory, businessType, abstractRules);
+    public DetailRulesEngine(RuleFactory ruleFactory, String businessType) {
+        super(ruleFactory, businessType);
     }
 
     @Override

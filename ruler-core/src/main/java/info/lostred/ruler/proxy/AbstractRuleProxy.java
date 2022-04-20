@@ -1,8 +1,10 @@
-package info.lostred.ruler.core;
+package info.lostred.ruler.proxy;
 
 import info.lostred.ruler.constants.ValidGrade;
+import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.rule.SingleFieldRule;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -21,7 +23,7 @@ public class AbstractRuleProxy implements MethodInterceptor {
     /**
      * 代理目标对象
      */
-    private final AbstractRule<?> target;
+    protected final AbstractRule<?> target;
     /**
      * 日志
      */

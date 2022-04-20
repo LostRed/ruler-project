@@ -1,11 +1,9 @@
 package info.lostred.ruler.engine;
 
 import info.lostred.ruler.constants.ValidGrade;
-import info.lostred.ruler.core.AbstractRule;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.factory.RuleFactory;
-
-import java.util.Collection;
+import info.lostred.ruler.rule.AbstractRule;
 
 /**
  * 不完整执行的规则引擎
@@ -15,8 +13,8 @@ import java.util.Collection;
  */
 public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
 
-    public IncompleteRulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
-        super(ruleFactory, businessType, abstractRules);
+    public IncompleteRulesEngine(RuleFactory ruleFactory, String businessType) {
+        super(ruleFactory, businessType);
     }
 
     @Override

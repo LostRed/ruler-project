@@ -26,7 +26,8 @@ public class DictFieldRule<E> extends SingleFieldRule<E> {
 
     @Override
     public boolean isSupported(E object) {
-        return !validConfiguration.getValidInfos(ValidType.DICT.name()).isEmpty();
+        return validConfiguration != null
+                && !validConfiguration.getValidInfos(ValidType.DICT.name()).isEmpty();
     }
 
     @Override
@@ -38,7 +39,7 @@ public class DictFieldRule<E> extends SingleFieldRule<E> {
     @Override
     public Report buildReport(E object) {
         Map<String, Object> map = validConfiguration.getValidInfos(ValidType.DICT.name()).stream()
-                .flatMap(validInfo -> this.collectIllegals(object, validInfo).stream())
+                .flatMap(validInfo -> this.collectEntries(object, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);
     }

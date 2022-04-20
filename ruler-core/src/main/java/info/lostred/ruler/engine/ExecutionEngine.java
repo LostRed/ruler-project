@@ -1,5 +1,7 @@
-package info.lostred.ruler.core;
+package info.lostred.ruler.engine;
 
+import info.lostred.ruler.core.Judgement;
+import info.lostred.ruler.core.Reportable;
 import info.lostred.ruler.domain.Report;
 
 /**

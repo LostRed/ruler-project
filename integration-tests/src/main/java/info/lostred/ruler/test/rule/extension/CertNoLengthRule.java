@@ -1,15 +1,14 @@
 package info.lostred.ruler.test.rule.extension;
 
-import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.core.AbstractRule;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.test.entity.Person;
 
 import java.util.Map;
 import java.util.Set;
 
-@Rule(ruleCode = "test1", businessType = "person", desc = "身份证长度必须为18位", validClass = Person.class)
+//@Rule(ruleCode = "test1", businessType = "person", desc = "身份证长度必须为18位", validClass = Person.class)
 public class CertNoLengthRule extends AbstractRule<Person> {
 
     public CertNoLengthRule(RuleInfo ruleInfo) {

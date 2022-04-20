@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +37,8 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
 
     @Override
     public boolean isSupported(E object) {
-        return !validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).isEmpty();
+        return validConfiguration != null
+                && !validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).isEmpty();
     }
 
     @Override
@@ -48,7 +50,7 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
     @Override
     public Report buildReport(E object) {
         Map<String, Object> map = validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).stream()
-                .flatMap(validInfo -> this.collectIllegals(object, validInfo).stream())
+                .flatMap(validInfo -> this.collectEntries(object, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);
     }
