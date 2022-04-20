@@ -60,7 +60,7 @@ public class DatabaseInitializationConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RuleFactory dbRuleFactory(ValidConfiguration validConfiguration, DataSource dataSource) {
+    public RuleFactory databaseRuleFactory(ValidConfiguration validConfiguration, DataSource dataSource) {
         return new DatabaseRuleFactory(validConfiguration, dataSource, rulerProperties.getRuleConfig().getTableName());
     }
 }
