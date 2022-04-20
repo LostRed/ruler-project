@@ -64,7 +64,9 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
         }
     }
 
-    //simple rules engine will invoke these methods below.
+    //-------------------------------------------------------------------------
+    // Simple rules engine will invoke these methods below
+    //-------------------------------------------------------------------------
 
     /**
      * 校验集合中的数据
@@ -91,7 +93,9 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
         return this.isIllegal(validInfo, subNodeInfo);
     }
 
-    //detail rules engine will invoke these methods below.
+    //-------------------------------------------------------------------------
+    // Detail rules engine will invoke these methods below
+    //-------------------------------------------------------------------------
 
     /**
      * 从集合类节点收集非法的字段与值
@@ -122,7 +126,9 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
         }
     }
 
-    //methods to handle result.
+    //-------------------------------------------------------------------------
+    // Methods to handle result
+    //-------------------------------------------------------------------------
 
     /**
      * 待校验的值是否是非法的

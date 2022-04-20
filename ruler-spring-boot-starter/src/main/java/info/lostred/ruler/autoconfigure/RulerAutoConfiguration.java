@@ -1,7 +1,7 @@
 package info.lostred.ruler.autoconfigure;
 
-import info.lostred.ruler.configure.AnnotationInitConfiguration;
-import info.lostred.ruler.configure.DatabaseInitConfiguration;
+import info.lostred.ruler.configure.AnnotationInitializationConfiguration;
+import info.lostred.ruler.configure.DatabaseInitializationConfiguration;
 import info.lostred.ruler.constants.RulesEngineType;
 import info.lostred.ruler.core.RulesEngine;
 import info.lostred.ruler.engine.CompleteRulesEngine;
@@ -32,7 +32,7 @@ public class RulerAutoConfiguration {
      * 规则自动配置类
      */
     @Configuration(proxyBeanMethods = false)
-    @Import({AnnotationInitConfiguration.class, DatabaseInitConfiguration.class})
+    @Import({AnnotationInitializationConfiguration.class, DatabaseInitializationConfiguration.class})
     public static class RuleAutoConfiguration {
     }
 

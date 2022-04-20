@@ -31,9 +31,9 @@ public interface RuleFactory {
     void createRule(RuleInfo ruleInfo);
 
     /**
-     * 获取规则
+     * 根据规则编号获取规则
      *
-     * @param ruleCode 规则编码
+     * @param ruleCode 规则编号
      * @param <E>      规则约束的参数类型
      * @return 规则
      */

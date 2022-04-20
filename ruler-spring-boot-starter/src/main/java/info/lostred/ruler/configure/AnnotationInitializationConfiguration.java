@@ -22,25 +22,24 @@ import java.util.Optional;
  */
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(RulerProperties.class)
-public class AnnotationInitConfiguration {
+@ConditionalOnProperty(prefix = "ruler.rule-config", name = "init-type", havingValue = "annotation", matchIfMissing = true)
+public class AnnotationInitializationConfiguration {
     private final ApplicationContext applicationContext;
     private final RulerProperties rulerProperties;
 
-    public AnnotationInitConfiguration(ApplicationContext applicationContext, RulerProperties rulerProperties) {
+    public AnnotationInitializationConfiguration(ApplicationContext applicationContext, RulerProperties rulerProperties) {
         this.applicationContext = applicationContext;
         this.rulerProperties = rulerProperties;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "ruler.valid-config", name = "init-type", havingValue = "annotation", matchIfMissing = true)
-    public ValidConfiguration defaultGlobalConfiguration() {
+    public ValidConfiguration validConfiguration() {
         return new ValidConfiguration(null);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "ruler.rule-config", name = "init-type", havingValue = "annotation", matchIfMissing = true)
     public RuleFactory annotationRuleFactory(ValidConfiguration rulesEngineConfiguration) {
         Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RuleScan.class);
         Class<?> configClass = null;
