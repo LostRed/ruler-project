@@ -1,6 +1,6 @@
 package info.lostred.ruler.proxy;
 
-import info.lostred.ruler.constants.ValidGrade;
+import info.lostred.ruler.constant.Grade;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.rule.AbstractRule;
 import net.sf.cglib.proxy.MethodInterceptor;
@@ -42,7 +42,7 @@ public abstract class AbstractRuleProxy implements MethodInterceptor {
             Map<String, Object> illegals = report.getIllegals();
             if (illegals == null || illegals.isEmpty()) {
                 logger.config("ruleCode=" + target.getRuleInfo().getRuleCode() +
-                        ", grade=" + ValidGrade.QUALIFIED.name() +
+                        ", grade=" + Grade.QUALIFIED.name() +
                         ", report=" + illegals);
             } else {
                 logger.config("ruleCode=" + target.getRuleInfo().getRuleCode() +
@@ -55,7 +55,7 @@ public abstract class AbstractRuleProxy implements MethodInterceptor {
                         ", grade=" + target.getRuleInfo().getGrade());
             } else {
                 logger.config("ruleCode=" + target.getRuleInfo().getRuleCode() +
-                        ", grade=" + ValidGrade.QUALIFIED.name());
+                        ", grade=" + Grade.QUALIFIED.name());
             }
         }
     }

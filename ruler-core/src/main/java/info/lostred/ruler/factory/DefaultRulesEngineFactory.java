@@ -1,6 +1,6 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.constants.RulerConstants;
+import info.lostred.ruler.constant.RulerConstants;
 import info.lostred.ruler.engine.RulesEngine;
 
 import java.util.Collection;

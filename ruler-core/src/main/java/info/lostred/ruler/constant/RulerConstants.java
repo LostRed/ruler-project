@@ -1,4 +1,4 @@
-package info.lostred.ruler.constants;
+package info.lostred.ruler.constant;
 
 /**
  * ruler常量

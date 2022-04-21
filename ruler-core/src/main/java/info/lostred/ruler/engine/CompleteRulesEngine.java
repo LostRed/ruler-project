@@ -1,5 +1,6 @@
 package info.lostred.ruler.engine;
 
+import info.lostred.ruler.constant.Grade;
 import info.lostred.ruler.factory.RuleFactory;
 
 /**
@@ -15,7 +16,7 @@ public class CompleteRulesEngine<T> extends DetailRulesEngine<T> {
     }
 
     @Override
-    public boolean toNext(String grade) {
+    public boolean toNext(Grade grade) {
         return true;
     }
 }

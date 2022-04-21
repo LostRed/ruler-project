@@ -1,6 +1,5 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.rule.AbstractRule;
 
@@ -55,11 +54,4 @@ public interface RuleFactory {
      * @return 规则集合
      */
     <E> List<AbstractRule<E>> findRules(String businessType);
-
-    /**
-     * 获取校验配置
-     *
-     * @return 校验配置
-     */
-    ValidConfiguration getValidConfiguration();
 }

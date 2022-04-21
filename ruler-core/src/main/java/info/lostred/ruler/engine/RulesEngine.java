@@ -1,6 +1,6 @@
 package info.lostred.ruler.engine;
 
-import info.lostred.ruler.constants.RulerConstants;
+import info.lostred.ruler.constant.RulerConstants;
 import info.lostred.ruler.core.Judgement;
 import info.lostred.ruler.core.Reportable;
 import info.lostred.ruler.domain.Report;
@@ -62,9 +62,7 @@ public abstract class RulesEngine<T> implements ExecutionEngine<T> {
      */
     private List<AbstractRule<T>> mergeRules() {
         List<AbstractRule<T>> rules = ruleFactory.findRules(businessType);
-        if (ruleFactory.getValidConfiguration().isEnableCommonRules()
-                && ruleFactory.getValidConfiguration() != null
-                && !RulerConstants.COMMON_BUSINESS_TYPE.equals(businessType)) {
+        if (!RulerConstants.COMMON_BUSINESS_TYPE.equals(businessType)) {
             rules.addAll(ruleFactory.findRules(RulerConstants.COMMON_BUSINESS_TYPE));
         }
         return rules;
@@ -207,11 +205,7 @@ public abstract class RulesEngine<T> implements ExecutionEngine<T> {
             return false;
         }
         for (AbstractRule<T> abstractRule : this.abstractRules) {
-            if (abstractRule.getRuleInfo().isRequired()) {
-                throw new RuntimeException("Cannot remove required rule.");
-            } else {
-                return this.abstractRules.remove(abstractRule);
-            }
+            return this.abstractRules.remove(abstractRule);
         }
         return false;
     }

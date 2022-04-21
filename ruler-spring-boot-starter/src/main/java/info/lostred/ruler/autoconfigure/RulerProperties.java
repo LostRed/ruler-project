@@ -1,7 +1,7 @@
 package info.lostred.ruler.autoconfigure;
 
-import info.lostred.ruler.constants.RulerConstants;
-import info.lostred.ruler.constants.RulesEngineType;
+import info.lostred.ruler.constant.RulerConstants;
+import info.lostred.ruler.constant.RulesEngineType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**

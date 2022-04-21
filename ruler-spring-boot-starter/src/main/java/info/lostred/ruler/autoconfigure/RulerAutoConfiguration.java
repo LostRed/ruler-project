@@ -1,12 +1,10 @@
 package info.lostred.ruler.autoconfigure;
 
 import info.lostred.ruler.configure.AnnotationInitializationConfiguration;
-import info.lostred.ruler.configure.DatabaseInitializationConfiguration;
-import info.lostred.ruler.constants.RulesEngineType;
-import info.lostred.ruler.engine.RulesEngine;
+import info.lostred.ruler.constant.RulesEngineType;
 import info.lostred.ruler.engine.CompleteRulesEngine;
 import info.lostred.ruler.engine.IncompleteRulesEngine;
-import info.lostred.ruler.engine.SimpleRulesEngine;
+import info.lostred.ruler.engine.RulesEngine;
 import info.lostred.ruler.factory.DefaultRulesEngineFactory;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.factory.RulesEngineFactory;
@@ -32,7 +30,7 @@ public class RulerAutoConfiguration {
      * 规则自动配置类
      */
     @Configuration(proxyBeanMethods = false)
-    @Import({AnnotationInitializationConfiguration.class, DatabaseInitializationConfiguration.class})
+    @Import(AnnotationInitializationConfiguration.class)
     public static class RuleAutoConfiguration {
     }
 
@@ -68,7 +66,7 @@ public class RulerAutoConfiguration {
             } else if (RulesEngineType.INCOMPLETE.equals(RulesEngineType.valueOf(type))) {
                 return RulesEngineFactory.builder(ruleFactory, defaultBusinessType, IncompleteRulesEngine.class, defaultValidClass).build();
             } else {
-                return RulesEngineFactory.builder(ruleFactory, defaultBusinessType, SimpleRulesEngine.class, defaultValidClass).build();
+                throw new RuntimeException("Unknown rules engine type: " + type);
             }
         }
     }

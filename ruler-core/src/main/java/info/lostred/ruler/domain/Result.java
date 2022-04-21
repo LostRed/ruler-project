@@ -1,6 +1,6 @@
 package info.lostred.ruler.domain;
 
-import info.lostred.ruler.constants.ValidGrade;
+import info.lostred.ruler.constant.Grade;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +15,7 @@ public class Result {
     /**
      * 校验结果等级
      */
-    private String grade;
+    private Grade grade;
     /**
      * 可疑字段数量
      */
@@ -36,11 +36,11 @@ public class Result {
      * 构建一个默认的校验结果，该结果的校验结果等级为合格
      *
      * @return 校验结果
-     * @see ValidGrade
+     * @see Grade
      */
     public static Result of() {
         Result result = new Result();
-        result.grade = ValidGrade.QUALIFIED.name();
+        result.grade = Grade.QUALIFIED;
         result.reports = new ArrayList<>();
         return result;
     }
@@ -58,12 +58,12 @@ public class Result {
      * 更新校验结果，“违规”的优先级最高，其次是“可疑”，最后是“合格”
      *
      * @param report 报告
-     * @see ValidGrade
+     * @see Grade
      */
     public void updateGrade(Report report) {
         if (report != null) {
-            String grade = report.getRuleInfo().getGrade();
-            if (!ValidGrade.ILLEGAL.name().equals(this.grade)
+            Grade grade = report.getRuleInfo().getGrade();
+            if (!Grade.ILLEGAL.equals(this.grade)
                     && !this.grade.equals(grade)) {
                 this.grade = grade;
             }
@@ -77,17 +77,17 @@ public class Result {
      */
     public Result statistic() {
         this.suspectedFieldCount = reports.stream()
-                .filter(e -> ValidGrade.SUSPECTED.name().equals(e.getRuleInfo().getGrade()))
+                .filter(e -> Grade.SUSPECTED.equals(e.getRuleInfo().getGrade()))
                 .mapToLong(e -> e.getIllegals().size())
                 .sum();
         this.illegalFieldCount = reports.stream()
-                .filter(e -> ValidGrade.ILLEGAL.name().equals(e.getRuleInfo().getGrade()))
+                .filter(e -> Grade.ILLEGAL.equals(e.getRuleInfo().getGrade()))
                 .mapToLong(e -> e.getIllegals().size())
                 .sum();
         return this;
     }
 
-    public String getGrade() {
+    public Grade getGrade() {
         return grade;
     }
 

@@ -1,4 +1,4 @@
-package info.lostred.ruler.constants;
+package info.lostred.ruler.constant;
 
 /**
  * 规则引擎类型

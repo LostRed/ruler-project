@@ -1,6 +1,6 @@
 package info.lostred.ruler.annotation;
 
-import info.lostred.ruler.constants.ValidGrade;
+import info.lostred.ruler.constant.Grade;
 
 import java.lang.annotation.*;
 
@@ -28,11 +28,11 @@ public @interface Rule {
     String businessType();
 
     /**
-     * 规则校验结果等级
+     * 规则的严重等级
      *
-     * @return 规则校验结果等级
+     * @return 规则的严重等级
      */
-    ValidGrade validGrade() default ValidGrade.ILLEGAL;
+    Grade grade() default Grade.ILLEGAL;
 
     /**
      * 规则描述
@@ -47,25 +47,4 @@ public @interface Rule {
      * @return 规则执行的顺序号
      */
     int seq() default 0;
-
-    /**
-     * 是否强制使用
-     *
-     * @return 是否强制使用
-     */
-    boolean required() default false;
-
-    /**
-     * 是否启用
-     *
-     * @return 是否启用
-     */
-    boolean enable() default true;
-
-    /**
-     * 规则约束的类
-     *
-     * @return 规则约束的类
-     */
-    Class<?> validClass() default Object.class;
 }

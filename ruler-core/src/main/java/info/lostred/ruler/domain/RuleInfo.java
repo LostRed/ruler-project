@@ -1,10 +1,9 @@
 package info.lostred.ruler.domain;
 
 import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.constants.RulerConstants;
-import info.lostred.ruler.constants.ValidGrade;
-import info.lostred.ruler.rule.SingleFieldRule;
+import info.lostred.ruler.constant.Grade;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -12,7 +11,7 @@ import java.util.Objects;
  *
  * @author lostred
  */
-public class RuleInfo implements Cloneable {
+public class RuleInfo {
     /**
      * 规则编号
      */
@@ -22,9 +21,9 @@ public class RuleInfo implements Cloneable {
      */
     private String businessType;
     /**
-     * 规则校验结果等级
+     * 严重等级
      */
-    private String grade;
+    private Grade grade;
     /**
      * 规则描述
      */
@@ -34,149 +33,88 @@ public class RuleInfo implements Cloneable {
      */
     private Integer seq;
     /**
-     * 是否强制使用
+     * 规则类型
      */
-    private boolean required;
+    private Class<?> ruleClass;
     /**
-     * 是否启用
+     * 校验信息
      */
-    private boolean enable;
-    /**
-     * 规则实现类的全限定类名
-     */
-    private String ruleClassName;
-    /**
-     * 规则约束类的全限定类名
-     */
-    private String validClassName;
-    /**
-     * 规则约束的类
-     */
-    private Class<?> validClass;
+    private List<ValidInfo> validInfos;
 
-    public static RuleInfo of(Rule rule, Class<?> ruleClass) {
-        return of(rule.ruleCode(), rule.businessType(), rule.validGrade().name(), rule.desc(),
-                rule.seq(), rule.required(), rule.enable(), ruleClass.getName(), rule.validClass());
+    public static RuleInfo of(Rule rule) {
+        return new RuleInfo(rule.ruleCode(), rule.businessType(), rule.grade(), rule.desc(), rule.seq(), null);
     }
 
-    public static RuleInfo of(String ruleCode, String businessType, String desc,
-                              String ruleClassName, String validClassName) {
-        return RuleInfo.of(ruleCode, businessType, ValidGrade.ILLEGAL.name(), desc,
-                0, false, true, ruleClassName, validClassName);
-    }
-
-    public static RuleInfo of(String ruleCode, String businessType, String desc,
-                              String ruleClassName, Class<?> validClass) {
-        return RuleInfo.of(ruleCode, businessType, ValidGrade.ILLEGAL.name(), desc,
-                0, false, true, ruleClassName, validClass);
-    }
-
-    public static RuleInfo of(String ruleCode, String businessType, String grade, String desc,
-                              Integer seq, boolean required, boolean enable,
-                              String ruleClassName, String validClassName) {
-        RuleInfo ruleInfo = new RuleInfo(ruleCode, businessType, grade, desc,
-                seq, required, enable, ruleClassName);
-        ruleInfo.setValidClassName(validClassName);
-        return ruleInfo;
-    }
-
-    public static RuleInfo of(String ruleCode, String businessType, String grade, String desc,
-                              Integer seq, boolean required, boolean enable,
-                              String ruleClassName, Class<?> validClass) {
-        RuleInfo ruleInfo = new RuleInfo(ruleCode, businessType, grade, desc,
-                seq, required, enable, ruleClassName);
-        ruleInfo.setValidClass(validClass);
-        return ruleInfo;
+    public static RuleInfo of(String ruleCode, String businessType, Grade grade, String desc, Integer seq, List<ValidInfo> validInfos) {
+        return new RuleInfo(ruleCode, businessType, grade, desc, seq, validInfos);
     }
 
     public RuleInfo() {
     }
 
-    public RuleInfo(String ruleCode, String businessType, String grade, String desc,
-                    Integer seq, boolean required, boolean enable, String ruleClassName) {
-        try {
-            Class<?> ruleClass = RuleInfo.class.getClassLoader().loadClass(ruleClassName);
-            if (!SingleFieldRule.class.isAssignableFrom(ruleClass)
-                    && RulerConstants.COMMON_BUSINESS_TYPE.equals(businessType)) {
-                throw new IllegalArgumentException("BusinessType can not be " +
-                        RulerConstants.COMMON_BUSINESS_TYPE + ".");
-            }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public RuleInfo(String ruleCode, String businessType, Grade grade, String desc, Integer seq, List<ValidInfo> validInfos) {
         this.ruleCode = ruleCode;
         this.businessType = businessType;
         this.grade = grade;
         this.desc = desc;
         this.seq = seq;
-        this.required = required;
-        this.enable = enable;
-        this.ruleClassName = ruleClassName;
+        this.validInfos = validInfos;
     }
 
     public String getRuleCode() {
         return ruleCode;
     }
 
+    public void setRuleCode(String ruleCode) {
+        this.ruleCode = ruleCode;
+    }
+
     public String getBusinessType() {
         return businessType;
     }
 
-    public String getGrade() {
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
+    }
+
+    public Grade getGrade() {
         return grade;
+    }
+
+    public void setGrade(Grade grade) {
+        this.grade = grade;
     }
 
     public String getDesc() {
         return desc;
     }
 
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     public Integer getSeq() {
         return seq;
     }
 
-    public boolean isRequired() {
-        return required;
+    public void setSeq(Integer seq) {
+        this.seq = seq;
     }
 
-    public boolean isEnable() {
-        return enable;
+    public Class<?> getRuleClass() {
+        return ruleClass;
     }
 
-    public String getRuleClassName() {
-        return ruleClassName;
+    public void setRuleClass(Class<?> ruleClass) {
+        this.ruleClass = ruleClass;
     }
 
-    public String getValidClassName() {
-        return validClassName;
+    public List<ValidInfo> getValidInfos() {
+        return validInfos;
     }
 
-    public Class<?> getValidClass() {
-        return validClass;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public void setEnable(boolean enable) {
-        this.enable = enable;
-    }
-
-    public void setValidClassName(String validClassName) {
-        this.validClassName = validClassName;
-        try {
-            this.validClass = this.getClass().getClassLoader().loadClass(validClassName);
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    public void setValidClass(Class<?> validClass) {
-        if (validClass == null) {
-            throw new NullPointerException("The parameter 'validClass' can not be null.");
-        }
-        this.validClass = validClass;
-        this.validClassName = validClass.getName();
+    public void setValidInfos(List<ValidInfo> validInfos) {
+        this.validInfos = validInfos;
     }
 
     @Override
@@ -194,10 +132,5 @@ public class RuleInfo implements Cloneable {
     @Override
     public int hashCode() {
         return Objects.hash(ruleCode);
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
     }
 }

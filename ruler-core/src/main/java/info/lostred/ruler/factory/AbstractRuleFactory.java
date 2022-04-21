@@ -1,11 +1,9 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.exception.RuleInitializationException;
 import info.lostred.ruler.proxy.DefaultRuleProxy;
 import info.lostred.ruler.rule.AbstractRule;
-import info.lostred.ruler.rule.SingleFieldRule;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -22,11 +20,6 @@ import java.util.stream.Collectors;
 public abstract class AbstractRuleFactory implements RuleFactory {
     protected final Map<String, RuleInfo> ruleInfoMap = new ConcurrentHashMap<>();
     protected final Map<String, AbstractRule<?>> rules = new ConcurrentHashMap<>();
-    protected final ValidConfiguration validConfiguration;
-
-    public AbstractRuleFactory(ValidConfiguration validConfiguration) {
-        this.validConfiguration = validConfiguration;
-    }
 
     @Override
     public void registerRuleInfo(RuleInfo ruleInfo) {
@@ -45,7 +38,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
 
     @Override
     public void createRule(RuleInfo ruleInfo) {
-        AbstractRule<?> rule = this.builder(validConfiguration, ruleInfo).build();
+        AbstractRule<?> rule = this.builder(ruleInfo).build();
         this.rules.put(ruleInfo.getRuleCode(), rule);
     }
 
@@ -68,58 +61,44 @@ public abstract class AbstractRuleFactory implements RuleFactory {
         return (AbstractRule<E>) rule;
     }
 
-    @Override
-    public ValidConfiguration getValidConfiguration() {
-        return validConfiguration;
-    }
-
     /**
      * 获取规则的建造者
      *
-     * @param validConfiguration 规则配置
-     * @param ruleInfo           规则信息
-     * @param <E>                规则约束的参数类型
+     * @param ruleInfo 规则信息
+     * @param <E>      规则约束的参数类型
      * @return 某个规则的建造者实例对象
      */
-    public <E> Builder<E> builder(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
-        return new Builder<>(validConfiguration, ruleInfo);
+    public <E> Builder<E> builder(RuleInfo ruleInfo) {
+        return new Builder<>(ruleInfo);
     }
 
     /**
      * 规则建造者
      */
     private static class Builder<E> {
-        private final ValidConfiguration validConfiguration;
         private final RuleInfo ruleInfo;
 
-        private Builder(ValidConfiguration validConfiguration, RuleInfo ruleInfo) {
-            this.validConfiguration = validConfiguration;
+        private Builder(RuleInfo ruleInfo) {
             this.ruleInfo = ruleInfo;
         }
 
         @SuppressWarnings("unchecked")
         public AbstractRule<E> build() {
+            Class<?> ruleClass = ruleInfo.getRuleClass();
             try {
-                Class<?> ruleClass = this.getClass().getClassLoader().loadClass(ruleInfo.getRuleClassName());
-                Object object;
-                if (SingleFieldRule.class.isAssignableFrom(ruleClass)) {
-                    Constructor<?> constructor = ruleClass.getDeclaredConstructor(RuleInfo.class, ValidConfiguration.class);
-                    object = constructor.newInstance(ruleInfo, validConfiguration);
-                } else {
-                    Constructor<?> constructor = ruleClass.getDeclaredConstructor(RuleInfo.class);
-                    object = constructor.newInstance(ruleInfo);
-                }
+                Constructor<?> constructor = ruleClass.getDeclaredConstructor(RuleInfo.class);
+                Object object = constructor.newInstance(ruleInfo);
                 if (object instanceof AbstractRule<?>) {
                     //创建代理器
                     DefaultRuleProxy proxy = new DefaultRuleProxy((AbstractRule<E>) object);
                     //拿到代理对象
                     return proxy.newProxyInstance();
                 }
-                throw new RuleInitializationException("Internal error: " + ruleInfo.getRuleClassName() +
+                throw new RuleInitializationException("Internal error: " + ruleClass.getName() +
                         " cannot be instantiated, because it is not instance of Rule.", this.ruleInfo);
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
-                     IllegalAccessException | ClassNotFoundException e) {
-                throw new RuleInitializationException("Internal error: " + ruleInfo.getRuleClassName() +
+                     IllegalAccessException e) {
+                throw new RuleInitializationException("Internal error: " + ruleClass.getName() +
                         " cannot be instantiated.", e, this.ruleInfo);
             }
         }

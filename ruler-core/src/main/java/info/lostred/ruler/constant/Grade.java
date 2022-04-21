@@ -1,11 +1,11 @@
-package info.lostred.ruler.constants;
+package info.lostred.ruler.constant;
 
 /**
- * 校验结果等级
+ * 严重等级
  *
  * @author lostred
  */
-public enum ValidGrade {
+public enum Grade {
     /**
      * 合格
      */

@@ -2,9 +2,8 @@ package info.lostred.ruler.factory;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.annotation.RuleScan;
-import info.lostred.ruler.rule.AbstractRule;
-import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.util.PackageScanUtils;
 
 import java.io.IOException;
@@ -22,8 +21,7 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
     private final Class<?> configClass;
     private final String[] anotherPackages;
 
-    public AnnotationRuleFactory(ValidConfiguration validConfiguration, Class<?> configClass, String... anotherPackages) {
-        super(validConfiguration);
+    public AnnotationRuleFactory(Class<?> configClass, String... anotherPackages) {
         this.configClass = configClass;
         this.anotherPackages = anotherPackages;
         this.init();
@@ -77,6 +75,6 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
      */
     private RuleInfo buildRuleInfo(Class<?> ruleClass) {
         Rule rule = ruleClass.getAnnotation(Rule.class);
-        return RuleInfo.of(rule, ruleClass);
+        return RuleInfo.of(rule);
     }
 }

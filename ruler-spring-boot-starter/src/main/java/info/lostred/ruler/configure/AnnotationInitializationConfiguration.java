@@ -2,7 +2,6 @@ package info.lostred.ruler.configure;
 
 import info.lostred.ruler.annotation.RuleScan;
 import info.lostred.ruler.autoconfigure.RulerProperties;
-import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.factory.AnnotationRuleFactory;
 import info.lostred.ruler.factory.RuleFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -34,14 +33,7 @@ public class AnnotationInitializationConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ValidConfiguration validConfiguration() {
-        boolean enableCommonRules = rulerProperties.isEnableCommonRules();
-        return new ValidConfiguration(null, enableCommonRules);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public RuleFactory annotationRuleFactory(ValidConfiguration rulesEngineConfiguration) {
+    public RuleFactory annotationRuleFactory() {
         Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RuleScan.class);
         Class<?> configClass = null;
         Optional<Object> first = beans.values().stream().findFirst();
@@ -59,8 +51,8 @@ public class AnnotationInitializationConfiguration {
         }
         String[] scanBasePackages = rulerProperties.getRuleConfig().getScanBasePackages();
         if (scanBasePackages != null) {
-            return new AnnotationRuleFactory(rulesEngineConfiguration, configClass, scanBasePackages);
+            return new AnnotationRuleFactory(configClass, scanBasePackages);
         }
-        return new AnnotationRuleFactory(rulesEngineConfiguration, configClass);
+        return new AnnotationRuleFactory(configClass);
     }
 }
