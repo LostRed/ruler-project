@@ -28,7 +28,7 @@ ruler:
   rule-config:
     init-type: annotation #规则信息的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置规则信息，数据库方式需要引入数据库驱动包
     table-name: ruler_rule_info #规则信息配置表表名
-    scan-base-packages: info.lostred.ruler.rule #规则包扫描路径
+    scan-base-packages: info.lostred.ruler.rule #规则包扫描路径，与注解@RulerScan定义的路径会取并集并一起扫描
   rules-engine-config:
     type: complete #上述提到的规则引擎类型，默认为simple
   db-config:
