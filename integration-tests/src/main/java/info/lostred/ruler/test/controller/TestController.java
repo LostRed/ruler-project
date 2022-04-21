@@ -1,6 +1,6 @@
 package info.lostred.ruler.test.controller;
 
-import info.lostred.ruler.core.RulesEngine;
+import info.lostred.ruler.engine.RulesEngine;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.test.entity.Person;
 import org.springframework.web.bind.annotation.PostMapping;

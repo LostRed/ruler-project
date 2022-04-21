@@ -35,7 +35,8 @@ public class AnnotationInitializationConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ValidConfiguration validConfiguration() {
-        return new ValidConfiguration(null);
+        boolean enableCommonRules = rulerProperties.isEnableCommonRules();
+        return new ValidConfiguration(null, enableCommonRules);
     }
 
     @Bean

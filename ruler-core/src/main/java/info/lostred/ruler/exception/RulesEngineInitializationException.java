@@ -1,7 +1,5 @@
 package info.lostred.ruler.exception;
 
-import info.lostred.ruler.core.RulesEngine;
-
 /**
  * 规则引擎初始化异常
  *
@@ -9,30 +7,30 @@ import info.lostred.ruler.core.RulesEngine;
  */
 public class RulesEngineInitializationException extends RuntimeException {
     private final String businessType;
-    private final Class<? extends RulesEngine<?>> rulesEngineType;
+    private final Class<?> rulesEngineType;
 
     public RulesEngineInitializationException(String businessType,
-                                              Class<? extends RulesEngine<?>> rulesEngineType) {
+                                              Class<?> rulesEngineType) {
         this.businessType = businessType;
         this.rulesEngineType = rulesEngineType;
     }
 
     public RulesEngineInitializationException(String message, String businessType,
-                                              Class<? extends RulesEngine<?>> rulesEngineType) {
+                                              Class<?> rulesEngineType) {
         super(message);
         this.businessType = businessType;
         this.rulesEngineType = rulesEngineType;
     }
 
     public RulesEngineInitializationException(String message, Throwable cause, String businessType,
-                                              Class<? extends RulesEngine<?>> rulesEngineType) {
+                                              Class<?> rulesEngineType) {
         super(message, cause);
         this.businessType = businessType;
         this.rulesEngineType = rulesEngineType;
     }
 
     public RulesEngineInitializationException(Throwable cause, String businessType,
-                                              Class<? extends RulesEngine<?>> rulesEngineType) {
+                                              Class<?> rulesEngineType) {
         super(cause);
         this.businessType = businessType;
         this.rulesEngineType = rulesEngineType;
@@ -41,7 +39,7 @@ public class RulesEngineInitializationException extends RuntimeException {
     public RulesEngineInitializationException(String message, Throwable cause,
                                               boolean enableSuppression, boolean writableStackTrace,
                                               String businessType,
-                                              Class<? extends RulesEngine<?>> rulesEngineType) {
+                                              Class<?> rulesEngineType) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.businessType = businessType;
         this.rulesEngineType = rulesEngineType;
@@ -51,7 +49,7 @@ public class RulesEngineInitializationException extends RuntimeException {
         return businessType;
     }
 
-    public Class<? extends RulesEngine<?>> getRulesEngineType() {
+    public Class<?> getRulesEngineType() {
         return rulesEngineType;
     }
 }

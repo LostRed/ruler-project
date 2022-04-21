@@ -1,4 +1,4 @@
-package info.lostred.ruler.core;
+package info.lostred.ruler.engine;
 
 /**
  * 规则迭代引擎接口

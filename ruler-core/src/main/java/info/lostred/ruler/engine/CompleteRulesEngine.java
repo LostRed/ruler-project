@@ -1,20 +1,17 @@
 package info.lostred.ruler.engine;
 
-import info.lostred.ruler.core.AbstractRule;
 import info.lostred.ruler.factory.RuleFactory;
-
-import java.util.Collection;
 
 /**
  * 完整执行的规则引擎
  *
- * @param <E> 规则约束的参数类型
+ * @param <T> 规则约束的参数类型
  * @author lostred
  */
-public class CompleteRulesEngine<E> extends DetailRulesEngine<E> {
+public class CompleteRulesEngine<T> extends DetailRulesEngine<T> {
 
-    public CompleteRulesEngine(RuleFactory ruleFactory, String businessType, Collection<AbstractRule<E>> abstractRules) {
-        super(ruleFactory, businessType, abstractRules);
+    public CompleteRulesEngine(RuleFactory ruleFactory, String businessType) {
+        super(ruleFactory, businessType);
     }
 
     @Override

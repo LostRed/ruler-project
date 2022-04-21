@@ -3,7 +3,7 @@ package info.lostred.ruler.autoconfigure;
 import info.lostred.ruler.configure.AnnotationInitializationConfiguration;
 import info.lostred.ruler.configure.DatabaseInitializationConfiguration;
 import info.lostred.ruler.constants.RulesEngineType;
-import info.lostred.ruler.core.RulesEngine;
+import info.lostred.ruler.engine.RulesEngine;
 import info.lostred.ruler.engine.CompleteRulesEngine;
 import info.lostred.ruler.engine.IncompleteRulesEngine;
 import info.lostred.ruler.engine.SimpleRulesEngine;

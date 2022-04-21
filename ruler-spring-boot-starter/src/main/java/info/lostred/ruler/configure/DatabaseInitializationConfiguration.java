@@ -55,7 +55,8 @@ public class DatabaseInitializationConfiguration {
         String selectSql = JdbcUtils.parseSql(RulerConstants.SELECT_VALID_INFO_SQL);
         String defaultBusinessType = rulerProperties.getDefaultBusinessType();
         List<ValidInfo> validInfos = JdbcUtils.query(dataSource, selectSql, ValidInfo.class, defaultBusinessType);
-        return new ValidConfiguration(validInfos);
+        boolean enableCommonRules = rulerProperties.isEnableCommonRules();
+        return new ValidConfiguration(validInfos, enableCommonRules);
     }
 
     @Bean

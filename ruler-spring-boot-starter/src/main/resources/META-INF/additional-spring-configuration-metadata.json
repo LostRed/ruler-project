@@ -28,6 +28,12 @@
   ],
   "properties": [
     {
+      "name": "ruler.enable-common-rules",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
+      "description": "是否启用框架默认的通用规则.",
+      "defaultValue": false
+    },
+    {
       "name": "ruler.default-business-type",
       "type": "java.lang.String",
       "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",

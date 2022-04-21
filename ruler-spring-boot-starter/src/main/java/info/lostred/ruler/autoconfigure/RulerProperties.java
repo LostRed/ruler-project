@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties("ruler")
 public class RulerProperties {
+    private boolean enableCommonRules;
     private String defaultBusinessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
     private Class<?> defaultValidClass;
     private DbConfig dbConfig = new DbConfig();
@@ -114,12 +115,12 @@ public class RulerProperties {
         }
     }
 
-    public DbConfig getDbConfig() {
-        return dbConfig;
+    public boolean isEnableCommonRules() {
+        return enableCommonRules;
     }
 
-    public void setDbConfig(DbConfig dbConfig) {
-        this.dbConfig = dbConfig;
+    public void setEnableCommonRules(boolean enableCommonRules) {
+        this.enableCommonRules = enableCommonRules;
     }
 
     public String getDefaultBusinessType() {
@@ -128,6 +129,14 @@ public class RulerProperties {
 
     public void setDefaultBusinessType(String defaultBusinessType) {
         this.defaultBusinessType = defaultBusinessType;
+    }
+
+    public DbConfig getDbConfig() {
+        return dbConfig;
+    }
+
+    public void setDbConfig(DbConfig dbConfig) {
+        this.dbConfig = dbConfig;
     }
 
     public Class<?> getDefaultValidClass() {

@@ -30,7 +30,7 @@ class DatabaseInitSmokeTest {
     static String url = "jdbc:mysql://localhost:3306/rules_engine";
     static String user = "rules_engine";
     static String password = "123456";
-    static String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
+    static String businessType = "test";
     static DataSource dataSource;
 
     static RuleFactory ruleFactory;
@@ -52,7 +52,7 @@ class DatabaseInitSmokeTest {
         JdbcUtils.execute(dataSource, insertDataSql2);
         String selectSql = JdbcUtils.parseSql(RulerConstants.SELECT_VALID_INFO_SQL);
         validInfos = JdbcUtils.query(dataSource, selectSql, ValidInfo.class, businessType);
-        return new ValidConfiguration(validInfos);
+        return new ValidConfiguration(validInfos, true);
     }
 
     @BeforeAll
@@ -73,7 +73,6 @@ class DatabaseInitSmokeTest {
         subValidClass.setNumber(new BigDecimal(11));
         subValidClass.setTime(LocalDateTime.now());
         validClass.setSubValidClasses(Collections.singletonList(subValidClass));
-
         Result result = engine.execute(validClass);
         System.out.println(this.toJson(result));
     }

@@ -2,7 +2,6 @@ package info.lostred.ruler.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import info.lostred.ruler.constants.RulerConstants;
 import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.ValidInfo;
@@ -26,7 +25,7 @@ import java.util.Collections;
 
 class AnnotationInitSmokeTest {
     static String validClassName = SubValidClass.class.getName();
-    static String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
+    static String businessType = "test";
     static RuleFactory ruleFactory;
     static DetailRulesEngine<ValidClass> engine;
     static Collection<ValidInfo> validInfos;
@@ -39,19 +38,19 @@ class AnnotationInitSmokeTest {
 
     static ValidConfiguration buildValidInfos() {
         validInfos = new ArrayList<>();
-        ValidInfo validInfo1 = ValidInfo.ofRequired("string", validClassName);
-        ValidInfo validInfo2 = ValidInfo.ofRequired("number", validClassName);
-        ValidInfo validInfo3 = ValidInfo.ofRequired( "time", validClassName);
-        ValidInfo validInfo4 = ValidInfo.ofDict( "string", validClassName);
-        ValidInfo validInfo5 = ValidInfo.ofNumberScope("number", null, BigDecimal.TEN, validClassName);
-        ValidInfo validInfo6 = ValidInfo.ofDateTimeScope("time", null, LocalDateTime.now(), validClassName);
+        ValidInfo validInfo1 = ValidInfo.ofRequired(businessType, "string", validClassName);
+        ValidInfo validInfo2 = ValidInfo.ofRequired(businessType, "number", validClassName);
+        ValidInfo validInfo3 = ValidInfo.ofRequired(businessType, "time", validClassName);
+        ValidInfo validInfo4 = ValidInfo.ofDict(businessType, "string", validClassName);
+        ValidInfo validInfo5 = ValidInfo.ofNumberScope(businessType, "number", null, BigDecimal.TEN, validClassName);
+        ValidInfo validInfo6 = ValidInfo.ofDateTimeScope(businessType, "time", null, LocalDateTime.now(), validClassName);
         validInfos.add(validInfo1);
         validInfos.add(validInfo2);
         validInfos.add(validInfo3);
         validInfos.add(validInfo4);
         validInfos.add(validInfo5);
         validInfos.add(validInfo6);
-        return new ValidConfiguration(validInfos);
+        return new ValidConfiguration(validInfos, true);
     }
 
     @BeforeAll
@@ -71,7 +70,6 @@ class AnnotationInitSmokeTest {
         subValidClass.setNumber(new BigDecimal(11));
         subValidClass.setTime(LocalDateTime.now());
         validClass.setSubValidClasses(Collections.singletonList(subValidClass));
-
         Result result = engine.execute(validClass);
         System.out.println(this.toJson(result));
     }

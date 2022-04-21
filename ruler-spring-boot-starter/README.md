@@ -19,11 +19,7 @@
 
 ```yaml
 ruler:
-  db-config:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/rules_engine
-    username: rules_engine
-    password: 123456
+  enable-common-rules: true #启用框架默认的通用规则
   default-business-type: common #业务类型，对应以下两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息，默认为common
   default-valid-class: info.lostred.ruler.domain.model.ValidClass #规则引擎所约束的java类型
   valid-config:
@@ -35,6 +31,11 @@ ruler:
     scan-base-packages: info.lostred.ruler.rule #规则包扫描路径
   rules-engine-config:
     type: complete #上述提到的规则引擎类型，默认为simple
+  db-config:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rules_engine
+    username: rules_engine
+    password: 123456
 ```
 
 或者配置spring的数据源
@@ -89,49 +90,95 @@ valid_type的填写可参考ValidType枚举类，字母全大写。
 
 ```java
 
+import info.lostred.ruler.autoconfigure.RulerProperties;
 import info.lostred.ruler.core.ValidConfiguration;
 
 @Configuration
 @RuleScan("info.lostred.ruler.rule")
 public class RulerConfig {
-    private static final String validClassName = "info.lostred.ruler.domain.model.SubValidClass";
-    private static final String businessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
-
-    //如果不使用数据库初始化方式，则需要在spring容器中注册一个ValidConfiguration实例对象
-    @Bean
-    public ValidConfiguration validConfiguration() {
+    private static final String businessType = "person";
+    
+    //注入容器中默认配置的ValidConfiguration实例对象，也可以通过@Bean注解自行定义
+    @Autowired
+    private ValidConfiguration validConfiguration;
+    
+    //如果不使用数据库初始化方式，则需要在spring容器初始化前，添加容器中默认ValidConfiguration实例对象的校验信息
+    @PostConstruct
+    public void init() {
         Collection<ValidInfo> validInfos = new ArrayList<>();
-        ValidInfo validInfo1 = new ValidInfo("1", businessType, ValidType.REQUIRED.name(), "string", validClassName);
-        ValidInfo validInfo2 = new ValidInfo("2", businessType, ValidType.REQUIRED.name(), "number", validClassName);
-        ValidInfo validInfo3 = new ValidInfo("3", businessType, ValidType.REQUIRED.name(), "time", validClassName);
-        ValidInfo validInfo4 = new ValidInfo("4", businessType, ValidType.DICT.name(), "string", validClassName);
-        ValidInfo validInfo5 = new ValidInfo("5", businessType, ValidType.NUMBER_SCOPE.name(), "number", validClassName);
-        validInfo5.setUpperLimit(BigDecimal.TEN);
-        ValidInfo validInfo6 = new ValidInfo("6", businessType, ValidType.DATETIME_SCOPE.name(), "time", validClassName);
-        validInfo6.setEndTime(LocalDateTime.now());
+        ValidInfo validInfo1 = ValidInfo.ofRequired(businessType, "name", Person.class.getName());
+        ValidInfo validInfo2 = ValidInfo.ofRequired(businessType, "gender", Person.class.getName());
+        ValidInfo validInfo3 = ValidInfo.ofDict(businessType, "gender", Person.class.getName());
+        Set<Object> set = new HashSet<>(Arrays.asList("1", "2"));
+        validInfo3.setDict(set);
+        ValidInfo validInfo4 = ValidInfo.ofNumberScope(businessType, "age", new BigDecimal(18), null, Person.class.getName());
+        ValidInfo validInfo5 = ValidInfo.ofDateTimeScope(businessType, "birthday",
+                LocalDateTime.of(1990, 1, 1, 0, 0, 0),
+                LocalDateTime.of(2004, 1, 1, 0, 0, 0),
+                Person.class.getName());
+        ValidInfo validInfo6 = ValidInfo.ofRequired(businessType, "type", Contact.class.getName());
+        ValidInfo validInfo7 = ValidInfo.ofRequired(businessType, "account", Contact.class.getName());
+        ValidInfo validInfo8 = ValidInfo.ofRequired(businessType, "password", Contact.class.getName());
+        ValidInfo validInfo9 = ValidInfo.ofRequired(businessType, "country", Area.class.getName());
+        ValidInfo validInfo10 = ValidInfo.ofRequired(businessType, "province", Area.class.getName());
+        ValidInfo validInfo11 = ValidInfo.ofRequired(businessType, "city", Area.class.getName());
         validInfos.add(validInfo1);
         validInfos.add(validInfo2);
         validInfos.add(validInfo3);
         validInfos.add(validInfo4);
         validInfos.add(validInfo5);
         validInfos.add(validInfo6);
-        ValidConfiguration validConfiguration = new ValidConfiguration(validInfos);
-        Set<Object> set = new HashSet<>(Arrays.asList("hello", "world"));
-        validInfo4.setDict(set);
-        return validConfiguration;
+        validInfos.add(validInfo7);
+        validInfos.add(validInfo8);
+        validInfos.add(validInfo9);
+        validInfos.add(validInfo10);
+        validInfos.add(validInfo11);
+        validConfiguration.addValidInfo(validInfos);
     }
 
     //选择适合的规则引擎注册到spring容器
     @Bean
-    public RulesEngine<ValidClass> rulerEngine(RuleFactory ruleFactory) {
-        TypeReference<CompleteRulesEngine<ValidClass>> typeReference = new TypeReference<CompleteRulesEngine<ValidClass>>() {
+    public RulesEngine<Person> rulerEngine(RuleFactory ruleFactory) {
+        TypeReference<CompleteRulesEngine<Person>> typeReference = new TypeReference<CompleteRulesEngine<Person>>() {
         };
         return DefaultRulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();
     }
 }
 ```
 
-以上，ValidClass为需要校验的类。
+以上，Person为需要校验的类，下面是实体类的示例代码。
+
+```java
+@Data
+public class Person {
+    private String certNo;
+    private String name;
+    private String gender;
+    private Integer age;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private Date birthday;
+    private Area area;
+    private List<Contact> contacts;
+}
+
+@Data
+public class Area {
+    private String continent;
+    private String country;
+    private String province;
+    private String city;
+    private String district;
+    private String town;
+}
+
+@Data
+public class Contact {
+    private String type;
+    private String account;
+    private String password;
+    private Area area;
+}
+```
 
 ### 规则引擎依赖注入
 

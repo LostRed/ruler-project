@@ -65,26 +65,26 @@ public final class JdbcUtils {
      * @param sql          sql语句
      * @param elementClass 集合元素类型的类对象
      * @param args         参数
-     * @param <T>          集合元素类型
+     * @param <E>          集合元素类型
      * @return 结果集合
      */
-    public static <T> List<T> query(DataSource dataSource, String sql, Class<T> elementClass, Object... args) {
+    public static <E> List<E> query(DataSource dataSource, String sql, Class<E> elementClass, Object... args) {
         assert elementClass != null;
         Field[] fields = elementClass.getDeclaredFields();
         try {
             ResultSet resultSet = executeQuery(dataSource, sql, args);
-            List<T> list = new ArrayList<>();
+            List<E> list = new ArrayList<>();
             while (resultSet.next()) {
-                T element = elementClass.newInstance();
+                E e = elementClass.newInstance();
                 for (Field field : fields) {
                     field.setAccessible(true);
                     String fieldName = field.getName();
                     Object value = getValue(resultSet, fieldName);
                     if (value != null) {
-                        field.set(element, value);
+                        field.set(e, value);
                     }
                 }
-                list.add(element);
+                list.add(e);
             }
             return list;
         } catch (SQLException | InstantiationException | IllegalAccessException e) {

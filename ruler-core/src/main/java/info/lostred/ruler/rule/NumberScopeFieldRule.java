@@ -1,6 +1,7 @@
 package info.lostred.ruler.rule;
 
 import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.constants.RulerConstants;
 import info.lostred.ruler.constants.ValidType;
 import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.Report;
@@ -15,31 +16,32 @@ import java.util.stream.Collectors;
 /**
  * 数值范围字段校验规则
  *
- * @param <E> 规则约束的参数类型
+ * @param <T> 规则约束的参数类型
  * @author lostred
  */
-@Rule(ruleCode = "number_scope", desc = "规定的数值字段必须在限定的范围内")
-public class NumberScopeFieldRule<E> extends ScopeFieldRule<E> {
+@Rule(ruleCode = "number_scope", businessType = RulerConstants.DEFAULT_BUSINESS_TYPE, desc = "规定的数值字段必须在限定的范围内")
+public class NumberScopeFieldRule<T> extends ScopeFieldRule<T> {
 
     public NumberScopeFieldRule(RuleInfo ruleInfo, ValidConfiguration validConfiguration) {
         super(ruleInfo, validConfiguration);
     }
 
     @Override
-    public boolean isSupported(E object) {
-        return !validConfiguration.getValidInfos(ValidType.NUMBER_SCOPE.name()).isEmpty();
+    public boolean isSupported(T object) {
+        return validConfiguration != null
+                && !validConfiguration.getValidInfos(ValidType.NUMBER_SCOPE.name()).isEmpty();
     }
 
     @Override
-    public boolean judge(E object) {
+    public boolean judge(T object) {
         return validConfiguration.getValidInfos(ValidType.NUMBER_SCOPE.name()).stream()
                 .anyMatch(validInfo -> this.check(object, validInfo));
     }
 
     @Override
-    public Report buildReport(E object) {
+    public Report buildReport(T object) {
         Map<String, Object> map = validConfiguration.getValidInfos(ValidType.NUMBER_SCOPE.name()).stream()
-                .flatMap(validInfo -> this.collectIllegals(object, validInfo).stream())
+                .flatMap(validInfo -> this.collectEntries(object, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         return Report.of(ruleInfo).putIllegals(map);
     }

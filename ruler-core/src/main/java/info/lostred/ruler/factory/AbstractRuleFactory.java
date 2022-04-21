@@ -1,10 +1,10 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.core.AbstractRule;
-import info.lostred.ruler.core.AbstractRuleProxy;
 import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.RuleInfo;
 import info.lostred.ruler.exception.RuleInitializationException;
+import info.lostred.ruler.proxy.DefaultRuleProxy;
+import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.rule.SingleFieldRule;
 
 import java.lang.reflect.Constructor;
@@ -37,6 +37,13 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     }
 
     @Override
+    public void registerRule(AbstractRule<?> abstractRule) {
+        RuleInfo ruleInfo = abstractRule.getRuleInfo();
+        ruleInfoMap.put(ruleInfo.getRuleCode(), ruleInfo);
+        rules.put(ruleInfo.getRuleCode(), abstractRule);
+    }
+
+    @Override
     public void createRule(RuleInfo ruleInfo) {
         AbstractRule<?> rule = this.builder(validConfiguration, ruleInfo).build();
         this.rules.put(ruleInfo.getRuleCode(), rule);
@@ -59,6 +66,11 @@ public abstract class AbstractRuleFactory implements RuleFactory {
         }
         AbstractRule<?> rule = this.rules.get(ruleCode);
         return (AbstractRule<E>) rule;
+    }
+
+    @Override
+    public ValidConfiguration getValidConfiguration() {
+        return validConfiguration;
     }
 
     /**
@@ -99,7 +111,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
                 }
                 if (object instanceof AbstractRule<?>) {
                     //创建代理器
-                    AbstractRuleProxy proxy = new AbstractRuleProxy((AbstractRule<E>) object);
+                    DefaultRuleProxy proxy = new DefaultRuleProxy((AbstractRule<E>) object);
                     //拿到代理对象
                     return proxy.newProxyInstance();
                 }
