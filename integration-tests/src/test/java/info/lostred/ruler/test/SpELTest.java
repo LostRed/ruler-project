@@ -25,11 +25,12 @@ public class SpELTest {
 
     @Test
     void test() throws JsonProcessingException {
-        RuleDefinition ruleDefinition = RuleDefinition.of("test", "test", Grade.ILLEGAL, "test", AbstractRule.class,
-                "contacts[#i].password", "!=null", ".length < 6", 0);
+        RuleDefinition ruleDefinition = RuleDefinition.of("test", "test", Grade.ILLEGAL, "密码长度小于6", AbstractRule.class,
+                "contacts[#i].password", "!=null", ".length<6", 0);
         ExpressionParser parser = new SpelExpressionParser();
         AbstractRule rule = new AbstractRule(ruleDefinition, new SpelExpressionParser());
         RulesEngine rulesEngine = new RulesEngine("common", parser, Collections.singletonList(rule));
+        rulesEngine.setVariable("set", Arrays.asList("1", "2", "3"));
         Person person = new Person();
         person.setCertNo("12314");
         Contact contact1 = new Contact();

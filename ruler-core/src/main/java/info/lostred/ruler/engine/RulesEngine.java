@@ -65,6 +65,9 @@ public class RulesEngine {
         }
     }
 
+    public void setVariable(String name, Object value) {
+        context.setVariable(name, value);
+    }
     public String getBusinessType() {
         return businessType;
     }
