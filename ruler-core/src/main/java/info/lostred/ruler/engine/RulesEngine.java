@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 /**
  * 抽象规则引擎
  *
- * @param <E> 规则约束的参数类型
+ * @param <T> 规则约束的参数类型
  * @author lostred
  */
-public abstract class RulesEngine<E> implements ExecutionEngine<E> {
+public abstract class RulesEngine<T> implements ExecutionEngine<T> {
     /**
      * 规则工厂
      */
@@ -37,7 +37,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     /**
      * 规则集合
      */
-    protected final List<AbstractRule<E>> abstractRules = new CopyOnWriteArrayList<>();
+    protected final List<AbstractRule<T>> abstractRules = new CopyOnWriteArrayList<>();
     /**
      * 日志
      */
@@ -46,7 +46,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
     public RulesEngine(RuleFactory ruleFactory, String businessType) {
         this.ruleFactory = ruleFactory;
         this.businessType = businessType;
-        List<AbstractRule<E>> rules = this.mergeRules();
+        List<AbstractRule<T>> rules = this.mergeRules();
         if (rules.isEmpty()) {
             throw new RulesEngineInitializationException("This engine's business type is '" + businessType + "', has not available rules.",
                     this.businessType, this.getClass());
@@ -60,9 +60,10 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      *
      * @return 规则集合
      */
-    private List<AbstractRule<E>> mergeRules() {
-        List<AbstractRule<E>> rules = ruleFactory.findRules(businessType);
-        if (ruleFactory.getValidConfiguration() != null
+    private List<AbstractRule<T>> mergeRules() {
+        List<AbstractRule<T>> rules = ruleFactory.findRules(businessType);
+        if (ruleFactory.getValidConfiguration().isEnableCommonRules()
+                && ruleFactory.getValidConfiguration() != null
                 && !RulerConstants.DEFAULT_BUSINESS_TYPE.equals(businessType)) {
             rules.addAll(ruleFactory.findRules(RulerConstants.DEFAULT_BUSINESS_TYPE));
         }
@@ -75,10 +76,10 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      * @param object 规则约束的对象
      * @return 违规返回true，否则返回false
      */
-    public boolean check(E object) {
+    public boolean check(T object) {
         this.checkBefore(object);
         logger.config("invoke method=check, valid object=" + object);
-        for (AbstractRule<E> abstractRule : this.abstractRules) {
+        for (AbstractRule<T> abstractRule : this.abstractRules) {
             if (this.doJudge(object, abstractRule)) {
                 return true;
             }
@@ -92,15 +93,15 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      * @param object 规则约束的对象
      * @return 结果
      */
-    public abstract Result execute(E object);
+    public abstract Result execute(T object);
 
     @Override
-    public boolean doJudge(E object, Judgement<E> judgement) {
+    public boolean doJudge(T object, Judgement<T> judgement) {
         return judgement.isSupported(object) && judgement.judge(object);
     }
 
     @Override
-    public Report doBuildReport(E object, Reportable<E> reportable) {
+    public Report doBuildReport(T object, Reportable<T> reportable) {
         Report report = reportable.buildReport(object);
         if (report != null && !report.getIllegals().isEmpty()) {
             return report;
@@ -113,7 +114,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      *
      * @param object 规则约束的对象
      */
-    protected void checkBefore(E object) {
+    protected void checkBefore(T object) {
         if (object == null) {
             throw new NullPointerException("The valid node is null.");
         }
@@ -130,18 +131,18 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      * @param collectEntries 收集非法键值对的函数
      * @param validClass     规则约束类的类对象
      * @param nodeClass      节点类的类对象
-     * @param <Node>         节点类型
+     * @param <E>            节点类型
      */
-    public <Node> void registerRule(RuleInfo ruleInfo,
-                                    Class<E> validClass,
-                                    Class<Node> nodeClass,
-                                    Function<E, Node> getNode,
-                                    Function<E, Collection<Node>> getCollection,
-                                    Predicate<Node> isSupported,
-                                    Predicate<Node> judge,
-                                    Function<Node, Set<Map.Entry<String, Object>>> collectEntries) {
+    public <E> void registerRule(RuleInfo ruleInfo,
+                                 Class<T> validClass,
+                                 Class<E> nodeClass,
+                                 Function<T, E> getNode,
+                                 Function<T, Collection<E>> getCollection,
+                                 Predicate<E> isSupported,
+                                 Predicate<E> judge,
+                                 Function<E, Set<Map.Entry<String, Object>>> collectEntries) {
         boolean isCollection = getCollection != null && getNode == null;
-        DynamicRule<E, Node> rule = DynamicRuleProxy.builder(ruleInfo, validClass, nodeClass, isCollection)
+        DynamicRule<T, E> rule = DynamicRuleProxy.builder(ruleInfo, validClass, nodeClass, isCollection)
                 .setGetNode(getNode)
                 .setGetCollection(getCollection)
                 .setIsSupported(isSupported)
@@ -156,7 +157,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      *
      * @param rule 规则
      */
-    public void registerRule(AbstractRule<E> rule) {
+    public void registerRule(AbstractRule<T> rule) {
         this.ruleFactory.registerRule(rule);
         this.addRule(rule);
     }
@@ -166,7 +167,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      *
      * @param rule 规则
      */
-    public void addRule(AbstractRule<E> rule) {
+    public void addRule(AbstractRule<T> rule) {
         for (int i = 0; i < this.abstractRules.size(); i++) {
             if (this.abstractRules.get(i).getRuleInfo().getSeq() > rule.getRuleInfo().getSeq()) {
                 this.abstractRules.add(i, rule);
@@ -182,7 +183,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
      * @param ruleCode 规则编号
      */
     public void addRule(String ruleCode) {
-        AbstractRule<E> rule = this.ruleFactory.getRule(ruleCode);
+        AbstractRule<T> rule = this.ruleFactory.getRule(ruleCode);
         this.addRule(rule);
     }
 
@@ -205,7 +206,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
         if (ruleCode == null) {
             return false;
         }
-        for (AbstractRule<E> abstractRule : this.abstractRules) {
+        for (AbstractRule<T> abstractRule : this.abstractRules) {
             if (abstractRule.getRuleInfo().isRequired()) {
                 throw new RuntimeException("Cannot remove required rule.");
             } else {
@@ -228,7 +229,7 @@ public abstract class RulesEngine<E> implements ExecutionEngine<E> {
         return businessType;
     }
 
-    public List<AbstractRule<E>> getRules() {
+    public List<AbstractRule<T>> getRules() {
         return abstractRules;
     }
 }

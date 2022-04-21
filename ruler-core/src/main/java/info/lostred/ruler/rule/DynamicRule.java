@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
 /**
  * 动态规则
  *
- * @param <E>    规则约束的参数类型
- * @param <Node> 校验的节点类型
+ * @param <T> 规则约束的参数类型
+ * @param <E> 校验的节点类型
  * @author lostred
  */
-public class DynamicRule<E, Node> extends AbstractRule<E> {
+public class DynamicRule<T, E> extends AbstractRule<T> {
     /**
      * 校验的数据是否是集合
      */
@@ -23,23 +23,23 @@ public class DynamicRule<E, Node> extends AbstractRule<E> {
     /**
      * 获取单个校验节点的函数
      */
-    private Function<E, Node> getNode;
+    private Function<T, E> getNode;
     /**
      * 获取多个校验节点的集合的函数
      */
-    private Function<E, Collection<Node>> getCollection;
+    private Function<T, Collection<E>> getCollection;
     /**
      * 规则是否支持的断定
      */
-    private Predicate<Node> isSupported;
+    private Predicate<E> isSupported;
     /**
      * 校验结果为违规的断定
      */
-    private Predicate<Node> judge;
+    private Predicate<E> judge;
     /**
      * 收集非法键值对的函数
      */
-    private Function<Node, Set<Map.Entry<String, Object>>> collectEntries;
+    private Function<E, Set<Map.Entry<String, Object>>> collectEntries;
 
     public DynamicRule(RuleInfo ruleInfo, Boolean isCollection) {
         super(ruleInfo);
@@ -51,40 +51,40 @@ public class DynamicRule<E, Node> extends AbstractRule<E> {
     }
 
     @Override
-    public boolean isSupported(E object) {
+    public boolean isSupported(T object) {
         if (isCollection) {
-            Collection<Node> collection = getCollection.apply(object);
-            return collection != null && collection.stream().anyMatch(node -> isSupported.test(node));
+            Collection<E> collection = getCollection.apply(object);
+            return collection != null && collection.stream().anyMatch(e -> isSupported.test(e));
         } else {
-            Node node = getNode.apply(object);
-            return node != null && isSupported.test(node);
+            E e = getNode.apply(object);
+            return e != null && isSupported.test(e);
         }
     }
 
     @Override
-    public boolean judge(E object) {
+    public boolean judge(T object) {
         if (isCollection) {
-            Collection<Node> collection = getCollection.apply(object);
-            return collection.stream().anyMatch(node -> judge.test(node));
+            Collection<E> collection = getCollection.apply(object);
+            return collection.stream().anyMatch(e -> judge.test(e));
         } else {
-            Node node = getNode.apply(object);
-            return judge.test(node);
+            E e = getNode.apply(object);
+            return judge.test(e);
         }
     }
 
     @Override
-    public Report buildReport(E object) {
+    public Report buildReport(T object) {
         Set<Map.Entry<String, Object>> entries;
         if (isCollection) {
-            Collection<Node> collection = getCollection.apply(object);
+            Collection<E> collection = getCollection.apply(object);
             entries = collection.stream()
                     .filter(Objects::nonNull)
-                    .flatMap(node -> collectEntries.apply(node).stream())
+                    .flatMap(e -> collectEntries.apply(e).stream())
                     .collect(Collectors.toSet());
         } else {
-            Node node = getNode.apply(object);
-            if (node != null) {
-                entries = collectEntries.apply(node);
+            E e = getNode.apply(object);
+            if (e != null) {
+                entries = collectEntries.apply(e);
             } else {
                 entries = new HashSet<>(0);
             }
@@ -100,43 +100,43 @@ public class DynamicRule<E, Node> extends AbstractRule<E> {
         this.isCollection = isCollection;
     }
 
-    public Function<E, Node> getGetNode() {
+    public Function<T, E> getGetNode() {
         return getNode;
     }
 
-    public void setGetNode(Function<E, Node> getNode) {
+    public void setGetNode(Function<T, E> getNode) {
         this.getNode = getNode;
     }
 
-    public Function<E, Collection<Node>> getGetCollection() {
+    public Function<T, Collection<E>> getGetCollection() {
         return getCollection;
     }
 
-    public void setGetCollection(Function<E, Collection<Node>> getCollection) {
+    public void setGetCollection(Function<T, Collection<E>> getCollection) {
         this.getCollection = getCollection;
     }
 
-    public Predicate<Node> getIsSupported() {
+    public Predicate<E> getIsSupported() {
         return isSupported;
     }
 
-    public void setIsSupported(Predicate<Node> isSupported) {
+    public void setIsSupported(Predicate<E> isSupported) {
         this.isSupported = isSupported;
     }
 
-    public Predicate<Node> getJudge() {
+    public Predicate<E> getJudge() {
         return judge;
     }
 
-    public void setJudge(Predicate<Node> judge) {
+    public void setJudge(Predicate<E> judge) {
         this.judge = judge;
     }
 
-    public Function<Node, Set<Map.Entry<String, Object>>> getCollectEntries() {
+    public Function<E, Set<Map.Entry<String, Object>>> getCollectEntries() {
         return collectEntries;
     }
 
-    public void setCollectEntries(Function<Node, Set<Map.Entry<String, Object>>> collectEntries) {
+    public void setCollectEntries(Function<E, Set<Map.Entry<String, Object>>> collectEntries) {
         this.collectEntries = collectEntries;
     }
 }

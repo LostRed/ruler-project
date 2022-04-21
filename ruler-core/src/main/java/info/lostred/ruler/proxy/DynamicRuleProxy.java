@@ -21,14 +21,6 @@ public class DynamicRuleProxy extends AbstractRuleProxy {
         super(dynamicRule);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T newProxyInstance() {
-        Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(target.getClass());
-        enhancer.setCallback(this);
-        return (T) enhancer.create(new Class[]{RuleInfo.class}, new Object[]{null});
-    }
-
     /**
      * 获取动态规则代理建造者对象
      *
@@ -36,16 +28,16 @@ public class DynamicRuleProxy extends AbstractRuleProxy {
      * @param validClass   规则约束类的类对象
      * @param nodeClass    节点类的类对象
      * @param isCollection 校验的数据是否是集合
-     * @param <E>          规则约束类型
-     * @param <Node>       节点类型
+     * @param <T>          规则约束类型
+     * @param <E>       节点类型
      * @return 建造者对象
      */
-    public static <E, Node> Builder<E, Node> builder(RuleInfo ruleInfo, Class<E> validClass, Class<Node> nodeClass, Boolean isCollection) {
+    public static <T, E> Builder<T, E> builder(RuleInfo ruleInfo, Class<T> validClass, Class<E> nodeClass, Boolean isCollection) {
         return new Builder<>(ruleInfo, isCollection);
     }
 
-    public static class Builder<E, Node> {
-        private final DynamicRule<E, Node> dynamicRule;
+    public static class Builder<T, E> {
+        private final DynamicRule<T, E> dynamicRule;
         private final DynamicRuleProxy dynamicRuleProxy;
 
         public Builder(RuleInfo ruleInfo, Boolean isCollection) {
@@ -53,33 +45,33 @@ public class DynamicRuleProxy extends AbstractRuleProxy {
             this.dynamicRuleProxy = new DynamicRuleProxy(dynamicRule);
         }
 
-        public Builder<E, Node> setGetNode(Function<E, Node> getNode) {
+        public Builder<T, E> setGetNode(Function<T, E> getNode) {
             dynamicRule.setGetNode(getNode);
             return this;
         }
 
-        public Builder<E, Node> setGetCollection(Function<E, Collection<Node>> getCollection) {
+        public Builder<T, E> setGetCollection(Function<T, Collection<E>> getCollection) {
             dynamicRule.setGetCollection(getCollection);
             return this;
         }
 
-        public Builder<E, Node> setIsSupported(Predicate<Node> isSupported) {
+        public Builder<T, E> setIsSupported(Predicate<E> isSupported) {
             dynamicRule.setIsSupported(isSupported);
             return this;
         }
 
-        public Builder<E, Node> setJudge(Predicate<Node> judge) {
+        public Builder<T, E> setJudge(Predicate<E> judge) {
             dynamicRule.setJudge(judge);
             return this;
         }
 
-        public Builder<E, Node> setCollectEntries(Function<Node, Set<Map.Entry<String, Object>>> collectEntries) {
+        public Builder<T, E> setCollectEntries(Function<E, Set<Map.Entry<String, Object>>> collectEntries) {
             dynamicRule.setCollectEntries(collectEntries);
             return this;
         }
 
         @SuppressWarnings("unchecked")
-        public DynamicRule<E, Node> build() {
+        public DynamicRule<T, E> build() {
             if (this.dynamicRule.getIsCollection() && this.dynamicRule.getGetCollection() == null) {
                 throw new IllegalArgumentException("DynamicRule's getCollection must not be null.");
             } else if (this.dynamicRule.getGetNode() == null) {
@@ -93,7 +85,7 @@ public class DynamicRuleProxy extends AbstractRuleProxy {
             Enhancer enhancer = new Enhancer();
             enhancer.setSuperclass(dynamicRule.getClass());
             enhancer.setCallback(dynamicRuleProxy);
-            return (DynamicRule<E, Node>) enhancer.create(new Class[]{RuleInfo.class, Boolean.class}, new Object[]{null, null});
+            return (DynamicRule<T, E>) enhancer.create(new Class[]{RuleInfo.class, Boolean.class}, new Object[]{null, null});
         }
     }
 }

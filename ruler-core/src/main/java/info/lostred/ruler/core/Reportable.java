@@ -10,17 +10,17 @@ import java.util.Set;
 /**
  * 可生成报告接口
  *
- * @param <E> 报告数据来源的参数类型
+ * @param <T> 报告数据来源的参数类型
  * @author lostred
  */
-public interface Reportable<E> {
+public interface Reportable<T> {
     /**
      * 生成校验报告
      *
      * @param object 参数
      * @return 报告
      */
-    Report buildReport(E object);
+    Report buildReport(T object);
 
     /**
      * 获取非法字段与值的键值对

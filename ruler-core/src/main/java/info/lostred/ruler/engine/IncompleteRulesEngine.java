@@ -8,10 +8,10 @@ import info.lostred.ruler.rule.AbstractRule;
 /**
  * 不完整执行的规则引擎
  *
- * @param <E> 规则约束的参数类型
+ * @param <T> 规则约束的参数类型
  * @author lostred
  */
-public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
+public class IncompleteRulesEngine<T> extends DetailRulesEngine<T> {
 
     public IncompleteRulesEngine(RuleFactory ruleFactory, String businessType) {
         super(ruleFactory, businessType);
@@ -28,8 +28,8 @@ public class IncompleteRulesEngine<E> extends DetailRulesEngine<E> {
      * @param object 规则约束的对象
      * @return 有返回true，否则返回false
      */
-    public Report findSuspiciousReport(E object) {
-        for (AbstractRule<E> abstractRule : this.abstractRules) {
+    public Report findSuspiciousReport(T object) {
+        for (AbstractRule<T> abstractRule : this.abstractRules) {
             if (abstractRule.isSupported(object) && ValidGrade.SUSPECTED.name().equals(abstractRule.getRuleInfo().getGrade())) {
                 return this.doBuildReport(object, abstractRule);
             }

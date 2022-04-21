@@ -1,7 +1,9 @@
 package info.lostred.ruler.domain;
 
 import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.constants.RulerConstants;
 import info.lostred.ruler.constants.ValidGrade;
+import info.lostred.ruler.rule.SingleFieldRule;
 
 import java.util.Objects;
 
@@ -57,18 +59,23 @@ public class RuleInfo implements Cloneable {
                 rule.seq(), rule.required(), rule.enable(), ruleClass.getName(), rule.validClass());
     }
 
-    public static RuleInfo of(String ruleCode, String desc, String ruleClassName, String validClassName) {
-        return RuleInfo.of(ruleCode, "common", ValidGrade.ILLEGAL.name(), desc, 0, false, true, ruleClassName, validClassName);
+    public static RuleInfo of(String ruleCode, String businessType, String desc,
+                              String ruleClassName, String validClassName) {
+        return RuleInfo.of(ruleCode, businessType, ValidGrade.ILLEGAL.name(), desc,
+                0, false, true, ruleClassName, validClassName);
     }
 
-    public static RuleInfo of(String ruleCode, String desc, String ruleClassName, Class<?> validClass) {
-        return RuleInfo.of(ruleCode, "common", ValidGrade.ILLEGAL.name(), desc, 0, false, true, ruleClassName, validClass);
+    public static RuleInfo of(String ruleCode, String businessType, String desc,
+                              String ruleClassName, Class<?> validClass) {
+        return RuleInfo.of(ruleCode, businessType, ValidGrade.ILLEGAL.name(), desc,
+                0, false, true, ruleClassName, validClass);
     }
 
     public static RuleInfo of(String ruleCode, String businessType, String grade, String desc,
                               Integer seq, boolean required, boolean enable,
                               String ruleClassName, String validClassName) {
-        RuleInfo ruleInfo = new RuleInfo(ruleCode, businessType, grade, desc, seq, required, enable, ruleClassName);
+        RuleInfo ruleInfo = new RuleInfo(ruleCode, businessType, grade, desc,
+                seq, required, enable, ruleClassName);
         ruleInfo.setValidClassName(validClassName);
         return ruleInfo;
     }
@@ -76,8 +83,8 @@ public class RuleInfo implements Cloneable {
     public static RuleInfo of(String ruleCode, String businessType, String grade, String desc,
                               Integer seq, boolean required, boolean enable,
                               String ruleClassName, Class<?> validClass) {
-
-        RuleInfo ruleInfo = new RuleInfo(ruleCode, businessType, grade, desc, seq, required, enable, ruleClassName);
+        RuleInfo ruleInfo = new RuleInfo(ruleCode, businessType, grade, desc,
+                seq, required, enable, ruleClassName);
         ruleInfo.setValidClass(validClass);
         return ruleInfo;
     }
@@ -85,7 +92,18 @@ public class RuleInfo implements Cloneable {
     public RuleInfo() {
     }
 
-    public RuleInfo(String ruleCode, String businessType, String grade, String desc, Integer seq, boolean required, boolean enable, String ruleClassName) {
+    public RuleInfo(String ruleCode, String businessType, String grade, String desc,
+                    Integer seq, boolean required, boolean enable, String ruleClassName) {
+        try {
+            Class<?> ruleClass = RuleInfo.class.getClassLoader().loadClass(ruleClassName);
+            if (!SingleFieldRule.class.isAssignableFrom(ruleClass)
+                    && RulerConstants.DEFAULT_BUSINESS_TYPE.equals(businessType)) {
+                throw new IllegalArgumentException("BusinessType can not be " +
+                        RulerConstants.DEFAULT_BUSINESS_TYPE + ".");
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         this.ruleCode = ruleCode;
         this.businessType = businessType;
         this.grade = grade;

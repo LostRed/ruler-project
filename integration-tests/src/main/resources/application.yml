@@ -1,4 +1,5 @@
 ruler:
+  enable-common-rules: true
   default-business-type: person
   default-valid-class: info.lostred.ruler.test.entity.Person
   valid-config:
@@ -20,3 +21,4 @@ logging:
   level:
     info.lostred.ruler.rule: debug
     info.lostred.ruler.engine: debug
+    info.lostred.ruler.test.rule: debug

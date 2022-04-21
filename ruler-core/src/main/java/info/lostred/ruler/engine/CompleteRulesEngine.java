@@ -5,10 +5,10 @@ import info.lostred.ruler.factory.RuleFactory;
 /**
  * 完整执行的规则引擎
  *
- * @param <E> 规则约束的参数类型
+ * @param <T> 规则约束的参数类型
  * @author lostred
  */
-public class CompleteRulesEngine<E> extends DetailRulesEngine<E> {
+public class CompleteRulesEngine<T> extends DetailRulesEngine<T> {
 
     public CompleteRulesEngine(RuleFactory ruleFactory, String businessType) {
         super(ruleFactory, businessType);

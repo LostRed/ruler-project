@@ -6,10 +6,10 @@ import info.lostred.ruler.domain.RuleInfo;
 /**
  * 范围字段校验规则
  *
- * @param <E> 规则约束的参数类型
+ * @param <T> 规则约束的参数类型
  * @author lostred
  */
-public abstract class ScopeFieldRule<E> extends SingleFieldRule<E> {
+public abstract class ScopeFieldRule<T> extends SingleFieldRule<T> {
 
     public ScopeFieldRule(RuleInfo ruleInfo, ValidConfiguration validConfiguration) {
         super(ruleInfo, validConfiguration);

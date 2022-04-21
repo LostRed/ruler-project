@@ -7,10 +7,10 @@ import info.lostred.ruler.domain.RuleInfo;
 /**
  * 抽象规则
  *
- * @param <E> 规则约束的参数类型
+ * @param <T> 规则约束的参数类型
  * @author lostred
  */
-public abstract class AbstractRule<E> implements Judgement<E>, Reportable<E> {
+public abstract class AbstractRule<T> implements Judgement<T>, Reportable<T> {
     /**
      * 规则信息
      */

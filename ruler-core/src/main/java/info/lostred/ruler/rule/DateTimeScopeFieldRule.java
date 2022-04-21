@@ -1,6 +1,7 @@
 package info.lostred.ruler.rule;
 
 import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.constants.RulerConstants;
 import info.lostred.ruler.constants.ValidType;
 import info.lostred.ruler.core.ValidConfiguration;
 import info.lostred.ruler.domain.Report;
@@ -13,7 +14,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 /**
  * 日期时间范围字段校验规则
  *
- * @param <E> 规则约束的参数类型
+ * @param <T> 规则约束的参数类型
  * @author lostred
  */
-@Rule(ruleCode = "datetime_scope", desc = "规定的日期时间字段必须在限定的范围内")
-public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
+@Rule(ruleCode = "datetime_scope", businessType = RulerConstants.DEFAULT_BUSINESS_TYPE, desc = "规定的日期时间字段必须在限定的范围内")
+public class DateTimeScopeFieldRule<T> extends ScopeFieldRule<T> {
 
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -36,19 +36,19 @@ public class DateTimeScopeFieldRule<E> extends ScopeFieldRule<E> {
     }
 
     @Override
-    public boolean isSupported(E object) {
+    public boolean isSupported(T object) {
         return validConfiguration != null
                 && !validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).isEmpty();
     }
 
     @Override
-    public boolean judge(E object) {
+    public boolean judge(T object) {
         return validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).stream()
                 .anyMatch(validInfo -> this.check(object, validInfo));
     }
 
     @Override
-    public Report buildReport(E object) {
+    public Report buildReport(T object) {
         Map<String, Object> map = validConfiguration.getValidInfos(ValidType.DATETIME_SCOPE.name()).stream()
                 .flatMap(validInfo -> this.collectEntries(object, validInfo).stream())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

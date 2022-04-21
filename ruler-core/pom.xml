@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.lostred.ruler</groupId>
     <artifactId>ruler-core</artifactId>
-    <version>1.2.4</version>
+    <version>1.3.0</version>
     <name>ruler core</name>
     <description>ruler core.</description>
 

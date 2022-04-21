@@ -10,23 +10,23 @@ import java.util.Iterator;
 /**
  * 详细执行的规则引擎
  *
- * @param <E> 规则约束的参数类型
+ * @param <T> 规则约束的参数类型
  * @author lostred
  */
-public abstract class DetailRulesEngine<E> extends RulesEngine<E> implements IterationEngine {
+public abstract class DetailRulesEngine<T> extends RulesEngine<T> implements IterationEngine {
 
     public DetailRulesEngine(RuleFactory ruleFactory, String businessType) {
         super(ruleFactory, businessType);
     }
 
     @Override
-    public Result execute(E object) {
+    public Result execute(T object) {
         super.checkBefore(object);
         logger.config("invoke method=execute, valid object=" + object);
         Result result = Result.of();
-        Iterator<AbstractRule<E>> iterator = this.abstractRules.iterator();
+        Iterator<AbstractRule<T>> iterator = this.abstractRules.iterator();
         while (iterator.hasNext() && this.toNext(result.getGrade())) {
-            AbstractRule<E> abstractRule = iterator.next();
+            AbstractRule<T> abstractRule = iterator.next();
             if (abstractRule.isSupported(object)) {
                 Report report = this.doBuildReport(object, abstractRule);
                 if (report != null) {

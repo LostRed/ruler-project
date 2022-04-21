@@ -19,9 +19,14 @@ public final class ValidConfiguration {
      * <p>key为校验类型，value为校验信息</p>
      */
     private final Map<String, Map<String, ValidInfo>> validInfoMap = new ConcurrentHashMap<>();
+    /**
+     * 是否启用框架默认的通用规则
+     */
+    private final boolean enableCommonRules;
 
-    public ValidConfiguration(Collection<ValidInfo> validInfoMap) {
+    public ValidConfiguration(Collection<ValidInfo> validInfoMap, boolean enableCommonRules) {
         this.addValidInfo(validInfoMap);
+        this.enableCommonRules = enableCommonRules;
     }
 
     /**
@@ -107,5 +112,9 @@ public final class ValidConfiguration {
         if (validInfo != null) {
             validInfo.setDict(dict);
         }
+    }
+
+    public boolean isEnableCommonRules() {
+        return enableCommonRules;
     }
 }

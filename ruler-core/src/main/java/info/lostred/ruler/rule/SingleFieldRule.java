@@ -29,12 +29,12 @@ public abstract class SingleFieldRule<E> extends AbstractRule<E> {
     /**
      * 检查是否违规
      *
-     * @param element   约束的参数对象
+     * @param object    规则约束的对象
      * @param validInfo 校验信息
      * @return 违规返回true，否则返回false
      */
-    protected boolean check(E element, ValidInfo validInfo) {
-        NodeInfo nodeInfo = ReflectUtils.searchAndGetNodeByType(element, validInfo.getValidClass());
+    protected boolean check(E object, ValidInfo validInfo) {
+        NodeInfo nodeInfo = ReflectUtils.searchAndGetNodeByType(object, validInfo.getValidClass());
         Object node = nodeInfo.getNode();
         if (node instanceof Collection) {
             return ((Collection<?>) node).stream()

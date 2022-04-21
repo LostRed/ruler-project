@@ -52,7 +52,7 @@ class DatabaseInitSmokeTest {
         JdbcUtils.execute(dataSource, insertDataSql2);
         String selectSql = JdbcUtils.parseSql(RulerConstants.SELECT_VALID_INFO_SQL);
         validInfos = JdbcUtils.query(dataSource, selectSql, ValidInfo.class, businessType);
-        return new ValidConfiguration(validInfos);
+        return new ValidConfiguration(validInfos, true);
     }
 
     @BeforeAll

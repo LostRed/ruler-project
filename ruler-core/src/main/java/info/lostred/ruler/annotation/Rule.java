@@ -1,6 +1,5 @@
 package info.lostred.ruler.annotation;
 
-import info.lostred.ruler.constants.RulerConstants;
 import info.lostred.ruler.constants.ValidGrade;
 
 import java.lang.annotation.*;
@@ -26,7 +25,7 @@ public @interface Rule {
      *
      * @return 业务类型
      */
-    String businessType() default RulerConstants.DEFAULT_BUSINESS_TYPE;
+    String businessType();
 
     /**
      * 规则校验结果等级

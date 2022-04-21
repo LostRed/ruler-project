@@ -1,6 +1,5 @@
 package info.lostred.ruler.domain;
 
-import info.lostred.ruler.constants.RulerConstants;
 import info.lostred.ruler.constants.ValidType;
 
 import java.math.BigDecimal;
@@ -66,10 +65,6 @@ public class ValidInfo {
 
     private Set<Object> dict;
 
-    public static ValidInfo ofRequired(String fieldName, String validClassName) {
-        return ofRequired(RulerConstants.DEFAULT_BUSINESS_TYPE, fieldName, validClassName);
-    }
-
     public static ValidInfo ofRequired(String businessType, String fieldName, String validClassName) {
         return ofRequired(UUID.randomUUID().toString(), businessType, fieldName, validClassName);
     }
@@ -77,10 +72,6 @@ public class ValidInfo {
     public static ValidInfo ofRequired(String id, String businessType, String fieldName, String validClassName) {
         return new ValidInfo(id, businessType, ValidType.REQUIRED.name(), fieldName,
                 null, null, null, null, validClassName);
-    }
-
-    public static ValidInfo ofDict(String fieldName, String validClassName) {
-        return ofDict(RulerConstants.DEFAULT_BUSINESS_TYPE, fieldName, validClassName);
     }
 
     public static ValidInfo ofDict(String businessType, String fieldName, String validClassName) {
@@ -92,20 +83,12 @@ public class ValidInfo {
                 null, null, null, null, validClassName);
     }
 
-    public static ValidInfo ofNumberScope(String fieldName, BigDecimal lowerLimit, BigDecimal upperLimit, String validClassName) {
-        return ofNumberScope(RulerConstants.DEFAULT_BUSINESS_TYPE, fieldName, lowerLimit, upperLimit, validClassName);
-    }
-
     public static ValidInfo ofNumberScope(String businessType, String fieldName, BigDecimal lowerLimit, BigDecimal upperLimit, String validClassName) {
         return ofNumberScope(UUID.randomUUID().toString(), businessType, fieldName, lowerLimit, upperLimit, validClassName);
     }
 
     public static ValidInfo ofNumberScope(String id, String businessType, String fieldName, BigDecimal lowerLimit, BigDecimal upperLimit, String validClassName) {
         return new ValidInfo(id, businessType, ValidType.NUMBER_SCOPE.name(), fieldName, lowerLimit, upperLimit, null, null, validClassName);
-    }
-
-    public static ValidInfo ofDateTimeScope(String fieldName, LocalDateTime beginTime, LocalDateTime endTime, String validClassName) {
-        return ofDateTimeScope(RulerConstants.DEFAULT_BUSINESS_TYPE, fieldName, beginTime, endTime, validClassName);
     }
 
     public static ValidInfo ofDateTimeScope(String businessType, String fieldName, LocalDateTime beginTime, LocalDateTime endTime, String validClassName) {
