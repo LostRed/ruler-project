@@ -57,31 +57,10 @@ class ApplicationTest {
 
     @Test
     void rulesEngineFactoryTest() throws JsonProcessingException {
-        RulesEngine<Person> rulesEngine = rulesEngineFactory.getEngine(businessType, person, Person.class);
+        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
         long s = System.currentTimeMillis();
         Result result = rulesEngine.execute(person);
         long e = System.currentTimeMillis();
         printResult(result, s, e);
-    }
-
-    @Test
-    void dynamicAddRuleTest() {
-//        RulesEngine<Person> rulesEngine = rulesEngineFactory.getEngine(businessType, person, Person.class);
-//        RuleInfo ruleInfo = RuleInfo.of(UUID.randomUUID().toString(), "person", Grade.ILLEGAL.name(), "dynamic",
-//                0, true, true, DynamicRule.class.getName(), Person.class);
-//        rulesEngine.registerRule(ruleInfo, Person.class, String.class,
-//                Person::getCertNo,
-//                null,
-//                e -> true,
-//                e -> e.length() != 18,
-//                e -> {
-//                    Map<String, Object> map = new HashMap<>();
-//                    map.put("certNo", e);
-//                    return map.entrySet();
-//                });
-//        long s = System.currentTimeMillis();
-//        Result result = rulesEngine.execute(person);
-//        long e = System.currentTimeMillis();
-//        printResult(result, s, e);
     }
 }

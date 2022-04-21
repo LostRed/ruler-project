@@ -39,7 +39,7 @@ public @interface Rule {
      *
      * @return 规则描述
      */
-    String desc();
+    String description();
 
     /**
      * 规则执行的顺序号
@@ -47,4 +47,25 @@ public @interface Rule {
      * @return 规则执行的顺序号
      */
     int seq() default 0;
+
+    /**
+     * 参数表达式
+     *
+     * @return 参数表达式
+     */
+    String parameterExp();
+
+    /**
+     * 条件表达式
+     *
+     * @return 条件表达式
+     */
+    String conditionExp();
+
+    /**
+     * 断定表达式
+     *
+     * @return 断定表达式
+     */
+    String predicateExp();
 }

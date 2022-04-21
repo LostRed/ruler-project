@@ -1,6 +1,6 @@
 package info.lostred.ruler.exception;
 
-import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.domain.RuleDefinition;
 
 /**
  * 规则初始化异常
@@ -8,34 +8,34 @@ import info.lostred.ruler.domain.RuleInfo;
  * @author lostred
  */
 public class RuleInitializationException extends RuntimeException {
-    private final RuleInfo ruleInfo;
+    private final RuleDefinition ruleDefinition;
 
-    public RuleInitializationException(RuleInfo ruleInfo) {
+    public RuleInitializationException(RuleDefinition ruleDefinition) {
         super();
-        this.ruleInfo = ruleInfo;
+        this.ruleDefinition = ruleDefinition;
     }
 
-    public RuleInitializationException(String message, RuleInfo ruleInfo) {
+    public RuleInitializationException(String message, RuleDefinition ruleDefinition) {
         super(message);
-        this.ruleInfo = ruleInfo;
+        this.ruleDefinition = ruleDefinition;
     }
 
-    public RuleInitializationException(String message, Throwable cause, RuleInfo ruleInfo) {
+    public RuleInitializationException(String message, Throwable cause, RuleDefinition ruleDefinition) {
         super(message, cause);
-        this.ruleInfo = ruleInfo;
+        this.ruleDefinition = ruleDefinition;
     }
 
-    public RuleInitializationException(Throwable cause, RuleInfo ruleInfo) {
+    public RuleInitializationException(Throwable cause, RuleDefinition ruleDefinition) {
         super(cause);
-        this.ruleInfo = ruleInfo;
+        this.ruleDefinition = ruleDefinition;
     }
 
-    public RuleInitializationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, RuleInfo ruleInfo) {
+    public RuleInitializationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, RuleDefinition ruleDefinition) {
         super(message, cause, enableSuppression, writableStackTrace);
-        this.ruleInfo = ruleInfo;
+        this.ruleDefinition = ruleDefinition;
     }
 
-    public RuleInfo getRuleInfo() {
-        return ruleInfo;
+    public RuleDefinition getRuleInfo() {
+        return ruleDefinition;
     }
 }

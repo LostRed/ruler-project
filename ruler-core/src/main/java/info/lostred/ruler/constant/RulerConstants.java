@@ -14,4 +14,7 @@ public class RulerConstants {
     public final static String SELECT_VALID_INFO_SQL = "select-valid-info";
     public final static String SELECT_RULE_INFO_SQL = "select-rule-info";
     public static final String COMMON_BUSINESS_TYPE = "COMMON";
+    public static final String SP_EL_PREFIX = "#root.";
+    public static final String SP_EL_INDEX = "[#i]";
+    public static final String INDEX = "#i";
 }

@@ -106,7 +106,7 @@ public class RulerConfig {
     //如果不使用数据库初始化方式，则需要在spring容器初始化前，添加容器中默认ValidConfiguration实例对象的校验信息
     @PostConstruct
     public void init() {
-        Collection<ValidInfo> validInfos = new ArrayList<>();
+        Collection<ValidInfo> validDefinitions = new ArrayList<>();
         ValidInfo validInfo1 = ValidInfo.ofRequired(businessType, "name", Person.class.getName());
         ValidInfo validInfo2 = ValidInfo.ofRequired(businessType, "gender", Person.class.getName());
         ValidInfo validInfo3 = ValidInfo.ofDict(businessType, "gender", Person.class.getName());
@@ -123,18 +123,18 @@ public class RulerConfig {
         ValidInfo validInfo9 = ValidInfo.ofRequired(businessType, "country", Area.class.getName());
         ValidInfo validInfo10 = ValidInfo.ofRequired(businessType, "province", Area.class.getName());
         ValidInfo validInfo11 = ValidInfo.ofRequired(businessType, "city", Area.class.getName());
-        validInfos.add(validInfo1);
-        validInfos.add(validInfo2);
-        validInfos.add(validInfo3);
-        validInfos.add(validInfo4);
-        validInfos.add(validInfo5);
-        validInfos.add(validInfo6);
-        validInfos.add(validInfo7);
-        validInfos.add(validInfo8);
-        validInfos.add(validInfo9);
-        validInfos.add(validInfo10);
-        validInfos.add(validInfo11);
-        validConfiguration.addValidInfo(validInfos);
+        validDefinitions.add(validInfo1);
+        validDefinitions.add(validInfo2);
+        validDefinitions.add(validInfo3);
+        validDefinitions.add(validInfo4);
+        validDefinitions.add(validInfo5);
+        validDefinitions.add(validInfo6);
+        validDefinitions.add(validInfo7);
+        validDefinitions.add(validInfo8);
+        validDefinitions.add(validInfo9);
+        validDefinitions.add(validInfo10);
+        validDefinitions.add(validInfo11);
+        validConfiguration.addValidInfo(validDefinitions);
     }
 
     //选择适合的规则引擎注册到spring容器
@@ -217,8 +217,8 @@ public class NumberRule extends AbstractRule<ValidClass> {
 
     private final static String FIELD_NAME = "number";
 
-    public NumberRule(GlobalConfiguration rulesEngineConfiguration, RuleInfo ruleInfo) {
-        super(rulesEngineConfiguration, ruleInfo);
+    public NumberRule(GlobalConfiguration rulesEngineConfiguration, RuleInfo ruleDefinition) {
+        super(rulesEngineConfiguration, ruleDefinition);
     }
 
     @Override
@@ -234,7 +234,7 @@ public class NumberRule extends AbstractRule<ValidClass> {
     @Override
     public Report buildReport(ValidClass element) {
         if (this.judge(element)) {
-            return this.getReport(ruleInfo, element, FIELD_NAME, element.getNumber());
+            return this.getReport(ruleDefinition, element, FIELD_NAME, element.getNumber());
         }
         return null;
     }

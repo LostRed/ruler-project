@@ -2,7 +2,7 @@ package info.lostred.ruler.factory;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.annotation.RuleScan;
-import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.util.PackageScanUtils;
 
@@ -63,8 +63,8 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
             }
         }
         for (String ruleCode : this.ruleInfoMap.keySet()) {
-            RuleInfo ruleInfo = this.ruleInfoMap.get(ruleCode);
-            this.createRule(ruleInfo);
+            RuleDefinition ruleDefinition = this.ruleInfoMap.get(ruleCode);
+            this.createRule(ruleDefinition);
         }
     }
 
@@ -73,8 +73,8 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
      *
      * @param ruleClass 规则类
      */
-    private RuleInfo buildRuleInfo(Class<?> ruleClass) {
+    private RuleDefinition buildRuleInfo(Class<?> ruleClass) {
         Rule rule = ruleClass.getAnnotation(Rule.class);
-        return RuleInfo.of(rule);
+        return RuleDefinition.of(ruleClass, rule);
     }
 }

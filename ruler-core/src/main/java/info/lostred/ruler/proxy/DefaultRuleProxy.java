@@ -1,9 +1,7 @@
 package info.lostred.ruler.proxy;
 
-import info.lostred.ruler.core.ValidConfiguration;
-import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
-import info.lostred.ruler.rule.SingleFieldRule;
 import net.sf.cglib.proxy.Enhancer;
 
 /**
@@ -13,7 +11,7 @@ import net.sf.cglib.proxy.Enhancer;
  */
 public class DefaultRuleProxy extends AbstractRuleProxy {
 
-    public DefaultRuleProxy(AbstractRule<?> abstractRule) {
+    public DefaultRuleProxy(AbstractRule abstractRule) {
         super(abstractRule);
     }
 
@@ -28,10 +26,6 @@ public class DefaultRuleProxy extends AbstractRuleProxy {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(target.getClass());
         enhancer.setCallback(this);
-        if (target instanceof SingleFieldRule) {
-            return (U) enhancer.create(new Class[]{RuleInfo.class, ValidConfiguration.class}, new Object[]{null, null});
-        } else {
-            return (U) enhancer.create(new Class[]{RuleInfo.class}, new Object[]{null});
-        }
+        return (U) enhancer.create(new Class[]{RuleDefinition.class}, new Object[]{null});
     }
 }

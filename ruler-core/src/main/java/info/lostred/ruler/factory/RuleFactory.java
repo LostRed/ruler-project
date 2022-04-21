@@ -1,6 +1,6 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.domain.RuleInfo;
+import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
 
 import java.util.List;
@@ -19,39 +19,37 @@ public interface RuleFactory {
     /**
      * 注册规则信息
      *
-     * @param ruleInfo 规则信息
+     * @param ruleDefinition 规则定义
      */
-    void registerRuleInfo(RuleInfo ruleInfo);
+    void registerRuleInfo(RuleDefinition ruleDefinition);
 
     /**
      * 注册规则
      *
      * @param abstractRule 规则
      */
-    void registerRule(AbstractRule<?> abstractRule);
+    void registerRule(AbstractRule abstractRule);
 
     /**
      * 创建规则
      *
-     * @param ruleInfo 规则信息
+     * @param ruleDefinition 规则定义
      */
-    void createRule(RuleInfo ruleInfo);
+    void createRule(RuleDefinition ruleDefinition);
 
     /**
      * 根据规则编号获取规则
      *
      * @param ruleCode 规则编号
-     * @param <E>      规则约束的参数类型
      * @return 规则
      */
-    <E> AbstractRule<E> getRule(String ruleCode);
+    AbstractRule getRule(String ruleCode);
 
     /**
      * 根据业务类型与约束对象类型查找规则集合
      *
      * @param businessType 业务类型
-     * @param <E>          规则约束的参数类型
      * @return 规则集合
      */
-    <E> List<AbstractRule<E>> findRules(String businessType);
+    List<AbstractRule> findRules(String businessType);
 }

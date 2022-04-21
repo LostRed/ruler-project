@@ -2,9 +2,8 @@ package info.lostred.ruler.domain;
 
 import info.lostred.ruler.constant.Grade;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 引擎执行的结果
@@ -27,7 +26,7 @@ public class Result {
     /**
      * 校验报告集合
      */
-    private List<Report> reports;
+    private Map<String, Report> reports;
 
     private Result() {
     }
@@ -41,7 +40,7 @@ public class Result {
     public static Result of() {
         Result result = new Result();
         result.grade = Grade.QUALIFIED;
-        result.reports = new ArrayList<>();
+        result.reports = new HashMap<>();
         return result;
     }
 
@@ -51,40 +50,41 @@ public class Result {
      * @param report 报告
      */
     public void addReport(Report report) {
-        this.reports.add(report);
+        String ruleCode = report.getRuleDefinition().getRuleCode();
+        Report existed = this.reports.putIfAbsent(ruleCode, report);
+        if (existed != null) {
+            existed.putError(report.getErrors());
+        }
     }
 
     /**
      * 更新校验结果，“违规”的优先级最高，其次是“可疑”，最后是“合格”
      *
-     * @param report 报告
      * @see Grade
      */
-    public void updateGrade(Report report) {
-        if (report != null) {
-            Grade grade = report.getRuleInfo().getGrade();
-            if (!Grade.ILLEGAL.equals(this.grade)
-                    && !this.grade.equals(grade)) {
-                this.grade = grade;
-            }
+    public void updateGrade() {
+        Set<Grade> grades = this.reports.values().stream()
+                .map(e -> e.getRuleDefinition().getGrade())
+                .collect(Collectors.toSet());
+        if (grades.contains(Grade.ILLEGAL)) {
+            this.grade = Grade.ILLEGAL;
+        } else if (grades.contains(Grade.SUSPECTED)) {
+            this.grade = Grade.SUSPECTED;
         }
     }
 
     /**
      * 统计可疑与违规字段数量
-     *
-     * @return 结果
      */
-    public Result statistic() {
-        this.suspectedFieldCount = reports.stream()
-                .filter(e -> Grade.SUSPECTED.equals(e.getRuleInfo().getGrade()))
-                .mapToLong(e -> e.getIllegals().size())
+    public void statistic() {
+        this.suspectedFieldCount = reports.values().stream()
+                .filter(e -> Grade.SUSPECTED.equals(e.getRuleDefinition().getGrade()))
+                .mapToLong(e -> e.getErrors().size())
                 .sum();
-        this.illegalFieldCount = reports.stream()
-                .filter(e -> Grade.ILLEGAL.equals(e.getRuleInfo().getGrade()))
-                .mapToLong(e -> e.getIllegals().size())
+        this.illegalFieldCount = reports.values().stream()
+                .filter(e -> Grade.ILLEGAL.equals(e.getRuleDefinition().getGrade()))
+                .mapToLong(e -> e.getErrors().size())
                 .sum();
-        return this;
     }
 
     public Grade getGrade() {
@@ -99,8 +99,8 @@ public class Result {
         return illegalFieldCount;
     }
 
-    public List<Report> getReports() {
-        return Collections.unmodifiableList(this.reports);
+    public Map<String, Report> getReports() {
+        return Collections.unmodifiableMap(this.reports);
     }
 
     @Override

@@ -19,13 +19,13 @@ public abstract class AbstractRuleProxy implements MethodInterceptor {
     /**
      * 代理目标对象
      */
-    protected final AbstractRule<?> target;
+    protected final AbstractRule target;
     /**
      * 日志
      */
     private final Logger logger;
 
-    public AbstractRuleProxy(AbstractRule<?> abstractRule) {
+    public AbstractRuleProxy(AbstractRule abstractRule) {
         this.target = abstractRule;
         this.logger = Logger.getLogger(target.getClass().getName());
     }
@@ -39,22 +39,22 @@ public abstract class AbstractRuleProxy implements MethodInterceptor {
     protected void printLog(Method method, Object result) {
         if ("buildReport".equals(method.getName()) && result instanceof Report) {
             Report report = (Report) result;
-            Map<String, Object> illegals = report.getIllegals();
+            Map<String, Object> illegals = report.getErrors();
             if (illegals == null || illegals.isEmpty()) {
-                logger.config("ruleCode=" + target.getRuleInfo().getRuleCode() +
+                logger.config("ruleCode=" + target.getRuleDefinition().getRuleCode() +
                         ", grade=" + Grade.QUALIFIED.name() +
                         ", report=" + illegals);
             } else {
-                logger.config("ruleCode=" + target.getRuleInfo().getRuleCode() +
-                        ", grade=" + report.getRuleInfo().getGrade() +
+                logger.config("ruleCode=" + target.getRuleDefinition().getRuleCode() +
+                        ", grade=" + report.getRuleDefinition().getGrade() +
                         ", report=" + illegals);
             }
         } else if ("judge".equals(method.getName()) && result instanceof Boolean) {
             if ((Boolean) result) {
-                logger.config("ruleCode=" + target.getRuleInfo().getRuleCode() +
-                        ", grade=" + target.getRuleInfo().getGrade());
+                logger.config("ruleCode=" + target.getRuleDefinition().getRuleCode() +
+                        ", grade=" + target.getRuleDefinition().getGrade());
             } else {
-                logger.config("ruleCode=" + target.getRuleInfo().getRuleCode() +
+                logger.config("ruleCode=" + target.getRuleDefinition().getRuleCode() +
                         ", grade=" + Grade.QUALIFIED.name());
             }
         }

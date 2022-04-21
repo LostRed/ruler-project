@@ -11,55 +11,64 @@ public class Report {
     /**
      * 规则信息
      */
-    private final RuleInfo ruleInfo;
+    private final RuleDefinition ruleDefinition;
     /**
      * 非法字段与值的映射
      */
-    private final Map<String, Object> illegals;
+    private final Map<String, Object> errors;
 
-    public static Report of(RuleInfo ruleInfo) {
-        return new Report(ruleInfo);
+    public static Report of(RuleDefinition ruleDefinition) {
+        return new Report(ruleDefinition);
     }
 
-    private Report(RuleInfo ruleInfo) {
-        this.ruleInfo = ruleInfo;
-        this.illegals = new HashMap<>();
+    private Report(RuleDefinition ruleDefinition) {
+        this.ruleDefinition = ruleDefinition;
+        this.errors = new HashMap<>();
     }
 
-    public Report putIllegals(String fieldName, Object value) {
-        this.illegals.put(fieldName, value);
+    public Report putError(String fieldName, Object value) {
+        this.errors.put(fieldName, value);
         return this;
     }
 
-    public Report putIllegals(Set<Map.Entry<String, Object>> entries) {
+    public Report putError(Set<Map.Entry<String, Object>> entries) {
         for (Map.Entry<String, Object> entry : entries) {
-            this.illegals.put(entry.getKey(), entry.getValue());
+            this.errors.put(entry.getKey(), entry.getValue());
         }
         return this;
     }
 
-    public Report putIllegals(Map<String, Object> map) {
-        this.illegals.putAll(map);
+    public Report putError(Map<String, Object> map) {
+        this.errors.putAll(map);
         return this;
     }
 
-    public RuleInfo getRuleInfo() {
-        try {
-            return (RuleInfo) ruleInfo.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+    public RuleDefinition getRuleDefinition() {
+        return ruleDefinition;
     }
 
-    public Map<String, Object> getIllegals() {
-        return Collections.unmodifiableMap(this.illegals);
+    public Map<String, Object> getErrors() {
+        return Collections.unmodifiableMap(this.errors);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Report report = (Report) o;
+        return Objects.equals(ruleDefinition, report.ruleDefinition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ruleDefinition);
     }
 
     @Override
     public String toString() {
         return "Report{" +
-                "ruleInfo=" + ruleInfo +
-                ", illegals=" + illegals +
+                "ruleInfo=" + ruleDefinition +
+                ", illegals=" + errors +
                 '}';
     }
 }
