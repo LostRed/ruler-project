@@ -97,9 +97,9 @@ public class RuleInfo implements Cloneable {
         try {
             Class<?> ruleClass = RuleInfo.class.getClassLoader().loadClass(ruleClassName);
             if (!SingleFieldRule.class.isAssignableFrom(ruleClass)
-                    && RulerConstants.DEFAULT_BUSINESS_TYPE.equals(businessType)) {
+                    && RulerConstants.COMMON_BUSINESS_TYPE.equals(businessType)) {
                 throw new IllegalArgumentException("BusinessType can not be " +
-                        RulerConstants.DEFAULT_BUSINESS_TYPE + ".");
+                        RulerConstants.COMMON_BUSINESS_TYPE + ".");
             }
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

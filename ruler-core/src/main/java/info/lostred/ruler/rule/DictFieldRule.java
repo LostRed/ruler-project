@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @param <T> 规则约束的参数类型
  * @author lostred
  */
-@Rule(ruleCode = "dict", businessType = RulerConstants.DEFAULT_BUSINESS_TYPE, desc = "规定的字段必须填写字典中的值")
+@Rule(ruleCode = "dict", businessType = RulerConstants.COMMON_BUSINESS_TYPE, desc = "规定的字段必须填写字典中的值")
 public class DictFieldRule<T> extends SingleFieldRule<T> {
 
     public DictFieldRule(RuleInfo ruleInfo, ValidConfiguration validConfiguration) {

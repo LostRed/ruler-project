@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @param <T> 规则约束的参数类型
  * @author lostred
  */
-@Rule(ruleCode = "number_scope", businessType = RulerConstants.DEFAULT_BUSINESS_TYPE, desc = "规定的数值字段必须在限定的范围内")
+@Rule(ruleCode = "number_scope", businessType = RulerConstants.COMMON_BUSINESS_TYPE, desc = "规定的数值字段必须在限定的范围内")
 public class NumberScopeFieldRule<T> extends ScopeFieldRule<T> {
 
     public NumberScopeFieldRule(RuleInfo ruleInfo, ValidConfiguration validConfiguration) {

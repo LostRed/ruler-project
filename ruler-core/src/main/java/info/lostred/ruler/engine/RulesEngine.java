@@ -64,8 +64,8 @@ public abstract class RulesEngine<T> implements ExecutionEngine<T> {
         List<AbstractRule<T>> rules = ruleFactory.findRules(businessType);
         if (ruleFactory.getValidConfiguration().isEnableCommonRules()
                 && ruleFactory.getValidConfiguration() != null
-                && !RulerConstants.DEFAULT_BUSINESS_TYPE.equals(businessType)) {
-            rules.addAll(ruleFactory.findRules(RulerConstants.DEFAULT_BUSINESS_TYPE));
+                && !RulerConstants.COMMON_BUSINESS_TYPE.equals(businessType)) {
+            rules.addAll(ruleFactory.findRules(RulerConstants.COMMON_BUSINESS_TYPE));
         }
         return rules;
     }

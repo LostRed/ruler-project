@@ -22,7 +22,7 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
 
     @Override
     public <E> RulesEngine<E> getEngine(Object object, Class<E> validClass) {
-        return this.getEngine(RulerConstants.DEFAULT_BUSINESS_TYPE, object, validClass);
+        return this.getEngine(RulerConstants.COMMON_BUSINESS_TYPE, object, validClass);
     }
 
     @Override

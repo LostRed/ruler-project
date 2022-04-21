@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("ruler")
 public class RulerProperties {
     private boolean enableCommonRules;
-    private String defaultBusinessType = RulerConstants.DEFAULT_BUSINESS_TYPE;
+    private String defaultBusinessType = RulerConstants.COMMON_BUSINESS_TYPE;
     private Class<?> defaultValidClass;
     private DbConfig dbConfig = new DbConfig();
     private ValidConfig validConfig = new ValidConfig();

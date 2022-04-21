@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @param <T> 规则约束的参数类型
  * @author lostred
  */
-@Rule(ruleCode = "datetime_scope", businessType = RulerConstants.DEFAULT_BUSINESS_TYPE, desc = "规定的日期时间字段必须在限定的范围内")
+@Rule(ruleCode = "datetime_scope", businessType = RulerConstants.COMMON_BUSINESS_TYPE, desc = "规定的日期时间字段必须在限定的范围内")
 public class DateTimeScopeFieldRule<T> extends ScopeFieldRule<T> {
 
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
