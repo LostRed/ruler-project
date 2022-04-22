@@ -1,23 +1,18 @@
-//package info.lostred.ruler.test.rule;
-//
-//import info.lostred.ruler.domain.Report;
-//import info.lostred.ruler.rule.AbstractRule;
-//import info.lostred.ruler.test.entity.Person;
-//
-//public class CertNoLengthRule extends AbstractRule<Person> {
-//
-//    @Override
-//    public boolean isSupported(Person object) {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean judge(Person object) {
-//        return false;
-//    }
-//
-//    @Override
-//    public Report buildReport(Person object) {
-//        return null;
-//    }
-//}
+package info.lostred.ruler.test.rule;
+
+import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.domain.RuleDefinition;
+import info.lostred.ruler.rule.AbstractRule;
+import org.springframework.expression.ExpressionParser;
+
+@Rule(ruleCode = "身份证号码长度",
+        businessType = "person",
+        description = "身份证号码长度必须为18位",
+        parameterExp = "certNo",
+        conditionExp = "certNo!=null",
+        predicateExp = "certNo.length()!=18")
+public class CertNoLengthRule extends AbstractRule {
+    public CertNoLengthRule(RuleDefinition ruleDefinition, ExpressionParser parser) {
+        super(ruleDefinition, parser);
+    }
+}

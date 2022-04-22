@@ -2,8 +2,9 @@ package info.lostred.ruler.domain;
 
 import info.lostred.ruler.constant.Grade;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 引擎执行的结果
@@ -55,20 +56,19 @@ public class Result {
         if (existed != null) {
             existed.putError(report.getErrors());
         }
+        this.updateGrade(report.getRuleDefinition().getGrade());
     }
 
     /**
-     * 更新校验结果，“违规”的优先级最高，其次是“可疑”，最后是“合格”
+     * 更新校验结果的严重等级，“违规”的优先级最高，其次是“可疑”，最后是“合格”
      *
+     * @param grade 严重等级
      * @see Grade
      */
-    public void updateGrade() {
-        Set<Grade> grades = this.reports.values().stream()
-                .map(e -> e.getRuleDefinition().getGrade())
-                .collect(Collectors.toSet());
-        if (grades.contains(Grade.ILLEGAL)) {
+    public void updateGrade(Grade grade) {
+        if (Grade.ILLEGAL.equals(grade)) {
             this.grade = Grade.ILLEGAL;
-        } else if (grades.contains(Grade.SUSPECTED)) {
+        } else if (Grade.SUSPECTED.equals(grade)) {
             this.grade = Grade.SUSPECTED;
         }
     }

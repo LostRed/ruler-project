@@ -1,15 +1,18 @@
 package info.lostred.ruler.util;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * 日期时间工具
  *
  * @author lostred
  */
-public final class DatetimeUtils {
+public final class DateTimeUtils {
     /**
      * 将日期字符串转换为标准化日期
      *
@@ -18,8 +21,8 @@ public final class DatetimeUtils {
      */
     public static LocalDate formatDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        date = standardized(date).trim();
-        if ("".equals(date)) {
+        date = standardized(date);
+        if (date == null || "".equals(date)) {
             return null;
         }
         // yyyyMMdd
@@ -62,8 +65,8 @@ public final class DatetimeUtils {
      */
     public static LocalDateTime formatDateTime(String dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        dateTime = standardized(dateTime).trim();
-        if ("".equals(dateTime)) {
+        dateTime = standardized(dateTime);
+        if (dateTime == null || "".equals(dateTime)) {
             return null;
         }
         // yyyyMMddHHmmss
@@ -93,6 +96,9 @@ public final class DatetimeUtils {
      * @return 日期时间
      */
     public static LocalDateTime format(String string) {
+        if (string == null || "".equals(string)) {
+            return null;
+        }
         try {
             return formatDateTime(string);
         } catch (IllegalArgumentException e) {
@@ -115,8 +121,11 @@ public final class DatetimeUtils {
      * @return 替换后的字符串
      */
     public static String standardized(String source) {
+        if (source == null) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder();
-        char[] chars = source.toCharArray();
+        char[] chars = source.trim().toCharArray();
         for (char aChar : chars) {
             if (aChar == '/' || aChar == '.') {
                 sb.append('-');
@@ -125,5 +134,35 @@ public final class DatetimeUtils {
             }
         }
         return sb.toString();
+    }
+
+    public static boolean between(LocalDate data, String start, String end) {
+        LocalDate startDate = formatDate(start);
+        LocalDate endDate = formatDate(end);
+        startDate = startDate == null ? LocalDate.MIN : startDate;
+        endDate = endDate == null ? LocalDate.MAX : endDate;
+        return data.isAfter(startDate) && data.isBefore(endDate)
+                || data.isEqual(startDate) || data.isEqual(endDate);
+    }
+
+    public static boolean between(LocalDateTime time, String start, String end) {
+        LocalDateTime startTime = formatDateTime(start);
+        LocalDateTime endTime = formatDateTime(end);
+        startTime = startTime == null ? LocalDateTime.MIN : startTime;
+        endTime = endTime == null ? LocalDateTime.MAX : endTime;
+        return time.isAfter(startTime) && time.isBefore(endTime)
+                || time.isEqual(startTime) || time.isEqual(endTime);
+    }
+
+    public static boolean between(Date date, String start, String end) {
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDateTime time = instant.atZone(zoneId).toLocalDateTime();
+        LocalDateTime startTime = format(start);
+        LocalDateTime endTime = format(end);
+        startTime = startTime == null ? LocalDateTime.MIN : startTime;
+        endTime = endTime == null ? LocalDateTime.MAX : endTime;
+        return time.isAfter(startTime) && time.isBefore(endTime)
+                || time.equals(startTime) || time.equals(endTime);
     }
 }

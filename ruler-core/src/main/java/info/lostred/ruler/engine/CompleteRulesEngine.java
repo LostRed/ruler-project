@@ -26,7 +26,6 @@ public class CompleteRulesEngine extends DetailRulesEngine {
         for (AbstractRule rule : rules) {
             this.handle(context, object, result, rule);
         }
-        result.updateGrade();
         result.statistic();
         return result;
     }

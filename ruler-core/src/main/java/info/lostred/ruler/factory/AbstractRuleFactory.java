@@ -2,7 +2,7 @@ package info.lostred.ruler.factory;
 
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RuleInitializationException;
-import info.lostred.ruler.proxy.DefaultRuleProxy;
+import info.lostred.ruler.proxy.RuleProxy;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.ExpressionParser;
 
@@ -88,7 +88,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
                 Object object = constructor.newInstance(ruleDefinition, parser);
                 if (object instanceof AbstractRule) {
                     //创建代理器
-                    DefaultRuleProxy proxy = new DefaultRuleProxy((AbstractRule) object);
+                    RuleProxy proxy = new RuleProxy((AbstractRule) object);
                     //拿到代理对象
                     return proxy.newProxyInstance();
                 }

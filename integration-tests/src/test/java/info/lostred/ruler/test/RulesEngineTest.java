@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 @SpringBootTest
-class ApplicationTest {
+class RulesEngineTest {
     static String businessType = "person";
     static Person person;
     @Autowired
@@ -43,7 +43,7 @@ class ApplicationTest {
         person.setGender("男");
         person.setAge(10);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date parse = simpleDateFormat.parse("2011-01-01");
+        Date parse = simpleDateFormat.parse("2020-01-01");
         person.setBirthday(parse);
         Area area = new Area();
         person.setArea(area);

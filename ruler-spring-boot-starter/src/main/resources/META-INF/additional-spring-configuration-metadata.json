@@ -4,16 +4,6 @@
       "name": "ruler",
       "type": "info.lostred.ruler.autoconfigure.RulerProperties",
       "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties"
-    },
-    {
-      "name": "ruler.rule-config",
-      "type": "info.lostred.ruler.autoconfigure.RulerProperties$RuleConfig",
-      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties"
-    },
-    {
-      "name": "ruler.rules-engine-config",
-      "type": "info.lostred.ruler.autoconfigure.RulerProperties$RulesEngineConfig",
-      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties"
     }
   ],
   "properties": [
@@ -25,22 +15,28 @@
       "defaultValue": "COMMON"
     },
     {
-      "name": "ruler.rule-config.scan-base-packages",
-      "type": "java.lang.String",
-      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
-      "description": "规则包扫描路径."
-    },
-    {
-      "name": "ruler.rules-engine-config.type",
+      "name": "ruler.engine-type",
       "type": "java.lang.String",
       "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "容器单实例规则引擎的默认引擎类型.",
       "defaultValue": "simple"
+    },
+    {
+      "name": "ruler.rule-default-scope",
+      "type": "java.lang.String",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
+      "description": "规则类包扫描路径."
+    },
+    {
+      "name": "ruler.domain-default-scope",
+      "type": "java.lang.String",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
+      "description": "领域模型类包扫描路径."
     }
   ],
   "hints": [
     {
-      "name": "ruler.rules-engine-config.type",
+      "name": "ruler.engine-type",
       "values": [
         {
           "value": "simple",
@@ -53,6 +49,22 @@
         {
           "value": "complete",
           "description": "完全执行返回详细结果的规则引擎，能够返回校验的结果报告，会执行规则集合中的所有规则."
+        }
+      ]
+    },
+    {
+      "name": "ruler.rule-default-scope",
+      "providers": [
+        {
+          "name": "logger-name"
+        }
+      ]
+    },
+    {
+      "name": "ruler.domain-default-scope",
+      "providers": [
+        {
+          "name": "logger-name"
         }
       ]
     }

@@ -1,14 +1,11 @@
 ruler:
-  rule-config:
-    scan-base-packages: info.lostred.ruler.rule
-  rules-engine-config:
-    type: complete
+  business-type: person
+  engine-type: complete
+  rule-default-scope: info.lostred.ruler.test.rule
+  domain-default-scope: info.lostred.ruler.test.entity
 
 logging:
   level:
     info.lostred.ruler.rule: debug
     info.lostred.ruler.engine: debug
     info.lostred.ruler.test.rule: debug
-mybatis-plus:
-  config-location:
-  mapper-locations:

@@ -26,8 +26,7 @@ public class IncompleteRulesEngine extends DetailRulesEngine {
         Result result = Result.of();
         for (AbstractRule rule : rules) {
             this.handle(context, object, result, rule);
-            result.updateGrade();
-            if (result.getGrade().equals(Grade.ILLEGAL)) {
+            if (Grade.ILLEGAL.equals(result.getGrade())) {
                 break;
             }
         }

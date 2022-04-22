@@ -8,12 +8,14 @@ import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static info.lostred.ruler.constant.RulerConstants.INDEX_KEY;
-import static info.lostred.ruler.constant.RulerConstants.INDEX_LABEL;
+import static info.lostred.ruler.constant.SpELConstants.INDEX_KEY;
+import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
 
 /**
  * 规则引擎
@@ -34,6 +36,7 @@ public abstract class RulesEngine {
         this.beanResolver = beanResolver;
         this.parser = parser;
         List<AbstractRule> rules = ruleFactory.findRules(businessType);
+        rules.sort(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()));
         this.rules.addAll(rules);
     }
 
@@ -177,5 +180,56 @@ public abstract class RulesEngine {
         } else {
             return this.executeForObject(context, object, rule);
         }
+    }
+
+    /**
+     * 添加规则并按顺序号排序
+     *
+     * @param rule 规则
+     */
+    public void addRule(AbstractRule rule) {
+        for (int i = 0; i < this.rules.size(); i++) {
+            if (this.rules.get(i).getRuleDefinition().getOrder()
+                    > rule.getRuleDefinition().getOrder()) {
+                this.rules.add(i, rule);
+                break;
+            }
+        }
+        this.rules.add(rule);
+    }
+
+    /**
+     * 添加规则并按顺序号排序
+     *
+     * @param ruleCode 规则编号
+     */
+    public void addRule(String ruleCode) {
+        AbstractRule rule = this.ruleFactory.getRule(ruleCode);
+        this.addRule(rule);
+    }
+
+    /**
+     * 添加规则并按顺序号排序
+     *
+     * @param ruleCodes 规则编号集合
+     */
+    public void addRule(Collection<String> ruleCodes) {
+        ruleCodes.forEach(this::addRule);
+    }
+
+    /**
+     * 移除规则
+     *
+     * @param ruleCode 规则编号
+     * @return 成功移除返回true，否则返回false
+     */
+    public boolean removeRule(String ruleCode) {
+        if (ruleCode == null) {
+            return false;
+        }
+        for (AbstractRule rule : this.rules) {
+            return this.rules.remove(rule);
+        }
+        return false;
     }
 }

@@ -2,6 +2,7 @@ package info.lostred.ruler.domain;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.constant.Grade;
+import info.lostred.ruler.constant.RulerConstants;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -31,7 +32,7 @@ public class RuleDefinition {
     /**
      * 规则执行的顺序号
      */
-    private Integer sequence;
+    private Integer order;
     /**
      * 规则类型
      */
@@ -48,31 +49,35 @@ public class RuleDefinition {
      * 断定表达式
      */
     private String predicateExp;
-    /**
-     * 是否在集合参数中操作元素
-     */
-    private boolean opsInCollection;
 
     public static RuleDefinition of(Rule rule, Class<?> ruleClass) {
-        return of(UUID.randomUUID().toString(), rule.businessType(), rule.grade(), rule.description(),
-                ruleClass, rule.parameterExp(), rule.conditionExp(), rule.predicateExp(), rule.seq());
+        return of(rule.ruleCode(), rule.businessType(), rule.grade(), rule.description(), rule.order(),
+                ruleClass, rule.parameterExp(), rule.conditionExp(), rule.predicateExp());
     }
 
-    public static RuleDefinition of(String ruleCode, String businessType, Grade grade, String description,
-                                    Class<?> ruleClass, String parameterExp, String conditionExp, String predicateExp, Integer seq) {
-        return new RuleDefinition(ruleCode, businessType, grade, description, seq, ruleClass, parameterExp, conditionExp, predicateExp);
+    public static RuleDefinition of(String description,
+                                    Class<?> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
+        return new RuleDefinition(UUID.randomUUID().toString(), RulerConstants.COMMON_BUSINESS_TYPE, Grade.ILLEGAL, description, 0,
+                ruleClass, parameterExp, conditionExp, predicateExp);
+    }
+
+    public static RuleDefinition of(String ruleCode, String businessType, Grade grade, String description, Integer order,
+                                    Class<?> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
+        return new RuleDefinition(ruleCode, businessType, grade, description, order,
+                ruleClass, parameterExp, conditionExp, predicateExp);
     }
 
     private RuleDefinition() {
     }
 
-    public RuleDefinition(String ruleCode, String businessType, Grade grade, String description, Integer sequence,
+    public RuleDefinition(String ruleCode, String businessType, Grade grade, String description, Integer order,
                           Class<?> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
+        ruleCode = ruleCode == null || "".equals(ruleCode) ? UUID.randomUUID().toString() : ruleCode;
         this.ruleCode = ruleCode;
         this.businessType = businessType;
         this.grade = grade;
         this.description = description;
-        this.sequence = sequence;
+        this.order = order;
         this.ruleClass = ruleClass;
         this.parameterExp = parameterExp;
         this.conditionExp = conditionExp;
@@ -83,72 +88,36 @@ public class RuleDefinition {
         return ruleCode;
     }
 
-    public void setRuleCode(String ruleCode) {
-        this.ruleCode = ruleCode;
-    }
-
     public String getBusinessType() {
         return businessType;
-    }
-
-    public void setBusinessType(String businessType) {
-        this.businessType = businessType;
     }
 
     public Grade getGrade() {
         return grade;
     }
 
-    public void setGrade(Grade grade) {
-        this.grade = grade;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getSequence() {
-        return sequence;
-    }
-
-    public void setSequence(Integer sequence) {
-        this.sequence = sequence;
+    public Integer getOrder() {
+        return order;
     }
 
     public Class<?> getRuleClass() {
         return ruleClass;
     }
 
-    public void setRuleClass(Class<?> ruleClass) {
-        this.ruleClass = ruleClass;
-    }
-
     public String getParameterExp() {
         return parameterExp;
-    }
-
-    public void setParameterExp(String parameterExp) {
-        this.parameterExp = parameterExp;
     }
 
     public String getConditionExp() {
         return conditionExp;
     }
 
-    public void setConditionExp(String conditionExp) {
-        this.conditionExp = conditionExp;
-    }
-
     public String getPredicateExp() {
         return predicateExp;
-    }
-
-    public void setPredicateExp(String predicateExp) {
-        this.predicateExp = predicateExp;
     }
 
     @Override

@@ -9,7 +9,8 @@ import org.springframework.expression.ExpressionParser;
 import java.util.HashMap;
 import java.util.Map;
 
-import static info.lostred.ruler.constant.RulerConstants.*;
+import static info.lostred.ruler.constant.SpELConstants.INDEX;
+import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
 
 /**
  * 抽象规则

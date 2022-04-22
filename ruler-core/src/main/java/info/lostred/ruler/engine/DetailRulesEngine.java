@@ -7,7 +7,7 @@ import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import static info.lostred.ruler.constant.RulerConstants.INDEX_LABEL;
+import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
 
 /**
  * 返回详细结果的规则引擎

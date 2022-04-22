@@ -3,14 +3,14 @@ package info.lostred.ruler.annotation;
 import java.lang.annotation.*;
 
 /**
- * 规则类包扫描注解
+ * 领域模型类包扫描
  *
  * @author lostred
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RuleScan {
+public @interface DomainScan {
     /**
      * 包扫描路径
      *

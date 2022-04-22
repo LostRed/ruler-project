@@ -1,7 +1,7 @@
 package info.lostred.ruler.autoconfigure;
 
-import info.lostred.ruler.constant.RulerConstants;
 import info.lostred.ruler.constant.EngineType;
+import info.lostred.ruler.constant.RulerConstants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -12,38 +12,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("ruler")
 public class RulerProperties {
     private String businessType = RulerConstants.COMMON_BUSINESS_TYPE;
-    private RuleConfig ruleConfig = new RuleConfig();
-    private RulesEngineConfig rulesEngineConfig = new RulesEngineConfig();
-
-    /**
-     * 规则配置
-     */
-    public static class RuleConfig {
-        private String[] scanBasePackages;
-
-        public String[] getScanBasePackages() {
-            return scanBasePackages;
-        }
-
-        public void setScanBasePackages(String[] scanBasePackages) {
-            this.scanBasePackages = scanBasePackages;
-        }
-    }
-
-    /**
-     * 规则引擎配置
-     */
-    public static class RulesEngineConfig {
-        private String type = EngineType.SIMPLE.name();
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-    }
+    private String engineType = EngineType.SIMPLE.name();
+    private String[] ruleDefaultScope;
+    private String[] domainDefaultScope;
 
     public String getBusinessType() {
         return businessType;
@@ -53,19 +24,27 @@ public class RulerProperties {
         this.businessType = businessType;
     }
 
-    public RuleConfig getRuleConfig() {
-        return ruleConfig;
+    public String getEngineType() {
+        return engineType;
     }
 
-    public void setRuleConfig(RuleConfig ruleConfig) {
-        this.ruleConfig = ruleConfig;
+    public void setEngineType(String engineType) {
+        this.engineType = engineType;
     }
 
-    public RulesEngineConfig getRulesEngineConfig() {
-        return rulesEngineConfig;
+    public String[] getRuleDefaultScope() {
+        return ruleDefaultScope;
     }
 
-    public void setRulesEngineConfig(RulesEngineConfig rulesEngineConfig) {
-        this.rulesEngineConfig = rulesEngineConfig;
+    public void setRuleDefaultScope(String[] ruleDefaultScope) {
+        this.ruleDefaultScope = ruleDefaultScope;
+    }
+
+    public String[] getDomainDefaultScope() {
+        return domainDefaultScope;
+    }
+
+    public void setDomainDefaultScope(String[] domainDefaultScope) {
+        this.domainDefaultScope = domainDefaultScope;
     }
 }

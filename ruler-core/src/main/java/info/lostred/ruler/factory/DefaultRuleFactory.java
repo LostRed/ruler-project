@@ -42,7 +42,7 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
         } else {
             mergedPackages = stream.distinct().toArray(String[]::new);
         }
-        this.register(mergedPackages);
+        this.registerFromPackages(mergedPackages);
     }
 
     /**
@@ -50,7 +50,7 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
      *
      * @param packages 包名数组
      */
-    private void register(String[] packages) {
+    private void registerFromPackages(String[] packages) {
         for (String packageName : packages) {
             try {
                 Set<String> classNames = PackageScanUtils.findClassNames(packageName);

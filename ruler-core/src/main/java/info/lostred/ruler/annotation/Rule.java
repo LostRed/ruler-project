@@ -18,7 +18,7 @@ public @interface Rule {
      *
      * @return 规则编号
      */
-    String ruleCode();
+    String ruleCode() default "";
 
     /**
      * 业务类型
@@ -46,7 +46,7 @@ public @interface Rule {
      *
      * @return 规则执行的顺序号
      */
-    int seq() default 0;
+    int order() default 0;
 
     /**
      * 参数表达式
