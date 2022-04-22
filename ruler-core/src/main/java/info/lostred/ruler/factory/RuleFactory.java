@@ -2,6 +2,7 @@ package info.lostred.ruler.factory;
 
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
+import org.springframework.expression.ExpressionParser;
 
 import java.util.List;
 
@@ -17,25 +18,26 @@ public interface RuleFactory {
     void init();
 
     /**
-     * 注册规则信息
+     * 注册规则定义
      *
      * @param ruleDefinition 规则定义
      */
-    void registerRuleInfo(RuleDefinition ruleDefinition);
+    void register(RuleDefinition ruleDefinition);
 
     /**
      * 注册规则
      *
-     * @param abstractRule 规则
+     * @param rule 规则
      */
-    void registerRule(AbstractRule abstractRule);
+    void register(AbstractRule rule);
 
     /**
      * 创建规则
      *
      * @param ruleDefinition 规则定义
+     * @param parser         表达式解析器
      */
-    void createRule(RuleDefinition ruleDefinition);
+    void createRule(RuleDefinition ruleDefinition, ExpressionParser parser);
 
     /**
      * 根据规则编号获取规则

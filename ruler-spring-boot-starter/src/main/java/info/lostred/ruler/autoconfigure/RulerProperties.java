@@ -1,7 +1,7 @@
 package info.lostred.ruler.autoconfigure;
 
 import info.lostred.ruler.constant.RulerConstants;
-import info.lostred.ruler.constant.RulesEngineType;
+import info.lostred.ruler.constant.EngineType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -11,85 +11,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties("ruler")
 public class RulerProperties {
-    private boolean enableCommonRules;
-    private String defaultBusinessType = RulerConstants.COMMON_BUSINESS_TYPE;
-    private Class<?> defaultValidClass;
-    private DbConfig dbConfig = new DbConfig();
-    private ValidConfig validConfig = new ValidConfig();
+    private String businessType = RulerConstants.COMMON_BUSINESS_TYPE;
     private RuleConfig ruleConfig = new RuleConfig();
     private RulesEngineConfig rulesEngineConfig = new RulesEngineConfig();
-
-    /**
-     * 数据库配置
-     */
-    public static class DbConfig {
-        private String driverClassName;
-        private String url;
-        private String username;
-        private String password;
-
-        public String getDriverClassName() {
-            return driverClassName;
-        }
-
-        public void setDriverClassName(String driverClassName) {
-            this.driverClassName = driverClassName;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-    }
-
-    /**
-     * ruler全局配置
-     */
-    public static class ValidConfig {
-        private String tableName = RulerConstants.ORIGIN_VALID_INFO_TABLE_NAME;
-
-        public String getTableName() {
-            return tableName;
-        }
-
-        public void setTableName(String tableName) {
-            this.tableName = tableName;
-        }
-    }
 
     /**
      * 规则配置
      */
     public static class RuleConfig {
-        private String tableName = RulerConstants.ORIGIN_RULE_INFO_TABLE_NAME;
         private String[] scanBasePackages;
-
-        public String getTableName() {
-            return tableName;
-        }
-
-        public void setTableName(String tableName) {
-            this.tableName = tableName;
-        }
 
         public String[] getScanBasePackages() {
             return scanBasePackages;
@@ -104,7 +34,7 @@ public class RulerProperties {
      * 规则引擎配置
      */
     public static class RulesEngineConfig {
-        private String type = RulesEngineType.SIMPLE.name();
+        private String type = EngineType.SIMPLE.name();
 
         public String getType() {
             return type;
@@ -115,44 +45,12 @@ public class RulerProperties {
         }
     }
 
-    public boolean isEnableCommonRules() {
-        return enableCommonRules;
+    public String getBusinessType() {
+        return businessType;
     }
 
-    public void setEnableCommonRules(boolean enableCommonRules) {
-        this.enableCommonRules = enableCommonRules;
-    }
-
-    public String getDefaultBusinessType() {
-        return defaultBusinessType;
-    }
-
-    public void setDefaultBusinessType(String defaultBusinessType) {
-        this.defaultBusinessType = defaultBusinessType;
-    }
-
-    public DbConfig getDbConfig() {
-        return dbConfig;
-    }
-
-    public void setDbConfig(DbConfig dbConfig) {
-        this.dbConfig = dbConfig;
-    }
-
-    public Class<?> getDefaultValidClass() {
-        return defaultValidClass;
-    }
-
-    public void setDefaultValidClass(Class<?> defaultValidClass) {
-        this.defaultValidClass = defaultValidClass;
-    }
-
-    public ValidConfig getValidConfig() {
-        return validConfig;
-    }
-
-    public void setValidConfig(ValidConfig validConfig) {
-        this.validConfig = validConfig;
+    public void setBusinessType(String businessType) {
+        this.businessType = businessType;
     }
 
     public RuleConfig getRuleConfig() {

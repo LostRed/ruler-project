@@ -1,24 +1,14 @@
 ruler:
-  enable-common-rules: true
-  default-business-type: person
-  default-valid-class: info.lostred.ruler.test.entity.Person
-  valid-config:
-    init-type: annotation
-    table-name: ruler_valid_info
   rule-config:
-    init-type: annotation
-    table-name: ruler_rule_info
     scan-base-packages: info.lostred.ruler.rule
   rules-engine-config:
     type: complete
-  db-config:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/rules_engine
-    username: rules_engine
-    password: 123456
 
 logging:
   level:
     info.lostred.ruler.rule: debug
     info.lostred.ruler.engine: debug
     info.lostred.ruler.test.rule: debug
+mybatis-plus:
+  config-location:
+  mapper-locations:

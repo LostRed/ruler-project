@@ -31,7 +31,7 @@ public class RuleDefinition {
     /**
      * 规则执行的顺序号
      */
-    private Integer seq;
+    private Integer sequence;
     /**
      * 规则类型
      */
@@ -53,7 +53,7 @@ public class RuleDefinition {
      */
     private boolean opsInCollection;
 
-    public static RuleDefinition of(Class<?> ruleClass, Rule rule) {
+    public static RuleDefinition of(Rule rule, Class<?> ruleClass) {
         return of(UUID.randomUUID().toString(), rule.businessType(), rule.grade(), rule.description(),
                 ruleClass, rule.parameterExp(), rule.conditionExp(), rule.predicateExp(), rule.seq());
     }
@@ -66,13 +66,13 @@ public class RuleDefinition {
     private RuleDefinition() {
     }
 
-    public RuleDefinition(String ruleCode, String businessType, Grade grade, String description, Integer seq,
+    public RuleDefinition(String ruleCode, String businessType, Grade grade, String description, Integer sequence,
                           Class<?> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
         this.ruleCode = ruleCode;
         this.businessType = businessType;
         this.grade = grade;
         this.description = description;
-        this.seq = seq;
+        this.sequence = sequence;
         this.ruleClass = ruleClass;
         this.parameterExp = parameterExp;
         this.conditionExp = conditionExp;
@@ -111,12 +111,12 @@ public class RuleDefinition {
         this.description = description;
     }
 
-    public Integer getSeq() {
-        return seq;
+    public Integer getSequence() {
+        return sequence;
     }
 
-    public void setSeq(Integer seq) {
-        this.seq = seq;
+    public void setSequence(Integer sequence) {
+        this.sequence = sequence;
     }
 
     public Class<?> getRuleClass() {

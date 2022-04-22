@@ -37,7 +37,7 @@ public abstract class AbstractRuleProxy implements MethodInterceptor {
      * @param result 方法返回值
      */
     protected void printLog(Method method, Object result) {
-        if ("buildReport".equals(method.getName()) && result instanceof Report) {
+        if ("collectMappings".equals(method.getName()) && result instanceof Report) {
             Report report = (Report) result;
             Map<String, Object> illegals = report.getErrors();
             if (illegals == null || illegals.isEmpty()) {

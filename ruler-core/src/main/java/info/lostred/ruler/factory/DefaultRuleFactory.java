@@ -5,6 +5,7 @@ import info.lostred.ruler.annotation.RuleScan;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.util.PackageScanUtils;
+import org.springframework.expression.ExpressionParser;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -13,15 +14,17 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 /**
- * 应用上下文规则工厂
+ * 默认的规则工厂
  *
  * @author lostred
  */
-public class AnnotationRuleFactory extends AbstractRuleFactory {
+public class DefaultRuleFactory extends AbstractRuleFactory {
+    private final ExpressionParser parser;
     private final Class<?> configClass;
     private final String[] anotherPackages;
 
-    public AnnotationRuleFactory(Class<?> configClass, String... anotherPackages) {
+    public DefaultRuleFactory(ExpressionParser parser, Class<?> configClass, String... anotherPackages) {
+        this.parser = parser;
         this.configClass = configClass;
         this.anotherPackages = anotherPackages;
         this.init();
@@ -30,14 +33,14 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
     @Override
     public void init() {
         String[] mergedPackages;
-        Stream<String> mergedStream = Stream.concat(Stream.of("info.lostred.ruler.rule"), Arrays.stream(this.anotherPackages));
+        Stream<String> stream = Arrays.stream(this.anotherPackages);
         if (this.configClass != null && this.configClass.isAnnotationPresent(RuleScan.class)) {
             String[] scanBasePackages = this.configClass.getAnnotation(RuleScan.class).value();
-            mergedPackages = Stream.concat(mergedStream, Stream.of(scanBasePackages))
+            mergedPackages = Stream.concat(stream, Stream.of(scanBasePackages))
                     .distinct()
                     .toArray(String[]::new);
         } else {
-            mergedPackages = mergedStream.distinct().toArray(String[]::new);
+            mergedPackages = stream.distinct().toArray(String[]::new);
         }
         this.register(mergedPackages);
     }
@@ -56,25 +59,25 @@ public class AnnotationRuleFactory extends AbstractRuleFactory {
                         .filter(Objects::nonNull)
                         .filter(AbstractRule.class::isAssignableFrom)
                         .filter(e -> e.isAnnotationPresent(Rule.class))
-                        .map(this::buildRuleInfo)
-                        .forEach(this::registerRuleInfo);
+                        .map(this::buildRuleDefinition)
+                        .forEach(this::register);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
         for (String ruleCode : this.ruleInfoMap.keySet()) {
             RuleDefinition ruleDefinition = this.ruleInfoMap.get(ruleCode);
-            this.createRule(ruleDefinition);
+            this.createRule(ruleDefinition, parser);
         }
     }
 
     /**
-     * 构建规则信息
+     * 构建规则定义
      *
-     * @param ruleClass 规则类
+     * @param ruleClass 规则类的类对象
      */
-    private RuleDefinition buildRuleInfo(Class<?> ruleClass) {
+    private RuleDefinition buildRuleDefinition(Class<?> ruleClass) {
         Rule rule = ruleClass.getAnnotation(Rule.class);
-        return RuleDefinition.of(ruleClass, rule);
+        return RuleDefinition.of(rule, ruleClass);
     }
 }

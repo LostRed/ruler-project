@@ -37,17 +37,15 @@ public class AbstractRule implements Judgement, Collector {
 
     @Override
     public boolean isSupported(EvaluationContext context, ExpressionParser parser, Object object) {
-        String parameterExp = ruleDefinition.getParameterExp();
         String conditionExp = ruleDefinition.getConditionExp();
-        Boolean flag = parser.parseExpression(SP_EL_PREFIX + parameterExp + conditionExp).getValue(context, Boolean.class);
+        Boolean flag = parser.parseExpression(conditionExp).getValue(context, Boolean.class);
         return Boolean.TRUE.equals(flag);
     }
 
     @Override
     public boolean judge(EvaluationContext context, ExpressionParser parser, Object object) {
-        String parameterExp = ruleDefinition.getParameterExp();
         String predicateExp = ruleDefinition.getPredicateExp();
-        Boolean flag = parser.parseExpression(SP_EL_PREFIX + parameterExp + predicateExp).getValue(context, Boolean.class);
+        Boolean flag = parser.parseExpression(predicateExp).getValue(context, Boolean.class);
         return Boolean.TRUE.equals(flag);
     }
 
@@ -55,8 +53,8 @@ public class AbstractRule implements Judgement, Collector {
     public Map<String, Object> collectMappings(EvaluationContext context, ExpressionParser parser, Object object) {
         Map<String, Object> map = new HashMap<>();
         String parameterExp = ruleDefinition.getParameterExp();
-        Object value = parser.parseExpression(SP_EL_PREFIX + parameterExp).getValue(context);
-        if (parameterExp.contains(SP_EL_INDEX)) {
+        Object value = parser.parseExpression(parameterExp).getValue(context);
+        if (parameterExp.contains(INDEX_LABEL)) {
             Object index = parser.parseExpression(INDEX).getValue(context);
             assert index != null;
             map.put(parameterExp.replace(INDEX, index.toString()), value);
