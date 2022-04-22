@@ -1,6 +1,7 @@
 package info.lostred.ruler.factory;
 
 import info.lostred.ruler.engine.AbstractRulesEngine;
+import info.lostred.ruler.engine.RulesEngine;
 import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 
@@ -36,7 +37,7 @@ public interface RulesEngineFactory {
      * @param businessType 业务类型
      * @return 规则引擎
      */
-    AbstractRulesEngine getEngine(String businessType);
+    RulesEngine getEngine(String businessType);
 
     /**
      * 规则引擎建造者
