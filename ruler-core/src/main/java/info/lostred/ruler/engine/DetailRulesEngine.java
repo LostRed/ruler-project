@@ -14,7 +14,7 @@ import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
  *
  * @author lostred
  */
-public abstract class DetailRulesEngine extends RulesEngine {
+public abstract class DetailRulesEngine extends AbstractRulesEngine {
     public DetailRulesEngine(RuleFactory ruleFactory, String businessType,
                              BeanResolver beanResolver, ExpressionParser parser) {
         super(ruleFactory, businessType, beanResolver, parser);

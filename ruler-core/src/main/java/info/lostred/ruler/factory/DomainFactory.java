@@ -66,12 +66,12 @@ public class DomainFactory {
     /**
      * 获取属性信息集合
      *
-     * @param validClass 校验类的类对象
+     * @param domainClass 领域模型类的类对象
      * @return 属性信息集合
      */
-    private List<PropertyInfo> getPropertyList(Class<?> validClass) {
+    private List<PropertyInfo> getPropertyList(Class<?> domainClass) {
         try {
-            BeanInfo beanInfo = Introspector.getBeanInfo(validClass, Object.class);
+            BeanInfo beanInfo = Introspector.getBeanInfo(domainClass, Object.class);
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
             return Arrays.stream(propertyDescriptors).map(PropertyInfo::of).collect(Collectors.toList());
         } catch (IntrospectionException e) {
@@ -87,5 +87,14 @@ public class DomainFactory {
      */
     public List<PropertyInfo> getPropertyList(String className) {
         return this.propertyInfoMap.get(className);
+    }
+
+    /**
+     * 注册领域模型类
+     *
+     * @param domainClass 领域模型类的类对象
+     */
+    public void registerDomain(Class<?> domainClass) {
+        this.propertyInfoMap.put(domainClass.getName(), this.getPropertyList(domainClass));
     }
 }

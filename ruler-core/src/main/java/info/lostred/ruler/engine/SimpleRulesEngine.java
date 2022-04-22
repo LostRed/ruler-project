@@ -10,7 +10,7 @@ import org.springframework.expression.ExpressionParser;
  *
  * @author lostred
  */
-public class SimpleRulesEngine extends RulesEngine {
+public class SimpleRulesEngine extends AbstractRulesEngine {
     public SimpleRulesEngine(RuleFactory ruleFactory, String businessType,
                              BeanResolver beanResolver, ExpressionParser parser) {
         super(ruleFactory, businessType, beanResolver, parser);

@@ -19,71 +19,11 @@
 
 ```yaml
 ruler:
-  enable-common-rules: true #启用框架默认的通用规则
-  default-business-type: common #业务类型，对应以下两张配置表的business_type，用于构建引擎时筛选对应的规则信息与校验信息，默认为common
-  default-valid-class: info.lostred.ruler.domain.model.ValidClass #规则引擎所约束的java类型
-  valid-config:
-    init-type: annotation #校验信息的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置校验信息，数据库方式需要引入数据库驱动包
-    table-name: ruler_valid_info #校验信息配置表表名
-  rule-config:
-    init-type: annotation #规则信息的初始化方式，分为注解(annotation)和数据库(db)两种，默认为注解方式，注解方式需要手动配置规则信息，数据库方式需要引入数据库驱动包
-    table-name: ruler_rule_info #规则信息配置表表名
-    scan-base-packages: info.lostred.ruler.rule #规则包扫描路径，与注解@RulerScan定义的路径会取并集并一起扫描
-  rules-engine-config:
-    type: complete #上述提到的规则引擎类型，默认为simple
-  db-config:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/rules_engine
-    username: rules_engine
-    password: 123456
+  business-type: person #业务类型
+  engine-type: complete #上述提到的规则引擎类型，默认为simple
+  rule-default-scope: info.lostred.ruler.test.rule #规则类包扫描路径，与注解@RulerScan定义的路径会取并集并一起扫描
+  domain-default-scope: info.lostred.ruler.test.entity #领域模型类包扫描路径，与注解@DomainScan定义的路径会取并集并一起扫描
 ```
-
-或者配置spring的数据源
-
-```yaml
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/rules_engine
-    username: rules_engine
-    password: 123456
-```
-
-### 创建数据源及配置表(可选)
-
-实际上，使用数据库的初始化方式并不需要手动执行sql脚本，程序运行后便会执行初始化sql语句。
-
-```sql
-CREATE TABLE IF NOT EXISTS ruler_rule_info
-(
-    `rule_code`        varchar(24) PRIMARY KEY COMMENT '规则编号',
-    `business_type`    varchar(24) COMMENT '业务类型',
-    `grade`            varchar(24) COMMENT '规则校验结果等级',
-    `desc`             varchar(255) COMMENT '规则描述',
-    `seq`              int(11) COMMENT '规则执行的顺序号',
-    `required`         bit(1) COMMENT '是否强制使用',
-    `enable`           bit(1) COMMENT '是否启用',
-    `rule_class_name`  varchar(128) COMMENT '规则实现类的全限定类名',
-    `valid_class_name` varchar(128) COMMENT '规则约束类的全限定类名'
-) COMMENT '规则信息配置表';
-
-CREATE TABLE IF NOT EXISTS ruler_valid_info
-(
-    `id`               varchar(24) PRIMARY KEY COMMENT 'id',
-    `business_type`    varchar(24) COMMENT '业务类型',
-    `valid_type`       varchar(24) COMMENT '校验类型',
-    `field_name`       varchar(32) COMMENT '校验字段名',
-    `lower_limit`      decimal(16, 2) COMMENT '下限值',
-    `upper_limit`      decimal(16, 2) COMMENT '上限值',
-    `begin_time`       datetime COMMENT '开始时间',
-    `end_time`         datetime COMMENT '结束时间',
-    `required`         bit(1) COMMENT '是否强制使用',
-    `enable`           bit(1) COMMENT '是否启用',
-    `valid_class_name` varchar(128) COMMENT '校验类型的全限定类名'
-) COMMENT '校验信息配置表';
-```
-
-valid_type的填写可参考ValidType枚举类，字母全大写。
 
 ### 编写配置类(可选)
 
@@ -95,55 +35,9 @@ import info.lostred.ruler.autoconfigure.RulerProperties;
 import info.lostred.ruler.core.ValidConfiguration;
 
 @Configuration
-@RuleScan("info.lostred.ruler.rule")
+@RuleScan("info.lostred.ruler.test.rule")
+@DomainScan("info.lostred.ruler.test.entity")
 public class RulerConfig {
-    private static final String businessType = "person";
-    
-    //注入容器中默认配置的ValidConfiguration实例对象，也可以通过@Bean注解自行定义
-    @Autowired
-    private ValidConfiguration validConfiguration;
-    
-    //如果不使用数据库初始化方式，则需要在spring容器初始化前，添加容器中默认ValidConfiguration实例对象的校验信息
-    @PostConstruct
-    public void init() {
-        Collection<ValidInfo> validDefinitions = new ArrayList<>();
-        ValidInfo validInfo1 = ValidInfo.ofRequired(businessType, "name", Person.class.getName());
-        ValidInfo validInfo2 = ValidInfo.ofRequired(businessType, "gender", Person.class.getName());
-        ValidInfo validInfo3 = ValidInfo.ofDict(businessType, "gender", Person.class.getName());
-        Set<Object> set = new HashSet<>(Arrays.asList("1", "2"));
-        validInfo3.setDict(set);
-        ValidInfo validInfo4 = ValidInfo.ofNumberScope(businessType, "age", new BigDecimal(18), null, Person.class.getName());
-        ValidInfo validInfo5 = ValidInfo.ofDateTimeScope(businessType, "birthday",
-                LocalDateTime.of(1990, 1, 1, 0, 0, 0),
-                LocalDateTime.of(2004, 1, 1, 0, 0, 0),
-                Person.class.getName());
-        ValidInfo validInfo6 = ValidInfo.ofRequired(businessType, "type", Contact.class.getName());
-        ValidInfo validInfo7 = ValidInfo.ofRequired(businessType, "account", Contact.class.getName());
-        ValidInfo validInfo8 = ValidInfo.ofRequired(businessType, "password", Contact.class.getName());
-        ValidInfo validInfo9 = ValidInfo.ofRequired(businessType, "country", Area.class.getName());
-        ValidInfo validInfo10 = ValidInfo.ofRequired(businessType, "province", Area.class.getName());
-        ValidInfo validInfo11 = ValidInfo.ofRequired(businessType, "city", Area.class.getName());
-        validDefinitions.add(validInfo1);
-        validDefinitions.add(validInfo2);
-        validDefinitions.add(validInfo3);
-        validDefinitions.add(validInfo4);
-        validDefinitions.add(validInfo5);
-        validDefinitions.add(validInfo6);
-        validDefinitions.add(validInfo7);
-        validDefinitions.add(validInfo8);
-        validDefinitions.add(validInfo9);
-        validDefinitions.add(validInfo10);
-        validDefinitions.add(validInfo11);
-        validConfiguration.addValidInfo(validDefinitions);
-    }
-
-    //选择适合的规则引擎注册到spring容器
-    @Bean
-    public RulesEngine<Person> rulerEngine(RuleFactory ruleFactory) {
-        TypeReference<CompleteRulesEngine<Person>> typeReference = new TypeReference<CompleteRulesEngine<Person>>() {
-        };
-        return DefaultRulesEngineFactory.builder(ruleFactory, businessType, typeReference).build();
-    }
 }
 ```
 
@@ -183,23 +77,53 @@ public class Contact {
 
 ### 规则引擎依赖注入
 
-```java
+以下是单元测试案例。
 
+```java
 @SpringBootTest
 class ApplicationTest {
+    static String businessType = "person";
+    static Person person;
     @Autowired
     RulesEngineFactory rulesEngineFactory;
+    @Autowired
+    ObjectMapper objectMapper;
+
+    String toJson(Object object) throws JsonProcessingException {
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+    }
+
+    void printResult(Object result, long startTime, long endTime) throws JsonProcessingException {
+        System.out.println(toJson(result));
+        System.out.println("执行时间: " + (endTime - startTime) + " ms");
+    }
+
+    @BeforeAll
+    static void init() throws ParseException {
+        person = new Person();
+        person.setCertNo("12312");
+        person.setGender("男");
+        person.setAge(10);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date parse = simpleDateFormat.parse("2020-01-01");
+        person.setBirthday(parse);
+        Area area = new Area();
+        person.setArea(area);
+        Contact contact1 = new Contact();
+        contact1.setArea(area);
+        contact1.setPassword("1234");
+        Contact contact2 = new Contact();
+        contact2.setPassword("1234");
+        person.setContacts(Arrays.asList(contact1, contact2));
+    }
 
     @Test
-    void test() {
-        ValidClass validClass = new ValidClass();
-        validClass.setNumber(BigDecimal.ZERO);
-        SubValidClass subValidClass = new SubValidClass();
-        subValidClass.setNumber(new BigDecimal(11));
-        validClass.setSubValidClasses(Collections.singletonList(subValidClass));
-        RulesEngine<ValidClass> rulesEngine = rulesEngineFactory.dispatch(RulerConstants.DEFAULT_BUSINESS_TYPE, validClass, ValidClass.class);
-        Result result = rulesEngine.execute(validClass);
-        System.out.println(result);
+    void rulesEngineFactoryTest() throws JsonProcessingException {
+        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
+        long s = System.currentTimeMillis();
+        Result result = rulesEngine.execute(person);
+        long e = System.currentTimeMillis();
+        printResult(result, s, e);
     }
 }
 ```
@@ -212,47 +136,24 @@ class ApplicationTest {
 
 ```java
 
-@Rule(ruleCode = "test_1", businessType = "common", desc = "number必须>0", validClass = ValidClass.class)
-public class NumberRule extends AbstractRule<ValidClass> {
-
-    private final static String FIELD_NAME = "number";
-
-    public NumberRule(GlobalConfiguration rulesEngineConfiguration, RuleInfo ruleDefinition) {
-        super(rulesEngineConfiguration, ruleDefinition);
-    }
-
-    @Override
-    public boolean isSupported(ValidClass element) {
-        return element.getNumber() != null;
-    }
-
-    @Override
-    public boolean judge(ValidClass element) {
-        return element.getNumber().intValue() <= 0;
-    }
-
-    @Override
-    public Report buildReport(ValidClass element) {
-        if (this.judge(element)) {
-            return this.getReport(ruleDefinition, element, FIELD_NAME, element.getNumber());
-        }
-        return null;
-    }
-}
 ```
 
 ### Rule注解
 
-在类上标记该注解，规则工厂在扫描包时，会将其放入缓存。
+在类上标记该注解，规则工厂在扫描包时，会将其放入RuleFactory的单例池，统一管理。
 
 ### RuleScan注解
 
 在配置类上标记该注解，规则工厂会扫描其value指定的包路径。当使用spring时，需将该配置类注册到spring容器。
 
-```java
+### DomainScan注解
 
+在配置类上标记该注解，规则工厂会扫描其value指定的包路径。当使用spring时，需将该配置类注册到spring容器。
+
+```java
 @Configuration
-@RuleScan("info.lostred.ruler.rule")
+@RuleScan("info.lostred.ruler.test.rule")
+@DomainScan("info.lostred.ruler.test.entity")
 public class RulerConfig {
 }
 ```

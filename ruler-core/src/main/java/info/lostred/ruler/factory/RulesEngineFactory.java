@@ -1,6 +1,6 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.engine.RulesEngine;
+import info.lostred.ruler.engine.AbstractRulesEngine;
 import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 
@@ -24,9 +24,9 @@ public interface RulesEngineFactory {
      * @param <T>              规则引擎类型
      * @return 某个规则引擎类型的建造者实例对象
      */
-    static <T extends RulesEngine> Builder<T> builder(RuleFactory ruleFactory, String businessType,
-                                                      BeanResolver beanResolver, ExpressionParser parser,
-                                                      Class<T> rulesEngineClass) {
+    static <T extends AbstractRulesEngine> Builder<T> builder(RuleFactory ruleFactory, String businessType,
+                                                              BeanResolver beanResolver, ExpressionParser parser,
+                                                              Class<T> rulesEngineClass) {
         return new Builder<>(ruleFactory, businessType, beanResolver, parser, rulesEngineClass);
     }
 
@@ -36,14 +36,14 @@ public interface RulesEngineFactory {
      * @param businessType 业务类型
      * @return 规则引擎
      */
-    RulesEngine getEngine(String businessType);
+    AbstractRulesEngine getEngine(String businessType);
 
     /**
      * 规则引擎建造者
      *
      * @param <T> 规则引擎类型
      */
-    class Builder<T extends RulesEngine> {
+    class Builder<T extends AbstractRulesEngine> {
         private final RuleFactory ruleFactory;
         private final String businessType;
         private final BeanResolver beanResolver;

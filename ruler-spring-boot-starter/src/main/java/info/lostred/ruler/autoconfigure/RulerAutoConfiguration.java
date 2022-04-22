@@ -3,9 +3,8 @@ package info.lostred.ruler.autoconfigure;
 import info.lostred.ruler.annotation.DomainScan;
 import info.lostred.ruler.annotation.RuleScan;
 import info.lostred.ruler.constant.EngineType;
-import info.lostred.ruler.engine.CompleteRulesEngine;
-import info.lostred.ruler.engine.IncompleteRulesEngine;
-import info.lostred.ruler.engine.RulesEngine;
+import info.lostred.ruler.engine.*;
+import info.lostred.ruler.engine.AbstractRulesEngine;
 import info.lostred.ruler.engine.SimpleRulesEngine;
 import info.lostred.ruler.factory.*;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -86,17 +85,17 @@ public class RulerAutoConfiguration {
     public static class RulesEngineAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
-        public RulesEngineFactory engineFactory(Collection<RulesEngine> rulesEngines) {
-            return new DefaultRulesEngineFactory(rulesEngines);
+        public RulesEngineFactory engineFactory(Collection<AbstractRulesEngine> abstractRulesEngines) {
+            return new DefaultRulesEngineFactory(abstractRulesEngines);
         }
 
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnProperty("ruler.engine-type")
         public RulesEngine rulesEngine(RuleFactory ruleFactory,
-                                       BeanResolver beanResolver,
-                                       ExpressionParser parser,
-                                       RulerProperties rulerProperties) {
+                                               BeanResolver beanResolver,
+                                               ExpressionParser parser,
+                                               RulerProperties rulerProperties) {
             String type = rulerProperties.getEngineType().toUpperCase();
             String businessType = rulerProperties.getBusinessType();
             if (EngineType.COMPLETE.equals(EngineType.valueOf(type))) {

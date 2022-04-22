@@ -6,7 +6,22 @@
 - 一处配置，处处使用
 - 可根据需求配置不同的引擎类型(simple, incomplete, complete)
 
-## 2️⃣核心类
+## 2️⃣核心概念
+
+### DomainFactory领域模型工厂
+
+- 根据配置解析规则引擎需要校验类的属性
+- 统一管理这些需要校验的类
+
+### RulesEngineFactory规则引擎工厂
+
+- 根据配置构建规则引擎
+- 统一管理不同业务类型的规则引擎
+
+### RuleFactory规则工厂
+
+- 根据配置构建规则
+- 统一管理规则
 
 ### RulesEngine接口
 
@@ -17,9 +32,3 @@
 ### AbstractRule抽象类
 
 定义了规则的主要方法，开发者可扩展该类，实现其他特殊的规则。
-框架默认实现了一些普适规则：必填字段规则，字典字段规则，数值范围字段规则，日期时间范围字段规则。
-
-- RequiredFieldRule 必填字段规则
-- DictFieldRule 字典字段规则
-- NumberScopeFieldRule 数值范围字段规则
-- DateTimeScopeFieldRule 日期时间范围字段规则

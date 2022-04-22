@@ -1,6 +1,6 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.engine.RulesEngine;
+import info.lostred.ruler.engine.AbstractRulesEngine;
 
 import java.util.Collection;
 import java.util.Map;
@@ -12,19 +12,19 @@ import java.util.stream.Collectors;
  * @author lostred
  */
 public class DefaultRulesEngineFactory implements RulesEngineFactory {
-    private final Map<String, ? extends RulesEngine> rulesEngines;
+    private final Map<String, ? extends AbstractRulesEngine> rulesEngines;
 
-    public DefaultRulesEngineFactory(Collection<RulesEngine> rulesEngines) {
-        this.rulesEngines = rulesEngines.stream()
-                .collect(Collectors.toMap(RulesEngine::getBusinessType, e -> e));
+    public DefaultRulesEngineFactory(Collection<AbstractRulesEngine> abstractRulesEngines) {
+        this.rulesEngines = abstractRulesEngines.stream()
+                .collect(Collectors.toMap(AbstractRulesEngine::getBusinessType, e -> e));
     }
 
     @Override
-    public RulesEngine getEngine(String businessType) {
-        RulesEngine rulesEngine = this.rulesEngines.get(businessType);
-        if (rulesEngine == null) {
+    public AbstractRulesEngine getEngine(String businessType) {
+        AbstractRulesEngine abstractRulesEngine = this.rulesEngines.get(businessType);
+        if (abstractRulesEngine == null) {
             throw new RuntimeException("There is not available rules engine for '" + businessType + "' business type.");
         }
-        return rulesEngine;
+        return abstractRulesEngine;
     }
 }
