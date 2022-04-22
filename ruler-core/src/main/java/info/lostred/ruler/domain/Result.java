@@ -2,6 +2,7 @@ package info.lostred.ruler.domain;
 
 import info.lostred.ruler.constant.Grade;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
  *
  * @author lostred
  */
-public class Result {
+public class Result implements Serializable {
     /**
      * 校验结果等级
      */
