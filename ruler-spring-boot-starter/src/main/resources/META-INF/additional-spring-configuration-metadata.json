@@ -38,7 +38,7 @@
       "type": "java.lang.String",
       "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "默认的业务类型.",
-      "defaultValue": "common"
+      "defaultValue": "COMMON"
     },
     {
       "name": "ruler.default-valid-class",
@@ -155,6 +155,14 @@
         {
           "value": "annotation",
           "description": "从配置类注解初始化规则信息."
+        }
+      ]
+    },
+    {
+      "name": "ruler.rule-config.scan-base-packages",
+      "providers": [
+        {
+          "name": "logger-name"
         }
       ]
     },
