@@ -1,6 +1,7 @@
 package info.lostred.ruler.domain;
 
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.time.temporal.Temporal;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  *
  * @author lostred
  */
-public class PropertyInfo {
+public class PropertyInfo implements Serializable {
     private Class<?> validClass;
     private Class<?> propertyType;
     private String propertyName;
