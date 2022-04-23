@@ -69,7 +69,7 @@ public class DomainFactory {
      * @param domainClass 领域模型类的类对象
      * @return 属性信息集合
      */
-    private List<PropertyInfo> getPropertyList(Class<?> domainClass) {
+    public List<PropertyInfo> getPropertyList(Class<?> domainClass) {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(domainClass, Object.class);
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
