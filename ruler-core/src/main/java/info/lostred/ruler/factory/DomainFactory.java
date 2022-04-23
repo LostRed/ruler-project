@@ -56,6 +56,7 @@ public class DomainFactory {
                 classNames.stream()
                         .map(PackageScanUtils::loadClass)
                         .filter(Objects::nonNull)
+                        .peek(this.classSet::add)
                         .forEach(e -> this.propertyInfoMap.put(e.getName(), this.getPropertyList(e)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
