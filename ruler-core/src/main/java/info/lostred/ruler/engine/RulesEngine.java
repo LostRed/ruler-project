@@ -29,21 +29,21 @@ public interface RulesEngine {
     boolean evaluate(Object object);
 
     /**
-     * 添加规则并按顺序号排序
+     * 根据规则编号获取引擎中的规则
      *
-     * @param rule 规则
+     * @param ruleCode 规则编号
      */
-    void addRule(AbstractRule rule);
+    AbstractRule getRule(String ruleCode);
 
     /**
-     * 添加规则并按顺序号排序
+     * 在引擎中添加规则并按顺序号排序
      *
      * @param ruleCode 规则编号
      */
     void addRule(String ruleCode);
 
     /**
-     * 添加规则并按顺序号排序
+     * 在引擎中添加规则并按顺序号排序
      *
      * @param ruleCodes 规则编号集合
      */

@@ -150,7 +150,16 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     @Override
-    public void addRule(AbstractRule rule) {
+    public AbstractRule getRule(String ruleCode) {
+        return this.rules.stream()
+                .filter(rule -> rule.getRuleDefinition().getRuleCode().equals(ruleCode))
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
+    public void addRule(String ruleCode) {
+        AbstractRule rule = this.ruleFactory.getRule(ruleCode);
         for (int i = 0; i < this.rules.size(); i++) {
             if (this.rules.get(i).getRuleDefinition().getOrder()
                     > rule.getRuleDefinition().getOrder()) {
@@ -159,12 +168,6 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             }
         }
         this.rules.add(rule);
-    }
-
-    @Override
-    public void addRule(String ruleCode) {
-        AbstractRule rule = this.ruleFactory.getRule(ruleCode);
-        this.addRule(rule);
     }
 
     @Override

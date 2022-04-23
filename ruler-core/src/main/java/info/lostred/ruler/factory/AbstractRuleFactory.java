@@ -47,7 +47,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     @Override
     public AbstractRule getRule(String ruleCode) {
         if (!this.ruleDefinitionMap.containsKey(ruleCode)) {
-            throw new IllegalArgumentException("This rule didn't register.");
+            throw new IllegalArgumentException("This rule had not registered.");
         }
         return this.rules.get(ruleCode);
     }
