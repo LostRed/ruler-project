@@ -3,6 +3,7 @@ package info.lostred.ruler.domain;
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.constant.Grade;
 import info.lostred.ruler.constant.RulerConstants;
+import info.lostred.ruler.rule.AbstractRule;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -36,7 +37,7 @@ public class RuleDefinition {
     /**
      * 规则类型
      */
-    private Class<?> ruleClass;
+    private Class<? extends AbstractRule> ruleClass;
     /**
      * 参数表达式
      */
@@ -50,19 +51,19 @@ public class RuleDefinition {
      */
     private String predicateExp;
 
-    public static RuleDefinition of(Rule rule, Class<?> ruleClass) {
+    public static RuleDefinition of(Rule rule, Class<? extends AbstractRule> ruleClass) {
         return of(rule.ruleCode(), rule.businessType(), rule.grade(), rule.description(), rule.order(),
                 ruleClass, rule.parameterExp(), rule.conditionExp(), rule.predicateExp());
     }
 
     public static RuleDefinition of(String description,
-                                    Class<?> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
+                                    Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
         return new RuleDefinition(UUID.randomUUID().toString(), RulerConstants.COMMON_BUSINESS_TYPE, Grade.ILLEGAL, description, 0,
                 ruleClass, parameterExp, conditionExp, predicateExp);
     }
 
     public static RuleDefinition of(String ruleCode, String businessType, Grade grade, String description, Integer order,
-                                    Class<?> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
+                                    Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
         return new RuleDefinition(ruleCode, businessType, grade, description, order,
                 ruleClass, parameterExp, conditionExp, predicateExp);
     }
@@ -71,7 +72,7 @@ public class RuleDefinition {
     }
 
     public RuleDefinition(String ruleCode, String businessType, Grade grade, String description, Integer order,
-                          Class<?> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
+                          Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
         ruleCode = ruleCode == null || "".equals(ruleCode) ? UUID.randomUUID().toString() : ruleCode;
         this.ruleCode = ruleCode;
         this.businessType = businessType;
@@ -104,7 +105,7 @@ public class RuleDefinition {
         return order;
     }
 
-    public Class<?> getRuleClass() {
+    public Class<? extends AbstractRule> getRuleClass() {
         return ruleClass;
     }
 

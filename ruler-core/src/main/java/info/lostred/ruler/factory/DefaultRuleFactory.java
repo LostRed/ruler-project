@@ -41,13 +41,12 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
         }
     }
 
-    /**
-     * 构建规则定义
-     *
-     * @param ruleClass 规则类的类对象
-     */
+    @SuppressWarnings("unchecked")
     private RuleDefinition buildRuleDefinition(Class<?> ruleClass) {
+        if (!AbstractRule.class.isAssignableFrom(ruleClass)) {
+            throw new IllegalArgumentException("Class '" + ruleClass.getName() + "' is not a AbstractRule.");
+        }
         Rule rule = ruleClass.getAnnotation(Rule.class);
-        return RuleDefinition.of(rule, ruleClass);
+        return RuleDefinition.of(rule, (Class<? extends AbstractRule>) ruleClass);
     }
 }
