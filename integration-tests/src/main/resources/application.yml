@@ -1,8 +1,8 @@
 ruler:
   business-type: person
   engine-type: complete
-  rule-default-scope: info.lostred.ruler.test.rule
-  domain-default-scope: info.lostred.ruler.test.entity
+  rule-scan-packages: info.lostred.ruler.test.rule
+  domain-scan-packages: info.lostred.ruler.test.entity
 
 logging:
   level:
