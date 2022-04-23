@@ -49,32 +49,16 @@ public class PropertyInfo implements Serializable {
         return validClass;
     }
 
-    public void setValidClass(Class<?> validClass) {
-        this.validClass = validClass;
-    }
-
     public Class<?> getPropertyType() {
         return propertyType;
-    }
-
-    public void setPropertyType(Class<?> propertyType) {
-        this.propertyType = propertyType;
     }
 
     public String getPropertyName() {
         return propertyName;
     }
 
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
-    }
-
     public boolean isEntityProperty() {
         return entityProperty;
-    }
-
-    public void setEntityProperty(boolean entityProperty) {
-        this.entityProperty = entityProperty;
     }
 
     @Override
