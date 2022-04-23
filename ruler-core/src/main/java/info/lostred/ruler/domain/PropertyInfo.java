@@ -11,7 +11,7 @@ import java.util.Date;
  * @author lostred
  */
 public class PropertyInfo implements Serializable {
-    private Class<?> validClass;
+    private Class<?> domainClass;
     private Class<?> propertyType;
     private String propertyName;
     private boolean entityProperty;
@@ -25,8 +25,8 @@ public class PropertyInfo implements Serializable {
     public PropertyInfo() {
     }
 
-    private PropertyInfo(Class<?> validClass, Class<?> propertyType, String propertyName) {
-        this.validClass = validClass;
+    private PropertyInfo(Class<?> domainClass, Class<?> propertyType, String propertyName) {
+        this.domainClass = domainClass;
         this.propertyType = propertyType;
         this.propertyName = propertyName;
         this.entityProperty = isEntity(propertyType);
@@ -45,8 +45,8 @@ public class PropertyInfo implements Serializable {
                 && !Number.class.isAssignableFrom(_class);
     }
 
-    public Class<?> getValidClass() {
-        return validClass;
+    public Class<?> getDomainClass() {
+        return domainClass;
     }
 
     public Class<?> getPropertyType() {
@@ -64,7 +64,7 @@ public class PropertyInfo implements Serializable {
     @Override
     public String toString() {
         return "PropertyInfo{" +
-                "validClass=" + validClass +
+                "validClass=" + domainClass +
                 ", propertyType=" + propertyType +
                 ", propertyName='" + propertyName + '\'' +
                 ", entityProperty=" + entityProperty +
