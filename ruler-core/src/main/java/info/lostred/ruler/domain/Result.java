@@ -20,11 +20,11 @@ public class Result implements Serializable {
     /**
      * 可疑字段数量
      */
-    private long suspectedFieldCount;
+    private long suspectedCount;
     /**
      * 违规字段数量
      */
-    private long illegalFieldCount;
+    private long illegalCount;
     /**
      * 校验报告集合
      */
@@ -78,11 +78,11 @@ public class Result implements Serializable {
      * 统计可疑与违规字段数量
      */
     public void statistic() {
-        this.suspectedFieldCount = reports.values().stream()
+        this.suspectedCount = reports.values().stream()
                 .filter(e -> Grade.SUSPECTED.equals(e.getRuleDefinition().getGrade()))
                 .mapToLong(e -> e.getErrors().size())
                 .sum();
-        this.illegalFieldCount = reports.values().stream()
+        this.illegalCount = reports.values().stream()
                 .filter(e -> Grade.ILLEGAL.equals(e.getRuleDefinition().getGrade()))
                 .mapToLong(e -> e.getErrors().size())
                 .sum();
@@ -92,12 +92,12 @@ public class Result implements Serializable {
         return grade;
     }
 
-    public long getSuspectedFieldCount() {
-        return suspectedFieldCount;
+    public long getSuspectedCount() {
+        return suspectedCount;
     }
 
-    public long getIllegalFieldCount() {
-        return illegalFieldCount;
+    public long getIllegalCount() {
+        return illegalCount;
     }
 
     public Map<String, Report> getReports() {
@@ -108,8 +108,8 @@ public class Result implements Serializable {
     public String toString() {
         return "Result{" +
                 "grade='" + grade + '\'' +
-                ", suspectedCount=" + suspectedFieldCount +
-                ", illegalCount=" + illegalFieldCount +
+                ", suspectedCount=" + suspectedCount +
+                ", illegalCount=" + illegalCount +
                 ", reports=" + reports +
                 '}';
     }
