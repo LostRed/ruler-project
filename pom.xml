@@ -7,6 +7,8 @@
     <artifactId>ruler-project</artifactId>
     <packaging>pom</packaging>
     <version>2.0.0</version>
+    <name>ruler project</name>
+    <description>ruler project</description>
 
     <modules>
         <module>integration-tests</module>
