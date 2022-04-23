@@ -34,6 +34,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.businessType = businessType;
         this.beanResolver = beanResolver;
         this.parser = parser;
+        this.reloadRules();
     }
 
     /**
