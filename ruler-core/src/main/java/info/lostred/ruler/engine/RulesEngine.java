@@ -13,6 +13,13 @@ import java.util.Collection;
  */
 public interface RulesEngine {
     /**
+     * 获取引擎的业务类型
+     *
+     * @return 业务类型
+     */
+    String getBusinessType();
+
+    /**
      * 执行规则
      *
      * @param object 待校验的对象

@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
  * @author lostred
  */
 public class DefaultRulesEngineFactory implements RulesEngineFactory {
-    private final Map<String, ? extends AbstractRulesEngine> rulesEngines;
+    private final Map<String, ? extends RulesEngine> rulesEngines;
 
-    public DefaultRulesEngineFactory(Collection<AbstractRulesEngine> abstractRulesEngines) {
-        this.rulesEngines = abstractRulesEngines.stream()
-                .collect(Collectors.toMap(AbstractRulesEngine::getBusinessType, e -> e));
+    public DefaultRulesEngineFactory(Collection<RulesEngine> rulesEngines) {
+        this.rulesEngines = rulesEngines.stream()
+                .collect(Collectors.toMap(RulesEngine::getBusinessType, e -> e));
     }
 
     @Override

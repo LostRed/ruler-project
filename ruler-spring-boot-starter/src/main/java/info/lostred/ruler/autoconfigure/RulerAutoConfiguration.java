@@ -80,8 +80,8 @@ public class RulerAutoConfiguration {
     public static class RulesEngineAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
-        public RulesEngineFactory engineFactory(Collection<AbstractRulesEngine> abstractRulesEngines) {
-            return new DefaultRulesEngineFactory(abstractRulesEngines);
+        public RulesEngineFactory rulesEngineFactory(Collection<RulesEngine> rulesEngines) {
+            return new DefaultRulesEngineFactory(rulesEngines);
         }
 
         @Bean

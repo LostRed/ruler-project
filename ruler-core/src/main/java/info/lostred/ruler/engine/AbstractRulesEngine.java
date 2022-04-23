@@ -40,10 +40,6 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.rules.addAll(rules);
     }
 
-    public String getBusinessType() {
-        return businessType;
-    }
-
     /**
      * 针对数组参数执行
      *
@@ -135,6 +131,11 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         } else {
             return this.executeForObject(context, object, rule);
         }
+    }
+
+    @Override
+    public String getBusinessType() {
+        return businessType;
     }
 
     @Override
