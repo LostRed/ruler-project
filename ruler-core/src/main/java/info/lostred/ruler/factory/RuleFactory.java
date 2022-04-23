@@ -17,14 +17,14 @@ public interface RuleFactory {
      *
      * @param ruleDefinition 规则定义
      */
-    void register(RuleDefinition ruleDefinition);
+    void registerRuleDefinition(RuleDefinition ruleDefinition);
 
     /**
      * 注册规则
      *
      * @param rule 规则
      */
-    void register(AbstractRule rule);
+    void registerRule(AbstractRule rule);
 
     /**
      * 创建规则

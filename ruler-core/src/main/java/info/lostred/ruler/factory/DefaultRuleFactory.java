@@ -33,7 +33,7 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
                     .filter(AbstractRule.class::isAssignableFrom)
                     .filter(e -> e.isAnnotationPresent(Rule.class))
                     .map(this::buildRuleDefinition)
-                    .forEach(this::register);
+                    .forEach(this::registerRuleDefinition);
         }
         for (String ruleCode : this.ruleDefinitionMap.keySet()) {
             RuleDefinition ruleDefinition = this.ruleDefinitionMap.get(ruleCode);

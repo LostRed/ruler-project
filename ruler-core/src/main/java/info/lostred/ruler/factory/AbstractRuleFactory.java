@@ -24,7 +24,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     protected final Map<String, AbstractRule> rules = new ConcurrentHashMap<>();
 
     @Override
-    public void register(RuleDefinition ruleDefinition) {
+    public void registerRuleDefinition(RuleDefinition ruleDefinition) {
         if (ruleDefinitionMap.containsKey(ruleDefinition.getRuleCode())) {
             throw new RuleInitializationException("Rule code '" + ruleDefinition.getRuleCode() + "' is repeat.", ruleDefinition);
         }
@@ -32,7 +32,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     }
 
     @Override
-    public void register(AbstractRule rule) {
+    public void registerRule(AbstractRule rule) {
         RuleDefinition ruleDefinition = rule.getRuleDefinition();
         ruleDefinitionMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
         rules.put(ruleDefinition.getRuleCode(), rule);
