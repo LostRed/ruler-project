@@ -5,6 +5,7 @@ import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 规则引擎接口
@@ -34,6 +35,13 @@ public interface RulesEngine {
      * @return 引擎执行的布尔结果，true为不通过，false为通过
      */
     boolean evaluate(Object object);
+
+    /**
+     * 获取引擎中的所有规则
+     *
+     * @return 规则
+     */
+    List<AbstractRule> getAllRule();
 
     /**
      * 根据规则编号获取引擎中的规则
