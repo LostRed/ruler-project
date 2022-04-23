@@ -13,8 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class RulerProperties {
     private String businessType = RulerConstants.COMMON_BUSINESS_TYPE;
     private String engineType = EngineType.SIMPLE.name();
-    private String[] ruleDefaultScope;
-    private String[] domainDefaultScope;
+    private String[] ruleScanPackages;
+    private String[] domainScanPackages;
 
     public String getBusinessType() {
         return businessType;
@@ -32,19 +32,19 @@ public class RulerProperties {
         this.engineType = engineType;
     }
 
-    public String[] getRuleDefaultScope() {
-        return ruleDefaultScope;
+    public String[] getRuleScanPackages() {
+        return ruleScanPackages;
     }
 
-    public void setRuleDefaultScope(String[] ruleDefaultScope) {
-        this.ruleDefaultScope = ruleDefaultScope;
+    public void setRuleScanPackages(String[] ruleScanPackages) {
+        this.ruleScanPackages = ruleScanPackages;
     }
 
-    public String[] getDomainDefaultScope() {
-        return domainDefaultScope;
+    public String[] getDomainScanPackages() {
+        return domainScanPackages;
     }
 
-    public void setDomainDefaultScope(String[] domainDefaultScope) {
-        this.domainDefaultScope = domainDefaultScope;
+    public void setDomainScanPackages(String[] domainScanPackages) {
+        this.domainScanPackages = domainScanPackages;
     }
 }

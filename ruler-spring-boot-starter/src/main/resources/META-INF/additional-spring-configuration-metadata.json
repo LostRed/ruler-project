@@ -22,13 +22,13 @@
       "defaultValue": "simple"
     },
     {
-      "name": "ruler.rule-default-scope",
+      "name": "ruler.rule-scan-packages",
       "type": "java.lang.String",
       "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "规则类包扫描路径."
     },
     {
-      "name": "ruler.domain-default-scope",
+      "name": "ruler.domain-scan-packages",
       "type": "java.lang.String",
       "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "领域模型类包扫描路径."
@@ -53,7 +53,7 @@
       ]
     },
     {
-      "name": "ruler.rule-default-scope",
+      "name": "ruler.rule-scan-packages",
       "providers": [
         {
           "name": "logger-name"
@@ -61,7 +61,7 @@
       ]
     },
     {
-      "name": "ruler.domain-default-scope",
+      "name": "ruler.domain-scan-packages",
       "providers": [
         {
           "name": "logger-name"

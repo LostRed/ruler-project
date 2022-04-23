@@ -1,6 +1,5 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.annotation.DomainScan;
 import info.lostred.ruler.domain.PropertyInfo;
 import info.lostred.ruler.util.PackageScanUtils;
 
@@ -10,7 +9,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 领域模型工厂
@@ -20,27 +18,11 @@ import java.util.stream.Stream;
 public class DomainFactory {
     private final Set<Class<?>> classSet = new HashSet<>();
     private final Map<String, List<PropertyInfo>> propertyInfoMap = new HashMap<>();
-    private final Class<?> configClass;
-    private final String[] anotherPackages;
 
-    public DomainFactory(Class<?> configClass, String... anotherPackages) {
-        this.configClass = configClass;
-        this.anotherPackages = anotherPackages;
-        this.init();
-    }
-
-    public void init() {
-        String[] mergedPackages;
-        Stream<String> stream = Arrays.stream(this.anotherPackages);
-        if (this.configClass != null && this.configClass.isAnnotationPresent(DomainScan.class)) {
-            String[] scanBasePackages = this.configClass.getAnnotation(DomainScan.class).value();
-            mergedPackages = Stream.concat(stream, Stream.of(scanBasePackages))
-                    .distinct()
-                    .toArray(String[]::new);
-        } else {
-            mergedPackages = stream.distinct().toArray(String[]::new);
+    public DomainFactory(String... scanPackages) {
+        if (scanPackages != null) {
+            this.registerFromPackages(scanPackages);
         }
-        this.registerFromPackages(mergedPackages);
     }
 
     /**

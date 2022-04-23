@@ -18,9 +18,8 @@ import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * ruler自动配置类
@@ -30,16 +29,17 @@ import java.util.Optional;
 @Configuration(proxyBeanMethods = false)
 public class RulerAutoConfiguration {
     @Bean
-    @ConditionalOnMissingBean
-    public DomainFactory domainFactory(ApplicationContext applicationContext,
-                                       RulerProperties rulerProperties) {
+    public String[] domainScanPackages(ApplicationContext applicationContext) {
         Map<String, Object> beans = applicationContext.getBeansWithAnnotation(DomainScan.class);
-        Class<?> configClass = getConfigClass(beans);
-        String[] scanBasePackages = rulerProperties.getDomainDefaultScope();
-        if (scanBasePackages != null) {
-            return new DomainFactory(configClass, scanBasePackages);
-        }
-        return new DomainFactory(configClass);
+        return RulerAutoConfiguration.getConfigClasses(beans).stream()
+                .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()))
+                .toArray(String[]::new);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public DomainFactory domainFactory(String[] domainScanPackages) {
+        return new DomainFactory(domainScanPackages);
     }
 
     @Bean
@@ -61,17 +61,17 @@ public class RulerAutoConfiguration {
     @EnableConfigurationProperties(RulerProperties.class)
     public static class RuleAutoConfiguration {
         @Bean
-        @ConditionalOnMissingBean
-        public RuleFactory ruleFactory(ApplicationContext applicationContext,
-                                       ExpressionParser parser,
-                                       RulerProperties rulerProperties) {
+        public String[] ruleScanPackages(ApplicationContext applicationContext) {
             Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RuleScan.class);
-            Class<?> configClass = RulerAutoConfiguration.getConfigClass(beans);
-            String[] scanBasePackages = rulerProperties.getRuleDefaultScope();
-            if (scanBasePackages != null) {
-                return new DefaultRuleFactory(parser, configClass, scanBasePackages);
-            }
-            return new DefaultRuleFactory(parser, configClass);
+            return RulerAutoConfiguration.getConfigClasses(beans).stream()
+                    .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()))
+                    .toArray(String[]::new);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public RuleFactory ruleFactory(ExpressionParser parser, String[] ruleScanPackages) {
+            return new DefaultRuleFactory(parser, ruleScanPackages);
         }
     }
 
@@ -92,9 +92,9 @@ public class RulerAutoConfiguration {
         @ConditionalOnMissingBean
         @ConditionalOnProperty("ruler.engine-type")
         public RulesEngine rulesEngine(RuleFactory ruleFactory,
-                                               BeanResolver beanResolver,
-                                               ExpressionParser parser,
-                                               RulerProperties rulerProperties) {
+                                       BeanResolver beanResolver,
+                                       ExpressionParser parser,
+                                       RulerProperties rulerProperties) {
             String type = rulerProperties.getEngineType().toUpperCase();
             String businessType = rulerProperties.getBusinessType();
             if (EngineType.COMPLETE.equals(EngineType.valueOf(type))) {
@@ -113,21 +113,20 @@ public class RulerAutoConfiguration {
         }
     }
 
-    public static Class<?> getConfigClass(Map<String, Object> beans) {
-        Class<?> configClass = null;
-        Optional<Object> first = beans.values().stream().findFirst();
-        if (first.isPresent()) {
-            Object object = first.get();
-            String className = object.getClass().getName();
-            int suffix = className.indexOf("$$");
-            if (suffix != -1) {
-                className = className.substring(0, className.indexOf("$$"));
-            }
-            try {
-                configClass = RulerAutoConfiguration.class.getClassLoader().loadClass(className);
-            } catch (ClassNotFoundException ignored) {
-            }
-        }
-        return configClass;
+    public static Set<Class<?>> getConfigClasses(Map<String, Object> beans) {
+        return beans.values().stream()
+                .map(bean -> {
+                    String className = bean.getClass().getName();
+                    if (className.contains("$$")) {
+                        className = className.substring(0, className.indexOf("$$"));
+                    }
+                    try {
+                        return RulerAutoConfiguration.class.getClassLoader().loadClass(className);
+                    } catch (ClassNotFoundException ignored) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 }

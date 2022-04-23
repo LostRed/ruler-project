@@ -1,14 +1,10 @@
 package info.lostred.ruler.factory;
 
 import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.annotation.RuleScan;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.util.PackageScanUtils;
 import org.springframework.expression.ExpressionParser;
-
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 /**
  * 默认的规则工厂
@@ -17,29 +13,12 @@ import java.util.stream.Stream;
  */
 public class DefaultRuleFactory extends AbstractRuleFactory {
     private final ExpressionParser parser;
-    private final Class<?> configClass;
-    private final String[] anotherPackages;
 
-    public DefaultRuleFactory(ExpressionParser parser, Class<?> configClass, String... anotherPackages) {
+    public DefaultRuleFactory(ExpressionParser parser, String... scanPackages) {
         this.parser = parser;
-        this.configClass = configClass;
-        this.anotherPackages = anotherPackages;
-        this.init();
-    }
-
-    @Override
-    public void init() {
-        String[] mergedPackages;
-        Stream<String> stream = Arrays.stream(this.anotherPackages);
-        if (this.configClass != null && this.configClass.isAnnotationPresent(RuleScan.class)) {
-            String[] scanBasePackages = this.configClass.getAnnotation(RuleScan.class).value();
-            mergedPackages = Stream.concat(stream, Stream.of(scanBasePackages))
-                    .distinct()
-                    .toArray(String[]::new);
-        } else {
-            mergedPackages = stream.distinct().toArray(String[]::new);
+        if (scanPackages != null) {
+            this.registerFromPackages(scanPackages);
         }
-        this.registerFromPackages(mergedPackages);
     }
 
     /**

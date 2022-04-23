@@ -13,11 +13,6 @@ import java.util.List;
  */
 public interface RuleFactory {
     /**
-     * 初始化工厂
-     */
-    void init();
-
-    /**
      * 注册规则定义
      *
      * @param ruleDefinition 规则定义
