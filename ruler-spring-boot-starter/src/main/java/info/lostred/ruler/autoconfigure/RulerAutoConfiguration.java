@@ -3,7 +3,10 @@ package info.lostred.ruler.autoconfigure;
 import info.lostred.ruler.annotation.DomainScan;
 import info.lostred.ruler.annotation.RuleScan;
 import info.lostred.ruler.constant.EngineType;
-import info.lostred.ruler.engine.*;
+import info.lostred.ruler.engine.CompleteRulesEngine;
+import info.lostred.ruler.engine.IncompleteRulesEngine;
+import info.lostred.ruler.engine.RulesEngine;
+import info.lostred.ruler.engine.SimpleRulesEngine;
 import info.lostred.ruler.factory.*;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -39,6 +42,9 @@ public class RulerAutoConfiguration {
                                        RulerProperties rulerProperties) {
         Stream<String> stream = getConfigClasses(defaultListableBeanFactory, DomainScan.class).stream()
                 .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()));
+        if (rulerProperties.getDomainScanPackages() == null) {
+            return new DomainFactory(stream.toArray(String[]::new));
+        }
         String[] domainScanPackages = Stream.concat(stream, Arrays.stream(rulerProperties.getDomainScanPackages()))
                 .distinct()
                 .toArray(String[]::new);
@@ -70,6 +76,9 @@ public class RulerAutoConfiguration {
                                        RulerProperties rulerProperties) {
             Stream<String> stream = getConfigClasses(defaultListableBeanFactory, RuleScan.class).stream()
                     .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()));
+            if (rulerProperties.getRuleScanPackages() == null) {
+                return new DefaultRuleFactory(parser, stream.toArray(String[]::new));
+            }
             String[] ruleScanPackages = Stream.concat(stream, Arrays.stream(rulerProperties.getRuleScanPackages()))
                     .distinct()
                     .toArray(String[]::new);
@@ -90,7 +99,7 @@ public class RulerAutoConfiguration {
             return new DefaultRulesEngineFactory(rulesEngines);
         }
 
-        @Bean(initMethod = "reloadRules")
+        @Bean
         @ConditionalOnMissingBean
         @ConditionalOnProperty("ruler.engine-type")
         public RulesEngine rulesEngine(RuleFactory ruleFactory,

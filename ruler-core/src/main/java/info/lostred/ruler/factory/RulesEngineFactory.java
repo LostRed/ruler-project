@@ -23,6 +23,11 @@ public interface RulesEngineFactory {
     List<String> getAllEngineBusinessType();
 
     /**
+     * 所有引擎从规则工厂中重新加载规则
+     */
+    void reloadRules();
+
+    /**
      * 从引擎单例池中获取规则引擎
      *
      * @param businessType 业务类型

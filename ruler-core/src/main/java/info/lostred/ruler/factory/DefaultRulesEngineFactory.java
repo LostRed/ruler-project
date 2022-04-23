@@ -28,6 +28,11 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
     }
 
     @Override
+    public void reloadRules() {
+        rulesEngines.values().forEach(RulesEngine::reloadRules);
+    }
+
+    @Override
     public RulesEngine getEngine(String businessType) {
         return this.rulesEngines.get(businessType);
     }
