@@ -144,6 +144,18 @@ public class RuleDefinition {
         return predicateExp;
     }
 
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
