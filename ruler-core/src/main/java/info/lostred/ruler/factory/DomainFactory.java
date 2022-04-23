@@ -10,7 +10,6 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,7 +19,8 @@ import java.util.stream.Stream;
  * @author lostred
  */
 public class DomainFactory {
-    private final Map<String, List<PropertyInfo>> propertyInfoMap = new ConcurrentHashMap<>();
+    private final Set<Class<?>> classSet = new HashSet<>();
+    private final Map<String, List<PropertyInfo>> propertyInfoMap = new HashMap<>();
     private final Class<?> configClass;
     private final String[] anotherPackages;
 
@@ -90,11 +90,11 @@ public class DomainFactory {
     }
 
     /**
-     * 注册领域模型类
+     * 获取所有领域模型类的类对象集合
      *
-     * @param domainClass 领域模型类的类对象
+     * @return 领域模型类的类对象集合
      */
-    public void registerDomain(Class<?> domainClass) {
-        this.propertyInfoMap.put(domainClass.getName(), this.getPropertyList(domainClass));
+    public Set<Class<?>> getAllDomain() {
+        return this.classSet;
     }
 }
