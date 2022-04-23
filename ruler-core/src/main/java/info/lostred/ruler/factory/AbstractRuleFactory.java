@@ -24,23 +24,29 @@ public abstract class AbstractRuleFactory implements RuleFactory {
 
     @Override
     public void registerRuleDefinition(RuleDefinition ruleDefinition) {
-        if (ruleDefinitionMap.containsKey(ruleDefinition.getRuleCode())) {
+        if (this.ruleDefinitionMap.containsKey(ruleDefinition.getRuleCode())) {
             throw new RulesException("Rule code '" + ruleDefinition.getRuleCode() + "' is repeat.", ruleDefinition);
         }
-        ruleDefinitionMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
+        this.ruleDefinitionMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
     }
 
     @Override
     public void registerRule(AbstractRule rule) {
         RuleDefinition ruleDefinition = rule.getRuleDefinition();
-        ruleDefinitionMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
-        rules.put(ruleDefinition.getRuleCode(), rule);
+        this.ruleDefinitionMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
+        this.rules.put(ruleDefinition.getRuleCode(), rule);
     }
 
     @Override
     public void createRule(RuleDefinition ruleDefinition, ExpressionParser parser) {
         AbstractRule rule = this.builder(ruleDefinition, parser).build();
         this.rules.put(ruleDefinition.getRuleCode(), rule);
+    }
+
+    @Override
+    public void destroyRule(String ruleCode) {
+        this.ruleDefinitionMap.remove(ruleCode);
+        this.rules.remove(ruleCode);
     }
 
     @Override

@@ -35,6 +35,13 @@ public interface RuleFactory {
     void createRule(RuleDefinition ruleDefinition, ExpressionParser parser);
 
     /**
+     * 销毁规则
+     *
+     * @param ruleCode 规则编号
+     */
+    void destroyRule(String ruleCode);
+
+    /**
      * 根据规则编号获取规则
      *
      * @param ruleCode 规则编号
