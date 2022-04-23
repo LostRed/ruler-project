@@ -1,7 +1,7 @@
 package info.lostred.ruler.factory;
 
 import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.exception.RuleInitializationException;
+import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.proxy.RuleProxy;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.ExpressionParser;
@@ -26,7 +26,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     @Override
     public void registerRuleDefinition(RuleDefinition ruleDefinition) {
         if (ruleDefinitionMap.containsKey(ruleDefinition.getRuleCode())) {
-            throw new RuleInitializationException("Rule code '" + ruleDefinition.getRuleCode() + "' is repeat.", ruleDefinition);
+            throw new RulesException("Rule code '" + ruleDefinition.getRuleCode() + "' is repeat.", ruleDefinition);
         }
         ruleDefinitionMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
     }
@@ -98,11 +98,11 @@ public abstract class AbstractRuleFactory implements RuleFactory {
                     //拿到代理对象
                     return proxy.newProxyInstance();
                 }
-                throw new RuleInitializationException("Internal error: " + ruleClass.getName() +
+                throw new RulesException("Internal error: " + ruleClass.getName() +
                         " cannot be instantiated, because it is not instance of Rule.", this.ruleDefinition);
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                      IllegalAccessException e) {
-                throw new RuleInitializationException("Internal error: " + ruleClass.getName() +
+                throw new RulesException("Internal error: " + ruleClass.getName() +
                         " cannot be instantiated.", e, this.ruleDefinition);
             }
         }
