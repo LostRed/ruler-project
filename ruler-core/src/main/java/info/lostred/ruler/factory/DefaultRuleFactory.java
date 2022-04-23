@@ -26,7 +26,7 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
      */
     private void registerFromPackages() {
         if (scanPackages == null || scanPackages.length == 0) {
-            throw new IllegalArgumentException("Have not to set the scan packages.");
+            return;
         }
         for (String packageName : scanPackages) {
             PackageScanUtils.getClasses(packageName).stream()
