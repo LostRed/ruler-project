@@ -80,6 +80,11 @@ public interface RulesEngine {
     void orderRules();
 
     /**
+     * 重新载入规则
+     */
+    void reloadRules();
+
+    /**
      * 设置bean解析器
      *
      * @param context 评估上下文

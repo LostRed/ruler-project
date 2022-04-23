@@ -16,6 +16,21 @@ import java.util.List;
  */
 public interface RulesEngineFactory {
     /**
+     * 获取所有引擎的业务类型
+     *
+     * @return 业务类型集合
+     */
+    List<String> getAllEngineBusinessType();
+
+    /**
+     * 从引擎单例池中获取规则引擎
+     *
+     * @param businessType 业务类型
+     * @return 规则引擎
+     */
+    RulesEngine getEngine(String businessType);
+
+    /**
      * 获取工厂的建造者对象
      *
      * @param ruleFactory      规则工厂
@@ -31,21 +46,6 @@ public interface RulesEngineFactory {
                                                               Class<T> rulesEngineClass) {
         return new Builder<>(ruleFactory, businessType, beanResolver, parser, rulesEngineClass);
     }
-
-    /**
-     * 获取所有引擎的业务类型
-     *
-     * @return 业务类型集合
-     */
-    List<String> getAllEngineBusinessType();
-
-    /**
-     * 从引擎单例池中获取规则引擎
-     *
-     * @param businessType 业务类型
-     * @return 规则引擎
-     */
-    RulesEngine getEngine(String businessType);
 
     /**
      * 规则引擎建造者

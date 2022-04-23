@@ -34,9 +34,6 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.businessType = businessType;
         this.beanResolver = beanResolver;
         this.parser = parser;
-        List<AbstractRule> rules = ruleFactory.findRules(businessType);
-        rules.sort(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()));
-        this.rules.addAll(rules);
     }
 
     /**
@@ -196,6 +193,14 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     @Override
     public void orderRules() {
         this.rules.sort(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()));
+    }
+
+    @Override
+    public void reloadRules() {
+        List<AbstractRule> rules = ruleFactory.findRules(businessType);
+        rules.sort(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()));
+        this.rules.clear();
+        this.rules.addAll(rules);
     }
 
     @Override

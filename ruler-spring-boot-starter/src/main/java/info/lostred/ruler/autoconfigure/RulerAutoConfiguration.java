@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * ruler自动配置类
@@ -34,9 +35,11 @@ import java.util.stream.Collectors;
 public class RulerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
-    public DomainFactory domainFactory(DefaultListableBeanFactory defaultListableBeanFactory) {
-        String[] domainScanPackages = getConfigClasses(defaultListableBeanFactory, DomainScan.class).stream()
-                .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()))
+    public DomainFactory domainFactory(DefaultListableBeanFactory defaultListableBeanFactory,
+                                       RulerProperties rulerProperties) {
+        Stream<String> stream = getConfigClasses(defaultListableBeanFactory, DomainScan.class).stream()
+                .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()));
+        String[] domainScanPackages = Stream.concat(stream, Arrays.stream(rulerProperties.getDomainScanPackages()))
                 .distinct()
                 .toArray(String[]::new);
         return new DomainFactory(domainScanPackages);
@@ -62,9 +65,12 @@ public class RulerAutoConfiguration {
     public static class RuleAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
-        public RuleFactory ruleFactory(ExpressionParser parser, DefaultListableBeanFactory defaultListableBeanFactory) {
-            String[] ruleScanPackages = RulerAutoConfiguration.getConfigClasses(defaultListableBeanFactory, RuleScan.class).stream()
-                    .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()))
+        public RuleFactory ruleFactory(ExpressionParser parser,
+                                       DefaultListableBeanFactory defaultListableBeanFactory,
+                                       RulerProperties rulerProperties) {
+            Stream<String> stream = getConfigClasses(defaultListableBeanFactory, RuleScan.class).stream()
+                    .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()));
+            String[] ruleScanPackages = Stream.concat(stream, Arrays.stream(rulerProperties.getRuleScanPackages()))
                     .distinct()
                     .toArray(String[]::new);
             return new DefaultRuleFactory(parser, ruleScanPackages);
@@ -84,7 +90,7 @@ public class RulerAutoConfiguration {
             return new DefaultRulesEngineFactory(rulesEngines);
         }
 
-        @Bean
+        @Bean(initMethod = "reloadRules")
         @ConditionalOnMissingBean
         @ConditionalOnProperty("ruler.engine-type")
         public RulesEngine rulesEngine(RuleFactory ruleFactory,
