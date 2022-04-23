@@ -51,9 +51,9 @@ public interface RuleFactory {
     List<AbstractRule> findRules(String businessType);
 
     /**
-     * 获取所有规则
+     * 获取所有规则定义
      *
-     * @return 规则集合
+     * @return 规则定义集合
      */
-    List<AbstractRule> getAllRules();
+    List<RuleDefinition> getRuleDefinitions();
 }

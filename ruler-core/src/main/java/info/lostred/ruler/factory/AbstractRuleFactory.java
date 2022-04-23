@@ -8,7 +8,6 @@ import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,8 +59,10 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     }
 
     @Override
-    public List<AbstractRule> getAllRules() {
-        return new ArrayList<>(this.rules.values());
+    public List<RuleDefinition> getRuleDefinitions() {
+        return this.rules.values().stream()
+                .map(AbstractRule::getRuleDefinition)
+                .collect(Collectors.toList());
     }
 
     /**

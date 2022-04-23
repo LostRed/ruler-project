@@ -2,6 +2,7 @@ package info.lostred.ruler.engine;
 
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.Result;
+import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
@@ -10,6 +11,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 import static info.lostred.ruler.constant.SpELConstants.INDEX_KEY;
 import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
@@ -148,8 +150,10 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     @Override
-    public List<AbstractRule> getAllRule() {
-        return rules;
+    public List<RuleDefinition> getRuleDefinitions() {
+        return this.rules.stream()
+                .map(AbstractRule::getRuleDefinition)
+                .collect(Collectors.toList());
     }
 
     @Override

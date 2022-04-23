@@ -1,6 +1,7 @@
 package info.lostred.ruler.engine;
 
 import info.lostred.ruler.domain.Result;
+import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -37,11 +38,11 @@ public interface RulesEngine {
     boolean evaluate(Object object);
 
     /**
-     * 获取引擎中的所有规则
+     * 获取引擎中的所有规则定义
      *
-     * @return 规则
+     * @return 规则定义集合
      */
-    List<AbstractRule> getAllRule();
+    List<RuleDefinition> getRuleDefinitions();
 
     /**
      * 根据规则编号获取引擎中的规则
