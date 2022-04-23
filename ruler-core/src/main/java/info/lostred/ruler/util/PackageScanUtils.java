@@ -18,42 +18,41 @@ public final class PackageScanUtils {
     private static final Logger logger = Logger.getLogger(PackageScanUtils.class.getName());
 
     /**
-     * 找到包扫描路径下的所有全限定类名
+     * 找到包扫描路径下的所有类对象集合
      *
      * @param scanBasePackage 包扫描路径
-     * @return 全限定类名集合
-     * @throws IOException IO异常
+     * @return 类对象集合
      */
-    public static Set<String> findClassNames(String scanBasePackage) throws IOException {
-        Set<String> result = new HashSet<>();
-        scanBasePackage = scanBasePackage.replaceAll("\\.", "/");
-        Enumeration<URL> enumeration = Thread.currentThread().getContextClassLoader().getResources(scanBasePackage);
-        while (enumeration.hasMoreElements()) {
-            URL url = enumeration.nextElement();
-            List<File> files = new ArrayList<>();
-            if ("file".equals(url.getProtocol())) {
-                collectFiles(new File(url.getFile()), files);
-                for (File file : files) {
-                    String className = getClassName(file.getAbsolutePath(), scanBasePackage);
-                    if (className != null) {
-                        result.add(className);
+    public static Set<Class<?>> getClasses(String scanBasePackage) {
+        Set<Class<?>> classes = new HashSet<>();
+        String path = scanBasePackage.replaceAll("\\.", "/");
+        try {
+            Enumeration<URL> enumeration = Thread.currentThread().getContextClassLoader().getResources(path);
+            while (enumeration.hasMoreElements()) {
+                URL url = enumeration.nextElement();
+                List<File> files = new ArrayList<>();
+                if ("file".equals(url.getProtocol())) {
+                    collectFiles(new File(url.getFile()), files);
+                    for (File file : files) {
+                        String className = getClassName(file.getAbsolutePath(), path);
+                        loadClass(className).ifPresent(classes::add);
                     }
-                }
-            } else if ("jar".equals(url.getProtocol())) {
-                JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
-                Enumeration<JarEntry> entries = urlConnection.getJarFile().entries();
-                while (entries.hasMoreElements()) {
-                    JarEntry entry = entries.nextElement();
-                    if (entry.getName().endsWith(".class")) {
-                        String className = getClassName(entry.getName(), scanBasePackage);
-                        if (className != null) {
-                            result.add(className);
+                } else if ("jar".equals(url.getProtocol())) {
+                    JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
+                    Enumeration<JarEntry> entries = urlConnection.getJarFile().entries();
+                    while (entries.hasMoreElements()) {
+                        JarEntry entry = entries.nextElement();
+                        if (entry.getName().endsWith(".class")) {
+                            String className = getClassName(entry.getName(), path);
+                            loadClass(className).ifPresent(classes::add);
                         }
                     }
                 }
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return result;
+        return classes;
     }
 
     /**
@@ -86,17 +85,17 @@ public final class PackageScanUtils {
     /**
      * 获取全限定类名
      *
-     * @param path     文件绝对路径
-     * @param scanPath 包扫描文件夹相对路径
+     * @param absolutePath 文件绝对路径
+     * @param path         包扫描文件夹相对路径
      * @return 全限定类名
      */
-    private static String getClassName(String path, String scanPath) {
-        path = path.replaceAll("\\\\", "/");
-        if (path.lastIndexOf(scanPath) != -1) {
-            path = path.substring(path.lastIndexOf(scanPath));
-            return path.replace(".class", "").replaceAll("/", ".");
+    private static String getClassName(String absolutePath, String path) {
+        absolutePath = absolutePath.replaceAll("\\\\", "/");
+        if (absolutePath.lastIndexOf(path) != -1) {
+            absolutePath = absolutePath.substring(absolutePath.lastIndexOf(path));
+            return absolutePath.replace(".class", "").replaceAll("/", ".");
         }
-        return null;
+        throw new IllegalArgumentException(".'" + absolutePath + "' is not contains '" + path + "'.");
     }
 
     /**
@@ -105,13 +104,13 @@ public final class PackageScanUtils {
      * @param className 全限定类名
      * @return 类对象
      */
-    public static Class<?> loadClass(String className) {
+    public static Optional<Class<?>> loadClass(String className) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try {
-            return classLoader.loadClass(className);
+            return Optional.of(classLoader.loadClass(className));
         } catch (ClassNotFoundException ignored) {
             logger.warning("Unable to find class: " + className);
         }
-        return null;
+        return Optional.empty();
     }
 }

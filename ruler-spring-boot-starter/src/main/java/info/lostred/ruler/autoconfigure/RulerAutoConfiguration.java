@@ -4,9 +4,8 @@ import info.lostred.ruler.annotation.DomainScan;
 import info.lostred.ruler.annotation.RuleScan;
 import info.lostred.ruler.constant.EngineType;
 import info.lostred.ruler.engine.*;
-import info.lostred.ruler.engine.AbstractRulesEngine;
-import info.lostred.ruler.engine.SimpleRulesEngine;
 import info.lostred.ruler.factory.*;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -45,8 +44,8 @@ public class RulerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public BeanResolver beanResolver(ApplicationContext applicationContext) {
-        return new BeanFactoryResolver(applicationContext);
+    public BeanResolver beanResolver(BeanFactory beanFactory) {
+        return new BeanFactoryResolver(beanFactory);
     }
 
     @Bean

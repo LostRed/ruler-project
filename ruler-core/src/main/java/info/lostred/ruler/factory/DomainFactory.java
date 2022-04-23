@@ -8,7 +8,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,16 +50,9 @@ public class DomainFactory {
      */
     private void registerFromPackages(String[] packages) {
         for (String packageName : packages) {
-            try {
-                Set<String> classNames = PackageScanUtils.findClassNames(packageName);
-                classNames.stream()
-                        .map(PackageScanUtils::loadClass)
-                        .filter(Objects::nonNull)
-                        .peek(this.classSet::add)
-                        .forEach(e -> this.propertyInfoMap.put(e.getName(), this.getPropertyList(e)));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            PackageScanUtils.getClasses(packageName).stream()
+                    .peek(this.classSet::add)
+                    .forEach(e -> this.propertyInfoMap.put(e.getName(), this.getPropertyList(e)));
         }
     }
 

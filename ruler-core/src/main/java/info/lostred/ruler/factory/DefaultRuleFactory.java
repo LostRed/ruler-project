@@ -7,10 +7,7 @@ import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.util.PackageScanUtils;
 import org.springframework.expression.ExpressionParser;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -52,18 +49,11 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
      */
     private void registerFromPackages(String[] packages) {
         for (String packageName : packages) {
-            try {
-                Set<String> classNames = PackageScanUtils.findClassNames(packageName);
-                classNames.stream()
-                        .map(PackageScanUtils::loadClass)
-                        .filter(Objects::nonNull)
-                        .filter(AbstractRule.class::isAssignableFrom)
-                        .filter(e -> e.isAnnotationPresent(Rule.class))
-                        .map(this::buildRuleDefinition)
-                        .forEach(this::register);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            PackageScanUtils.getClasses(packageName).stream()
+                    .filter(AbstractRule.class::isAssignableFrom)
+                    .filter(e -> e.isAnnotationPresent(Rule.class))
+                    .map(this::buildRuleDefinition)
+                    .forEach(this::register);
         }
         for (String ruleCode : this.ruleInfoMap.keySet()) {
             RuleDefinition ruleDefinition = this.ruleInfoMap.get(ruleCode);
