@@ -35,6 +35,14 @@ public class RuleDefinition {
      */
     private Integer order;
     /**
+     * 是否强制使用
+     */
+    private boolean required;
+    /**
+     * 是否启用
+     */
+    private boolean enabled;
+    /**
      * 规则类型
      */
     private Class<? extends AbstractRule> ruleClass;
@@ -52,26 +60,31 @@ public class RuleDefinition {
     private String predicateExp;
 
     public static RuleDefinition of(Rule rule, Class<? extends AbstractRule> ruleClass) {
-        return of(rule.ruleCode(), rule.businessType(), rule.grade(), rule.description(), rule.order(),
+        return of(rule.ruleCode(), rule.businessType(), rule.grade(), rule.description(),
+                rule.order(), rule.required(), rule.enable(),
                 ruleClass, rule.parameterExp(), rule.conditionExp(), rule.predicateExp());
     }
 
     public static RuleDefinition of(String description,
                                     Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
-        return new RuleDefinition(UUID.randomUUID().toString(), RulerConstants.COMMON_BUSINESS_TYPE, Grade.ILLEGAL, description, 0,
+        return RuleDefinition.of(UUID.randomUUID().toString(), RulerConstants.COMMON_BUSINESS_TYPE, Grade.ILLEGAL, description,
+                0, false, true,
                 ruleClass, parameterExp, conditionExp, predicateExp);
     }
 
-    public static RuleDefinition of(String ruleCode, String businessType, Grade grade, String description, Integer order,
+    public static RuleDefinition of(String ruleCode, String businessType, Grade grade, String description,
+                                    Integer order, boolean required, boolean enable,
                                     Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
-        return new RuleDefinition(ruleCode, businessType, grade, description, order,
+        return new RuleDefinition(ruleCode, businessType, grade, description,
+                order, required, enable,
                 ruleClass, parameterExp, conditionExp, predicateExp);
     }
 
     private RuleDefinition() {
     }
 
-    public RuleDefinition(String ruleCode, String businessType, Grade grade, String description, Integer order,
+    public RuleDefinition(String ruleCode, String businessType, Grade grade, String description,
+                          Integer order, boolean required, boolean enabled,
                           Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
         ruleCode = ruleCode == null || "".equals(ruleCode) ? UUID.randomUUID().toString() : ruleCode;
         this.ruleCode = ruleCode;
@@ -79,6 +92,8 @@ public class RuleDefinition {
         this.grade = grade;
         this.description = description;
         this.order = order;
+        this.required = required;
+        this.enabled = enabled;
         this.ruleClass = ruleClass;
         this.parameterExp = parameterExp;
         this.conditionExp = conditionExp;
@@ -103,6 +118,14 @@ public class RuleDefinition {
 
     public Integer getOrder() {
         return order;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public Class<? extends AbstractRule> getRuleClass() {

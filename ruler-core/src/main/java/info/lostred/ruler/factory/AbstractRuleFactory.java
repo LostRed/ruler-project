@@ -44,9 +44,9 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     }
 
     @Override
-    public void destroyRule(String ruleCode) {
+    public AbstractRule destroyRule(String ruleCode) {
         this.ruleDefinitionMap.remove(ruleCode);
-        this.rules.remove(ruleCode);
+        return this.rules.remove(ruleCode);
     }
 
     @Override

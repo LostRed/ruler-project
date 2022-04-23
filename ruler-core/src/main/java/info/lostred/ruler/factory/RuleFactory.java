@@ -38,8 +38,9 @@ public interface RuleFactory {
      * 销毁规则
      *
      * @param ruleCode 规则编号
+     * @return 被销毁的规则
      */
-    void destroyRule(String ruleCode);
+    AbstractRule destroyRule(String ruleCode);
 
     /**
      * 根据规则编号获取规则

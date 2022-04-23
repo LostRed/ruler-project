@@ -49,6 +49,20 @@ public @interface Rule {
     int order() default 0;
 
     /**
+     * 是否强制使用
+     *
+     * @return 是否强制使用
+     */
+    boolean required() default false;
+
+    /**
+     * 是否启用
+     *
+     * @return 是否启用
+     */
+    boolean enable() default true;
+
+    /**
      * 参数表达式
      *
      * @return 参数表达式

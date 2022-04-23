@@ -186,6 +186,9 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             return false;
         }
         for (AbstractRule rule : this.rules) {
+            if (rule.getRuleDefinition().isRequired()) {
+                throw new RuntimeException("The rule [" + ruleCode + "] is required.");
+            }
             return this.rules.remove(rule);
         }
         return false;
@@ -198,8 +201,10 @@ public abstract class AbstractRulesEngine implements RulesEngine {
 
     @Override
     public void reloadRules() {
-        List<AbstractRule> rules = ruleFactory.findRules(businessType);
-        rules.sort(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()));
+        List<AbstractRule> rules = ruleFactory.findRules(businessType).stream()
+                .filter(rule -> rule.getRuleDefinition().isEnabled())
+                .sorted(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()))
+                .collect(Collectors.toList());
         this.rules.clear();
         this.rules.addAll(rules);
     }
