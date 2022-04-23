@@ -75,6 +75,11 @@ public interface RulesEngine {
     boolean removeRule(String ruleCode);
 
     /**
+     * 排序规则
+     */
+    void orderRules();
+
+    /**
      * 设置bean解析器
      *
      * @param context 评估上下文

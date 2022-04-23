@@ -194,6 +194,11 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     @Override
+    public void orderRules() {
+        this.rules.sort(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()));
+    }
+
+    @Override
     public void setBeanResolver(StandardEvaluationContext context) {
         context.setBeanResolver(beanResolver);
     }
