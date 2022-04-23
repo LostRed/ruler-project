@@ -15,7 +15,7 @@ public enum Grade {
      */
     SUSPECTED,
     /**
-     * 违规
+     * 非法
      */
     ILLEGAL
 }
