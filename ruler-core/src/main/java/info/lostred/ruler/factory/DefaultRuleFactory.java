@@ -13,29 +13,30 @@ import org.springframework.expression.ExpressionParser;
  */
 public class DefaultRuleFactory extends AbstractRuleFactory {
     private final ExpressionParser parser;
+    private final String[] scanPackages;
 
     public DefaultRuleFactory(ExpressionParser parser, String... scanPackages) {
         this.parser = parser;
-        if (scanPackages != null) {
-            this.registerFromPackages(scanPackages);
-        }
+        this.scanPackages = scanPackages;
+        this.registerFromPackages();
     }
 
     /**
      * 从包中注册规则信息与规则
-     *
-     * @param packages 包名数组
      */
-    private void registerFromPackages(String[] packages) {
-        for (String packageName : packages) {
+    private void registerFromPackages() {
+        if (scanPackages == null || scanPackages.length == 0) {
+            throw new IllegalArgumentException("Have not to set the scan packages.");
+        }
+        for (String packageName : scanPackages) {
             PackageScanUtils.getClasses(packageName).stream()
                     .filter(AbstractRule.class::isAssignableFrom)
                     .filter(e -> e.isAnnotationPresent(Rule.class))
                     .map(this::buildRuleDefinition)
                     .forEach(this::register);
         }
-        for (String ruleCode : this.ruleInfoMap.keySet()) {
-            RuleDefinition ruleDefinition = this.ruleInfoMap.get(ruleCode);
+        for (String ruleCode : this.ruleDefinitionMap.keySet()) {
+            RuleDefinition ruleDefinition = this.ruleDefinitionMap.get(ruleCode);
             this.createRule(ruleDefinition, parser);
         }
     }

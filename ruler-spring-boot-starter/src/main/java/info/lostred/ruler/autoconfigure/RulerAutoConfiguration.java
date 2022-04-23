@@ -6,11 +6,11 @@ import info.lostred.ruler.constant.EngineType;
 import info.lostred.ruler.engine.*;
 import info.lostred.ruler.factory.*;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.expression.BeanFactoryResolver;
@@ -18,7 +18,11 @@ import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -29,16 +33,12 @@ import java.util.stream.Collectors;
 @Configuration(proxyBeanMethods = false)
 public class RulerAutoConfiguration {
     @Bean
-    public String[] domainScanPackages(ApplicationContext applicationContext) {
-        Map<String, Object> beans = applicationContext.getBeansWithAnnotation(DomainScan.class);
-        return RulerAutoConfiguration.getConfigClasses(beans).stream()
-                .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()))
-                .toArray(String[]::new);
-    }
-
-    @Bean
     @ConditionalOnMissingBean
-    public DomainFactory domainFactory(String[] domainScanPackages) {
+    public DomainFactory domainFactory(DefaultListableBeanFactory defaultListableBeanFactory) {
+        String[] domainScanPackages = getConfigClasses(defaultListableBeanFactory, DomainScan.class).stream()
+                .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()))
+                .distinct()
+                .toArray(String[]::new);
         return new DomainFactory(domainScanPackages);
     }
 
@@ -61,16 +61,12 @@ public class RulerAutoConfiguration {
     @EnableConfigurationProperties(RulerProperties.class)
     public static class RuleAutoConfiguration {
         @Bean
-        public String[] ruleScanPackages(ApplicationContext applicationContext) {
-            Map<String, Object> beans = applicationContext.getBeansWithAnnotation(RuleScan.class);
-            return RulerAutoConfiguration.getConfigClasses(beans).stream()
-                    .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()))
-                    .toArray(String[]::new);
-        }
-
-        @Bean
         @ConditionalOnMissingBean
-        public RuleFactory ruleFactory(ExpressionParser parser, String[] ruleScanPackages) {
+        public RuleFactory ruleFactory(ExpressionParser parser, DefaultListableBeanFactory defaultListableBeanFactory) {
+            String[] ruleScanPackages = RulerAutoConfiguration.getConfigClasses(defaultListableBeanFactory, RuleScan.class).stream()
+                    .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()))
+                    .distinct()
+                    .toArray(String[]::new);
             return new DefaultRuleFactory(parser, ruleScanPackages);
         }
     }
@@ -113,15 +109,19 @@ public class RulerAutoConfiguration {
         }
     }
 
-    public static Set<Class<?>> getConfigClasses(Map<String, Object> beans) {
-        return beans.values().stream()
-                .map(bean -> {
-                    String className = bean.getClass().getName();
-                    if (className.contains("$$")) {
-                        className = className.substring(0, className.indexOf("$$"));
+    public static Set<Class<?>> getConfigClasses(DefaultListableBeanFactory defaultListableBeanFactory,
+                                                 Class<? extends Annotation> annotationClass) {
+        String[] beanNames = defaultListableBeanFactory.getBeanNamesForAnnotation(annotationClass);
+        return Arrays.stream(beanNames)
+                .map(defaultListableBeanFactory::getBeanDefinition)
+                .map(beanDefinition -> {
+                    String beanClassName = beanDefinition.getBeanClassName();
+                    assert beanClassName != null;
+                    if (beanClassName.contains("$$")) {
+                        beanClassName = beanClassName.substring(0, beanClassName.indexOf("$$"));
                     }
                     try {
-                        return RulerAutoConfiguration.class.getClassLoader().loadClass(className);
+                        return RulerAutoConfiguration.class.getClassLoader().loadClass(beanClassName);
                     } catch (ClassNotFoundException ignored) {
                         return null;
                     }

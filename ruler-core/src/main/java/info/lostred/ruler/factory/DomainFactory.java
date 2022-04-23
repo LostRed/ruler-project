@@ -16,24 +16,25 @@ import java.util.stream.Collectors;
  * @author lostred
  */
 public class DomainFactory {
-    private final Set<Class<?>> classSet = new HashSet<>();
+    private final Set<Class<?>> domainSet = new HashSet<>();
     private final Map<String, List<PropertyInfo>> propertyInfoMap = new HashMap<>();
+    private final String[] scanPackages;
 
     public DomainFactory(String... scanPackages) {
-        if (scanPackages != null) {
-            this.registerFromPackages(scanPackages);
-        }
+        this.scanPackages = scanPackages;
+        this.registerFromPackages();
     }
 
     /**
      * 从包中注册校验类信息
-     *
-     * @param packages 包名数组
      */
-    private void registerFromPackages(String[] packages) {
-        for (String packageName : packages) {
+    private void registerFromPackages() {
+        if (scanPackages == null || scanPackages.length == 0) {
+            throw new IllegalArgumentException("Have not to set the scan packages.");
+        }
+        for (String packageName : scanPackages) {
             PackageScanUtils.getClasses(packageName).stream()
-                    .peek(this.classSet::add)
+                    .peek(this.domainSet::add)
                     .forEach(e -> this.propertyInfoMap.put(e.getName(), this.getPropertyList(e)));
         }
     }
@@ -70,6 +71,6 @@ public class DomainFactory {
      * @return 领域模型类的类对象集合
      */
     public Set<Class<?>> getAllDomain() {
-        return this.classSet;
+        return this.domainSet;
     }
 }

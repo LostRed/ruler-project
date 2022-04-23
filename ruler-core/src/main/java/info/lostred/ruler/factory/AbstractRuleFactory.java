@@ -19,21 +19,21 @@ import java.util.stream.Collectors;
  * @author lostred
  */
 public abstract class AbstractRuleFactory implements RuleFactory {
-    protected final Map<String, RuleDefinition> ruleInfoMap = new ConcurrentHashMap<>();
+    protected final Map<String, RuleDefinition> ruleDefinitionMap = new ConcurrentHashMap<>();
     protected final Map<String, AbstractRule> rules = new ConcurrentHashMap<>();
 
     @Override
     public void register(RuleDefinition ruleDefinition) {
-        if (ruleInfoMap.containsKey(ruleDefinition.getRuleCode())) {
+        if (ruleDefinitionMap.containsKey(ruleDefinition.getRuleCode())) {
             throw new RuleInitializationException("Rule code '" + ruleDefinition.getRuleCode() + "' is repeat.", ruleDefinition);
         }
-        ruleInfoMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
+        ruleDefinitionMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
     }
 
     @Override
     public void register(AbstractRule rule) {
         RuleDefinition ruleDefinition = rule.getRuleDefinition();
-        ruleInfoMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
+        ruleDefinitionMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
         rules.put(ruleDefinition.getRuleCode(), rule);
     }
 
@@ -52,7 +52,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
 
     @Override
     public AbstractRule getRule(String ruleCode) {
-        if (!this.ruleInfoMap.containsKey(ruleCode)) {
+        if (!this.ruleDefinitionMap.containsKey(ruleCode)) {
             throw new IllegalArgumentException("This rule didn't register.");
         }
         return this.rules.get(ruleCode);
