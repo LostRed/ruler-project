@@ -25,16 +25,16 @@ public final class PackageScanUtils {
      */
     public static Set<Class<?>> getClasses(String scanBasePackage) {
         Set<Class<?>> classes = new HashSet<>();
-        String path = scanBasePackage.replaceAll("\\.", "/");
+        String relativePath = scanBasePackage.replaceAll("\\.", "/");
         try {
-            Enumeration<URL> enumeration = Thread.currentThread().getContextClassLoader().getResources(path);
+            Enumeration<URL> enumeration = Thread.currentThread().getContextClassLoader().getResources(relativePath);
             while (enumeration.hasMoreElements()) {
                 URL url = enumeration.nextElement();
                 List<File> files = new ArrayList<>();
                 if ("file".equals(url.getProtocol())) {
                     collectFiles(new File(url.getFile()), files);
                     for (File file : files) {
-                        String className = getClassName(file.getAbsolutePath(), path);
+                        String className = getClassName(file.getAbsolutePath(), relativePath);
                         loadClass(className).ifPresent(classes::add);
                     }
                 } else if ("jar".equals(url.getProtocol())) {
@@ -43,7 +43,7 @@ public final class PackageScanUtils {
                     while (entries.hasMoreElements()) {
                         JarEntry entry = entries.nextElement();
                         if (entry.getName().endsWith(".class")) {
-                            String className = getClassName(entry.getName(), path);
+                            String className = getClassName(entry.getName(), relativePath);
                             loadClass(className).ifPresent(classes::add);
                         }
                     }
@@ -86,16 +86,16 @@ public final class PackageScanUtils {
      * 获取全限定类名
      *
      * @param absolutePath 文件绝对路径
-     * @param path         包扫描文件夹相对路径
+     * @param relativePath 包扫描文件夹相对路径
      * @return 全限定类名
      */
-    private static String getClassName(String absolutePath, String path) {
+    private static String getClassName(String absolutePath, String relativePath) {
         absolutePath = absolutePath.replaceAll("\\\\", "/");
-        if (absolutePath.lastIndexOf(path) != -1) {
-            absolutePath = absolutePath.substring(absolutePath.lastIndexOf(path));
-            return absolutePath.replace(".class", "").replaceAll("/", ".");
+        if (absolutePath.lastIndexOf(relativePath) != -1) {
+            String path = absolutePath.substring(absolutePath.lastIndexOf(relativePath));
+            return path.replace(".class", "").replaceAll("/", ".");
         }
-        throw new IllegalArgumentException(".'" + absolutePath + "' is not contains '" + path + "'.");
+        throw new IllegalArgumentException(".'" + absolutePath + "' is not contains '" + relativePath + "'.");
     }
 
     /**
