@@ -39,6 +39,7 @@ public interface RulesEngine {
      * 根据规则编号获取引擎中的规则
      *
      * @param ruleCode 规则编号
+     * @return 规则
      */
     AbstractRule getRule(String ruleCode);
 
