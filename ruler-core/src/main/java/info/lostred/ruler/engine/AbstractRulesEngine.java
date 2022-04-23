@@ -195,11 +195,6 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     @Override
-    public void orderRules() {
-        this.rules.sort(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()));
-    }
-
-    @Override
     public void reloadRules() {
         List<AbstractRule> rules = ruleFactory.findRules(businessType).stream()
                 .filter(rule -> rule.getRuleDefinition().isEnabled())
