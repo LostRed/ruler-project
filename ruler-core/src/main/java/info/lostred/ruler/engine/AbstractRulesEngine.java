@@ -212,7 +212,9 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             if (rule.getRuleDefinition().isRequired()) {
                 throw new RuntimeException("The rule [" + ruleCode + "] is required.");
             }
-            return this.rules.remove(rule);
+            if (rule.getRuleDefinition().getRuleCode().equals(ruleCode)) {
+                return this.rules.remove(rule);
+            }
         }
         return false;
     }
