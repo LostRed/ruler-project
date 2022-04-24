@@ -181,7 +181,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             if (this.rules.get(i).getRuleDefinition().getOrder()
                     > rule.getRuleDefinition().getOrder()) {
                 this.rules.add(i, rule);
-                break;
+                return;
             }
         }
         this.rules.add(rule);
