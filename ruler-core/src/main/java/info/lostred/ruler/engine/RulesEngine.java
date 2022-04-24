@@ -2,6 +2,7 @@ package info.lostred.ruler.engine;
 
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
+import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -26,16 +27,18 @@ public interface RulesEngine {
      *
      * @param object 待校验的对象
      * @return 引擎执行的结果
+     * @throws RulesException 规则异常
      */
-    Result execute(Object object);
+    Result execute(Object object) throws RulesException;
 
     /**
      * 评估结果
      *
      * @param object 待校验的对象
      * @return 引擎执行的布尔结果，true为不通过，false为通过
+     * @throws RulesException 规则异常
      */
-    boolean evaluate(Object object);
+    boolean evaluate(Object object) throws RulesException;
 
     /**
      * 获取引擎中的所有规则定义
