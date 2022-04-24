@@ -209,10 +209,10 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             return false;
         }
         for (AbstractRule rule : this.rules) {
-            if (rule.getRuleDefinition().isRequired()) {
-                throw new RuntimeException("The rule [" + ruleCode + "] is required.");
-            }
             if (rule.getRuleDefinition().getRuleCode().equals(ruleCode)) {
+                if (rule.getRuleDefinition().isRequired()) {
+                    throw new RuntimeException("The rule [" + ruleCode + "] is required.");
+                }
                 return this.rules.remove(rule);
             }
         }
