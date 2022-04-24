@@ -1,7 +1,6 @@
 package info.lostred.ruler.engine;
 
 import info.lostred.ruler.domain.Result;
-import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
@@ -42,9 +41,8 @@ public abstract class DetailRulesEngine extends AbstractRulesEngine {
             }
         } catch (ExpressionException e) {
             String ruleCode = rule.getRuleDefinition().getRuleCode();
-            this.forceRemoveRule(ruleCode);
-            throw new RulesException("There are invalid expressions in rule [" + ruleCode + "], " +
-                    "it had be destroyed by rule engine.", e, rule.getRuleDefinition());
+            logger.warning("There are invalid expressions in rule [" + ruleCode + "], " +
+                    "it had be destroyed by rule engine.");
         }
     }
 }

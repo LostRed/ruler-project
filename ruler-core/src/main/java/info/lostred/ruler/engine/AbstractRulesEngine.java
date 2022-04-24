@@ -3,7 +3,6 @@ package info.lostred.ruler.engine;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
@@ -16,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static info.lostred.ruler.constant.SpELConstants.INDEX_KEY;
@@ -27,6 +27,7 @@ import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
  * @author lostred
  */
 public abstract class AbstractRulesEngine implements RulesEngine {
+    protected final Logger logger;
     private final RuleFactory ruleFactory;
     private final String businessType;
     protected final BeanResolver beanResolver;
@@ -35,6 +36,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
 
     public AbstractRulesEngine(RuleFactory ruleFactory, String businessType,
                                BeanResolver beanResolver, ExpressionParser parser) {
+        this.logger = Logger.getLogger(this.getClass().getName());
         this.ruleFactory = ruleFactory;
         this.businessType = businessType;
         this.beanResolver = beanResolver;
@@ -136,9 +138,9 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             }
         } catch (ExpressionException e) {
             String ruleCode = rule.getRuleDefinition().getRuleCode();
-            this.forceRemoveRule(ruleCode);
-            throw new RulesException("There are invalid expressions in rule [" + ruleCode + "], " +
-                    "it had be destroyed by rule engine.", e, rule.getRuleDefinition());
+            logger.warning("There are invalid expressions in rule [" + ruleCode + "], " +
+                    "it had be destroyed by rule engine.");
+            return false;
         }
     }
 
