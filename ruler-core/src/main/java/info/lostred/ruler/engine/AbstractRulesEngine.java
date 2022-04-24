@@ -3,13 +3,18 @@ package info.lostred.ruler.engine;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
+import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
+import org.springframework.expression.ExpressionException;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -120,14 +125,30 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * @return 结果，true表示不通过，false表示通过
      */
     protected boolean handle(StandardEvaluationContext context, Object object, AbstractRule rule) {
-        String parameterExp = rule.getRuleDefinition().getParameterExp();
-        if (parameterExp.contains(INDEX_LABEL)) {
-            String arrayExp = parameterExp.substring(0, parameterExp.indexOf(INDEX_LABEL));
-            Object[] array = parser.parseExpression(arrayExp).getValue(context, Object[].class);
-            return this.executeForArray(context, array, rule);
-        } else {
-            return this.executeForObject(context, object, rule);
+        try {
+            String parameterExp = rule.getRuleDefinition().getParameterExp();
+            if (parameterExp.contains(INDEX_LABEL)) {
+                String arrayExp = parameterExp.substring(0, parameterExp.indexOf(INDEX_LABEL));
+                Object[] array = parser.parseExpression(arrayExp).getValue(context, Object[].class);
+                return this.executeForArray(context, array, rule);
+            } else {
+                return this.executeForObject(context, object, rule);
+            }
+        } catch (ExpressionException e) {
+            String ruleCode = rule.getRuleDefinition().getRuleCode();
+            this.forceRemoveRule(ruleCode);
+            throw new RulesException("There are invalid expressions in rule [" + ruleCode + "], " +
+                    "it had be destroyed by rule engine.", e, rule.getRuleDefinition());
         }
+    }
+
+    /**
+     * 强制移除规则
+     *
+     * @param ruleCode 规则编号
+     */
+    protected void forceRemoveRule(String ruleCode) {
+        this.rules.removeIf(rule -> rule.getRuleDefinition().getRuleCode().equals(ruleCode));
     }
 
     @Override
