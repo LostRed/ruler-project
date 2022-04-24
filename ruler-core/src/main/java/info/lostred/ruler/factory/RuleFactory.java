@@ -38,6 +38,11 @@ public interface RuleFactory {
     void createRule(RuleDefinition ruleDefinition, ExpressionParser parser) throws RulesException;
 
     /**
+     * 销毁所有规则
+     */
+    void destroyAllRule();
+
+    /**
      * 销毁规则
      *
      * @param ruleCode 规则编号
