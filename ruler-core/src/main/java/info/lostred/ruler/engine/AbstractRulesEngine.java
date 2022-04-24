@@ -138,8 +138,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             }
         } catch (ExpressionException e) {
             String ruleCode = rule.getRuleDefinition().getRuleCode();
-            logger.warning("There are invalid expressions in rule [" + ruleCode + "], " +
-                    "it had be destroyed by rule engine.");
+            logger.warning("There are invalid expressions in rule [" + ruleCode + "].");
             return false;
         }
     }
