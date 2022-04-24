@@ -6,7 +6,6 @@ import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
-import org.springframework.expression.ExpressionException;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -27,7 +26,6 @@ import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
  * @author lostred
  */
 public abstract class AbstractRulesEngine implements RulesEngine {
-    protected final Logger logger;
     private final RuleFactory ruleFactory;
     private final String businessType;
     protected final BeanResolver beanResolver;
@@ -36,7 +34,6 @@ public abstract class AbstractRulesEngine implements RulesEngine {
 
     public AbstractRulesEngine(RuleFactory ruleFactory, String businessType,
                                BeanResolver beanResolver, ExpressionParser parser) {
-        this.logger = Logger.getLogger(this.getClass().getName());
         this.ruleFactory = ruleFactory;
         this.businessType = businessType;
         this.beanResolver = beanResolver;
@@ -127,19 +124,13 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * @return 结果，true表示不通过，false表示通过
      */
     protected boolean handle(StandardEvaluationContext context, Object object, AbstractRule rule) {
-        try {
-            String parameterExp = rule.getRuleDefinition().getParameterExp();
-            if (parameterExp.contains(INDEX_LABEL)) {
-                String arrayExp = parameterExp.substring(0, parameterExp.indexOf(INDEX_LABEL));
-                Object[] array = parser.parseExpression(arrayExp).getValue(context, Object[].class);
-                return this.executeForArray(context, array, rule);
-            } else {
-                return this.executeForObject(context, object, rule);
-            }
-        } catch (ExpressionException e) {
-            String ruleCode = rule.getRuleDefinition().getRuleCode();
-            logger.warning("There are invalid expressions in rule [" + ruleCode + "].");
-            return false;
+        String parameterExp = rule.getRuleDefinition().getParameterExp();
+        if (parameterExp.contains(INDEX_LABEL)) {
+            String arrayExp = parameterExp.substring(0, parameterExp.indexOf(INDEX_LABEL));
+            Object[] array = parser.parseExpression(arrayExp).getValue(context, Object[].class);
+            return this.executeForArray(context, array, rule);
+        } else {
+            return this.executeForObject(context, object, rule);
         }
     }
 

@@ -4,7 +4,6 @@ import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
-import org.springframework.expression.ExpressionException;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -30,18 +29,13 @@ public abstract class DetailRulesEngine extends AbstractRulesEngine {
      * @param rule    当前规则
      */
     protected void handle(StandardEvaluationContext context, Object object, Result result, AbstractRule rule) {
-        try {
-            String parameterExp = rule.getRuleDefinition().getParameterExp();
-            if (parameterExp.contains(INDEX_LABEL)) {
-                String arrayExp = parameterExp.substring(0, parameterExp.indexOf(INDEX_LABEL));
-                Object[] array = parser.parseExpression(arrayExp).getValue(context, Object[].class);
-                this.executeForArray(context, array, rule, result);
-            } else {
-                this.executeForObject(context, object, rule, result);
-            }
-        } catch (ExpressionException e) {
-            String ruleCode = rule.getRuleDefinition().getRuleCode();
-            logger.warning("There are invalid expressions in rule [" + ruleCode + "].");
+        String parameterExp = rule.getRuleDefinition().getParameterExp();
+        if (parameterExp.contains(INDEX_LABEL)) {
+            String arrayExp = parameterExp.substring(0, parameterExp.indexOf(INDEX_LABEL));
+            Object[] array = parser.parseExpression(arrayExp).getValue(context, Object[].class);
+            this.executeForArray(context, array, rule, result);
+        } else {
+            this.executeForObject(context, object, rule, result);
         }
     }
 }
