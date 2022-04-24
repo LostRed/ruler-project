@@ -193,19 +193,20 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     @Override
-    public boolean removeRule(String ruleCode) {
+    public AbstractRule removeRule(String ruleCode) {
         if (ruleCode == null) {
-            return false;
+            return null;
         }
-        for (AbstractRule rule : this.rules) {
+        for (int i = 0; i < this.rules.size(); i++) {
+            AbstractRule rule = this.rules.get(i);
             if (rule.getRuleDefinition().getRuleCode().equals(ruleCode)) {
                 if (rule.getRuleDefinition().isRequired()) {
                     throw new RuntimeException("The rule [" + ruleCode + "] is required.");
                 }
-                return this.rules.remove(rule);
+                return this.rules.remove(i);
             }
         }
-        return false;
+        return null;
     }
 
     @Override

@@ -70,9 +70,9 @@ public interface RulesEngine {
      * 移除规则
      *
      * @param ruleCode 规则编号
-     * @return 成功移除返回true，否则返回false
+     * @return 移除的规则
      */
-    boolean removeRule(String ruleCode);
+    AbstractRule removeRule(String ruleCode);
 
     /**
      * 重新载入规则
