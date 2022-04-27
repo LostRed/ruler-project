@@ -14,7 +14,7 @@ public class PropertyInfo implements Serializable {
     private Class<?> domainClass;
     private Class<?> propertyType;
     private String propertyName;
-    private boolean entityProperty;
+    private boolean nested;
 
     public static PropertyInfo of(PropertyDescriptor propertyDescriptor) {
         return new PropertyInfo(propertyDescriptor.getReadMethod().getDeclaringClass(),
@@ -29,7 +29,7 @@ public class PropertyInfo implements Serializable {
         this.domainClass = domainClass;
         this.propertyType = propertyType;
         this.propertyName = propertyName;
-        this.entityProperty = isEntity(propertyType);
+        this.nested = isNested(propertyType);
     }
 
     /**
@@ -38,7 +38,7 @@ public class PropertyInfo implements Serializable {
      * @param _class 类的类对象
      * @return 是返回true，否则返回false
      */
-    public static boolean isEntity(Class<?> _class) {
+    public static boolean isNested(Class<?> _class) {
         return !String.class.equals(_class)
                 && !Temporal.class.isAssignableFrom(_class)
                 && !Date.class.isAssignableFrom(_class)
@@ -57,17 +57,7 @@ public class PropertyInfo implements Serializable {
         return propertyName;
     }
 
-    public boolean isEntityProperty() {
-        return entityProperty;
-    }
-
-    @Override
-    public String toString() {
-        return "PropertyInfo{" +
-                "validClass=" + domainClass +
-                ", propertyType=" + propertyType +
-                ", propertyName='" + propertyName + '\'' +
-                ", entityProperty=" + entityProperty +
-                '}';
+    public boolean isNested() {
+        return nested;
     }
 }
