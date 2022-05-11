@@ -133,15 +133,6 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         }
     }
 
-    /**
-     * 强制移除规则
-     *
-     * @param ruleCode 规则编号
-     */
-    protected void forceRemoveRule(String ruleCode) {
-        this.rules.removeIf(rule -> rule.getRuleDefinition().getRuleCode().equals(ruleCode));
-    }
-
     @Override
     public String getBusinessType() {
         return businessType;
@@ -207,6 +198,11 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             }
         }
         return null;
+    }
+
+    @Override
+    public void forceRemoveRule(String ruleCode) {
+        this.rules.removeIf(rule -> rule.getRuleDefinition().getRuleCode().equals(ruleCode));
     }
 
     @Override

@@ -75,6 +75,13 @@ public interface RulesEngine {
     AbstractRule removeRule(String ruleCode);
 
     /**
+     * 强制移除规则
+     *
+     * @param ruleCode 规则编号
+     */
+    void forceRemoveRule(String ruleCode);
+
+    /**
      * 重新载入规则
      */
     void reloadRules();
