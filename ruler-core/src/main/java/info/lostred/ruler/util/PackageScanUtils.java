@@ -34,8 +34,11 @@ public final class PackageScanUtils {
                 if ("file".equals(url.getProtocol())) {
                     collectFiles(new File(url.getFile()), files);
                     for (File file : files) {
-                        String className = getClassName(file.getAbsolutePath(), relativePath);
-                        loadClass(className).ifPresent(classes::add);
+                        String absolutePath = file.getAbsolutePath().replaceAll("\\\\", "/");
+                        if (absolutePath.lastIndexOf(relativePath) != -1) {
+                            String className = getClassName(absolutePath, relativePath);
+                            loadClass(className).ifPresent(classes::add);
+                        }
                     }
                 } else if ("jar".equals(url.getProtocol())) {
                     JarURLConnection urlConnection = (JarURLConnection) url.openConnection();
@@ -43,8 +46,11 @@ public final class PackageScanUtils {
                     while (entries.hasMoreElements()) {
                         JarEntry entry = entries.nextElement();
                         if (entry.getName().endsWith(".class")) {
-                            String className = getClassName(entry.getName(), relativePath);
-                            loadClass(className).ifPresent(classes::add);
+                            String absolutePath = entry.getName().replaceAll("\\\\", "/");
+                            if (absolutePath.lastIndexOf(relativePath) != -1) {
+                                String className = getClassName(absolutePath, relativePath);
+                                loadClass(className).ifPresent(classes::add);
+                            }
                         }
                     }
                 }
@@ -90,12 +96,8 @@ public final class PackageScanUtils {
      * @return 全限定类名
      */
     private static String getClassName(String absolutePath, String relativePath) {
-        absolutePath = absolutePath.replaceAll("\\\\", "/");
-        if (absolutePath.lastIndexOf(relativePath) != -1) {
-            String path = absolutePath.substring(absolutePath.lastIndexOf(relativePath));
-            return path.replace(".class", "").replaceAll("/", ".");
-        }
-        throw new IllegalArgumentException(".'" + absolutePath + "' is not contains '" + relativePath + "'.");
+        String path = absolutePath.substring(absolutePath.lastIndexOf(relativePath));
+        return path.replace(".class", "").replaceAll("/", ".");
     }
 
     /**
