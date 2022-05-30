@@ -6,7 +6,6 @@ import info.lostred.ruler.rule.AbstractRule;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -43,7 +42,7 @@ public class RuleProxy implements MethodInterceptor {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(target.getClass());
         enhancer.setCallback(this);
-        return (T) enhancer.create(new Class[]{RuleDefinition.class, ExpressionParser.class}, new Object[]{null, null});
+        return (T) enhancer.create(new Class[]{RuleDefinition.class}, new Object[]{null});
     }
 
     @Override

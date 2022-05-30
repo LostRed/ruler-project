@@ -38,8 +38,8 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     }
 
     @Override
-    public void createRule(RuleDefinition ruleDefinition, ExpressionParser parser) {
-        AbstractRule rule = this.builder(ruleDefinition, parser).build();
+    public void createRule(RuleDefinition ruleDefinition) {
+        AbstractRule rule = this.builder(ruleDefinition).build();
         this.rules.put(ruleDefinition.getRuleCode(), rule);
     }
 
@@ -78,11 +78,10 @@ public abstract class AbstractRuleFactory implements RuleFactory {
      * 获取规则的建造者
      *
      * @param ruleDefinition 规则定义
-     * @param parser         表达式解析器
      * @return 某个规则的建造者实例对象
      */
-    public Builder builder(RuleDefinition ruleDefinition, ExpressionParser parser) {
-        return new Builder(ruleDefinition, parser);
+    public Builder builder(RuleDefinition ruleDefinition) {
+        return new Builder(ruleDefinition);
     }
 
     /**
@@ -90,18 +89,16 @@ public abstract class AbstractRuleFactory implements RuleFactory {
      */
     private static class Builder {
         private final RuleDefinition ruleDefinition;
-        private final ExpressionParser parser;
 
-        private Builder(RuleDefinition ruleDefinition, ExpressionParser parser) {
+        private Builder(RuleDefinition ruleDefinition) {
             this.ruleDefinition = ruleDefinition;
-            this.parser = parser;
         }
 
         public AbstractRule build() {
             Class<?> ruleClass = ruleDefinition.getRuleClass();
             try {
-                Constructor<?> constructor = ruleClass.getDeclaredConstructor(RuleDefinition.class, ExpressionParser.class);
-                Object object = constructor.newInstance(ruleDefinition, parser);
+                Constructor<?> constructor = ruleClass.getDeclaredConstructor(RuleDefinition.class);
+                Object object = constructor.newInstance(ruleDefinition);
                 if (object instanceof AbstractRule) {
                     //创建代理器
                     RuleProxy proxy = new RuleProxy((AbstractRule) object);

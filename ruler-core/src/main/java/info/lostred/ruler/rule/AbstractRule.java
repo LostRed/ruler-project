@@ -22,14 +22,9 @@ public class AbstractRule implements Judgement, Collector {
      * 规则信息
      */
     protected final RuleDefinition ruleDefinition;
-    /**
-     * 表达式解析器
-     */
-    protected final ExpressionParser parser;
 
-    public AbstractRule(RuleDefinition ruleDefinition, ExpressionParser parser) {
+    public AbstractRule(RuleDefinition ruleDefinition) {
         this.ruleDefinition = ruleDefinition;
-        this.parser = parser;
     }
 
     public RuleDefinition getRuleDefinition() {

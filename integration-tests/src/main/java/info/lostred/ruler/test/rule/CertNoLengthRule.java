@@ -3,7 +3,6 @@ package info.lostred.ruler.test.rule;
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
-import org.springframework.expression.ExpressionParser;
 
 @Rule(ruleCode = "身份证号码长度",
         businessType = "person",
@@ -12,7 +11,7 @@ import org.springframework.expression.ExpressionParser;
         conditionExp = "certNo!=null",
         predicateExp = "certNo.length()!=18")
 public class CertNoLengthRule extends AbstractRule {
-    public CertNoLengthRule(RuleDefinition ruleDefinition, ExpressionParser parser) {
-        super(ruleDefinition, parser);
+    public CertNoLengthRule(RuleDefinition ruleDefinition) {
+        super(ruleDefinition);
     }
 }

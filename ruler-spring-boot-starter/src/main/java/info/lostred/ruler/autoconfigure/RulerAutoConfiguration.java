@@ -71,18 +71,17 @@ public class RulerAutoConfiguration {
     public static class RuleAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
-        public RuleFactory ruleFactory(ExpressionParser parser,
-                                       DefaultListableBeanFactory defaultListableBeanFactory,
+        public RuleFactory ruleFactory(DefaultListableBeanFactory defaultListableBeanFactory,
                                        RulerProperties rulerProperties) {
             Stream<String> stream = getConfigClasses(defaultListableBeanFactory, RuleScan.class).stream()
                     .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()));
             if (rulerProperties.getRuleScanPackages() == null) {
-                return new DefaultRuleFactory(parser, stream.toArray(String[]::new));
+                return new DefaultRuleFactory(stream.toArray(String[]::new));
             }
             String[] ruleScanPackages = Stream.concat(stream, Arrays.stream(rulerProperties.getRuleScanPackages()))
                     .distinct()
                     .toArray(String[]::new);
-            return new DefaultRuleFactory(parser, ruleScanPackages);
+            return new DefaultRuleFactory(ruleScanPackages);
         }
     }
 

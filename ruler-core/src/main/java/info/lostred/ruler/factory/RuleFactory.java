@@ -3,7 +3,6 @@ package info.lostred.ruler.factory;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.rule.AbstractRule;
-import org.springframework.expression.ExpressionParser;
 
 import java.util.List;
 
@@ -32,10 +31,9 @@ public interface RuleFactory {
      * 创建规则
      *
      * @param ruleDefinition 规则定义
-     * @param parser         表达式解析器
      * @throws RulesException 规则异常
      */
-    void createRule(RuleDefinition ruleDefinition, ExpressionParser parser) throws RulesException;
+    void createRule(RuleDefinition ruleDefinition) throws RulesException;
 
     /**
      * 销毁所有规则

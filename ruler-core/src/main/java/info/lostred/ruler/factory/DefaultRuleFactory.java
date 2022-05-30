@@ -4,7 +4,6 @@ import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.util.PackageScanUtils;
-import org.springframework.expression.ExpressionParser;
 
 /**
  * 默认的规则工厂
@@ -12,11 +11,9 @@ import org.springframework.expression.ExpressionParser;
  * @author lostred
  */
 public class DefaultRuleFactory extends AbstractRuleFactory {
-    private final ExpressionParser parser;
     private final String[] scanPackages;
 
-    public DefaultRuleFactory(ExpressionParser parser, String... scanPackages) {
-        this.parser = parser;
+    public DefaultRuleFactory(String... scanPackages) {
         this.scanPackages = scanPackages;
         this.registerFromPackages();
     }
@@ -37,7 +34,7 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
         }
         for (String ruleCode : this.ruleDefinitionMap.keySet()) {
             RuleDefinition ruleDefinition = this.ruleDefinitionMap.get(ruleCode);
-            this.createRule(ruleDefinition, parser);
+            this.createRule(ruleDefinition);
         }
     }
 
