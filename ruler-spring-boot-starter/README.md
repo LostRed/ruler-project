@@ -5,7 +5,6 @@
 ### 引入依赖
 
 ```xml
-
 <dependency>
     <groupId>info.lostred.ruler</groupId>
     <artifactId>ruler-spring-boot-starter</artifactId>
@@ -30,7 +29,6 @@ ruler:
 使用注解初始化方式必须配置GlobalConfiguration，单实例规则引擎不能满足项目时，可自定义规则引擎。
 
 ```java
-
 import info.lostred.ruler.autoconfigure.RulerProperties;
 import info.lostred.ruler.core.ValidConfiguration;
 
@@ -135,7 +133,17 @@ class ApplicationTest {
 继承AbstractRule，重写接口方法即可实现自定义规则，若使用注解方式，需要在类上添加@Rule注解。
 
 ```java
-
+@Rule(ruleCode = "rule_01",
+        businessType = "person",    //自定义的业务类型
+        description = "身份证号码长度必须为18位",
+        parameterExp = "certNo",
+        conditionExp = "certNo!=null",
+        predicateExp = "certNo.length()!=18")
+public class CertNoLengthRule extends AbstractRule {
+    public CertNoLengthRule(RuleDefinition ruleDefinition, ExpressionParser parser) {
+        super(ruleDefinition, parser);
+    }
+}
 ```
 
 ### Rule注解
