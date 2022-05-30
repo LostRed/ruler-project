@@ -130,11 +130,12 @@ class ApplicationTest {
 
 ## 💻二次开发
 
-继承AbstractRule，重写接口方法即可实现自定义规则，若使用注解方式，需要在类上添加@Rule注解。
+继承AbstractRule，并在类上添加@Rule注解。以下提供了开发规则两种方式。
 
+1. 使用注解直接配置表达式
 ```java
 @Rule(ruleCode = "rule_01",
-        businessType = "person",    //自定义的业务类型
+        businessType = "person", //自定义的业务类型
         description = "身份证号码长度必须为18位",
         parameterExp = "certNo",
         conditionExp = "certNo!=null",
@@ -142,6 +143,36 @@ class ApplicationTest {
 public class CertNoLengthRule extends AbstractRule {
     public CertNoLengthRule(RuleDefinition ruleDefinition, ExpressionParser parser) {
         super(ruleDefinition, parser);
+    }
+}
+```
+
+2. 重写Judgement和Collector的接口方法
+```java
+@Rule(ruleCode = "rule_01",
+        businessType = "person", //自定义的业务类型
+        description = "身份证号码长度必须为18位")
+public class CertNoLengthRule extends AbstractRule {
+    public CertNoLengthRule(RuleDefinition ruleDefinition) {
+        super(ruleDefinition);
+    }
+
+    @Override
+    public boolean isSupported(EvaluationContext context, ExpressionParser parser, Object object) {
+        return object instanceof Person && ((Person) object).getCertNo() != null;
+    }
+
+    @Override
+    public boolean judge(EvaluationContext context, ExpressionParser parser, Object object) {
+        return ((Person) object).getCertNo().length() != 18;
+    }
+
+    @Override
+    public Map<String, Object> collectMappings(EvaluationContext context, ExpressionParser parser, Object object) {
+        String certNo = ((Person) object).getCertNo();
+        Map<String, Object> map = new HashMap<>(1);
+        map.put("certNo", certNo);
+        return map;
     }
 }
 ```

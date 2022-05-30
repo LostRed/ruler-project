@@ -67,19 +67,19 @@ public @interface Rule {
      *
      * @return 参数表达式
      */
-    String parameterExp();
+    String parameterExp() default "";
 
     /**
      * 条件表达式
      *
      * @return 条件表达式
      */
-    String conditionExp();
+    String conditionExp() default "";
 
     /**
      * 断定表达式
      *
      * @return 断定表达式
      */
-    String predicateExp();
+    String predicateExp() default "";
 }
