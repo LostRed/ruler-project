@@ -12,12 +12,12 @@ import java.util.Map;
  */
 public interface Collector {
     /**
-     * 生成校验报告
+     * 收集入参object中违规字段与值的映射关系
      *
      * @param context 评估上下文
      * @param parser  表达式解析器
      * @param object  参数
-     * @return 报告
+     * @return 违规字段与值的映射关系集合
      */
     Map<String, Object> collectMappings(EvaluationContext context, ExpressionParser parser, Object object);
 }

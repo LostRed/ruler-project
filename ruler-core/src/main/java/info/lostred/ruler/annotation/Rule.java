@@ -64,6 +64,7 @@ public @interface Rule {
 
     /**
      * 参数表达式
+     * <p>定义入参的取值字段</p>
      *
      * @return 参数表达式
      */
@@ -71,6 +72,7 @@ public @interface Rule {
 
     /**
      * 条件表达式
+     * <p>定义规则生效的条件，期望返回一个布尔值，值为true时规则才会生效</p>
      *
      * @return 条件表达式
      */
@@ -78,6 +80,7 @@ public @interface Rule {
 
     /**
      * 断定表达式
+     * <p>定义规则的运行逻辑，期望返回一个布尔值，值为true时表示参数不符合要求</p>
      *
      * @return 断定表达式
      */

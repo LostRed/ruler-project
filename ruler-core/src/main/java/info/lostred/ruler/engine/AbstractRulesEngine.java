@@ -96,7 +96,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     /**
-     * 针对对象参数执行
+     * 针对对象参数执行，并收集违规字段与值，放入结果中
      *
      * @param context 评估上下文
      * @param object  对象参数
