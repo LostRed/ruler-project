@@ -26,9 +26,21 @@ import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
  */
 public abstract class AbstractRulesEngine implements RulesEngine {
     private final RuleFactory ruleFactory;
+    /**
+     * 业务类型
+     */
     private final String businessType;
+    /**
+     * bean解析器
+     */
     protected final BeanResolver beanResolver;
+    /**
+     * 表达式解析器
+     */
     protected final ExpressionParser parser;
+    /**
+     * 规则引擎中的规则集合
+     */
     protected final List<AbstractRule> rules = new CopyOnWriteArrayList<>();
 
     public AbstractRulesEngine(RuleFactory ruleFactory, String businessType,

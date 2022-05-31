@@ -4,7 +4,6 @@ import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.proxy.RuleProxy;
 import info.lostred.ruler.rule.AbstractRule;
-import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -106,7 +105,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
                     return proxy.newProxyInstance();
                 }
                 throw new RulesException("Internal error: " + ruleClass.getName() +
-                        " cannot be instantiated, because it is not instance of Rule.", this.ruleDefinition);
+                        " cannot be instantiated, because it is not instance of AbstractRule.", this.ruleDefinition);
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                      IllegalAccessException e) {
                 throw new RulesException("Internal error: " + ruleClass.getName() +

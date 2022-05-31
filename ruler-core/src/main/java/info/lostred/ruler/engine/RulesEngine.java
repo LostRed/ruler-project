@@ -76,6 +76,7 @@ public interface RulesEngine {
 
     /**
      * 强制移除规则
+     * <p>用于规则工厂删除规则后</p>
      *
      * @param ruleCode 规则编号
      */
@@ -83,6 +84,7 @@ public interface RulesEngine {
 
     /**
      * 重新载入规则
+     * <p>重新初始化规则引擎中的规则</p>
      */
     void reloadRules();
 

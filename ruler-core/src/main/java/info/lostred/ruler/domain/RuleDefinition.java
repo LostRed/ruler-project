@@ -32,10 +32,12 @@ public class RuleDefinition {
     private String description;
     /**
      * 规则执行的顺序号
+     * <p>规则在规则引擎中先后执行的顺序，数值越小的优先会被执行</p>
      */
     private Integer order;
     /**
      * 是否强制使用
+     * <p>强制使用的规则无法在规则引擎中禁用</p>
      */
     private boolean required;
     /**
@@ -48,14 +50,17 @@ public class RuleDefinition {
     private Class<? extends AbstractRule> ruleClass;
     /**
      * 参数表达式
+     * <p>定义入参的取值字段</p>
      */
     private String parameterExp;
     /**
      * 条件表达式
+     * <p>定义规则生效的条件，期望返回一个布尔值，值为true时规则才会生效</p>
      */
     private String conditionExp;
     /**
      * 断定表达式
+     * <p>定义规则的运行逻辑，期望返回一个布尔值，值为true时表示参数不符合要求</p>
      */
     private String predicateExp;
 

@@ -16,7 +16,14 @@ import java.util.stream.Collectors;
  * @author lostred
  */
 public class DomainFactory {
+    /**
+     * 规则引擎入参类型集合
+     */
     private final Set<Class<?>> domainSet = new HashSet<>();
+    /**
+     * 规则引擎入参类型的字段信息地图
+     * <p>key为全限定类名，值为属性信息集合</p>
+     */
     private final Map<String, List<PropertyInfo>> propertyInfoMap = new HashMap<>();
     private final String[] scanPackages;
 

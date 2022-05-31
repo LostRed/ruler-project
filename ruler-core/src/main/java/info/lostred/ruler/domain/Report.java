@@ -13,7 +13,7 @@ public class Report {
      */
     private final RuleDefinition ruleDefinition;
     /**
-     * 非法字段与值的映射
+     * 违规字段与值的映射
      */
     private final Map<String, Object> errors;
 
@@ -26,11 +26,24 @@ public class Report {
         this.errors = new HashMap<>();
     }
 
+    /**
+     * 添加违规字段与值的映射
+     *
+     * @param fieldName 字段名
+     * @param value     值
+     * @return 返回调用对象
+     */
     public Report putError(String fieldName, Object value) {
         this.errors.put(fieldName, value);
         return this;
     }
 
+    /**
+     * 添加违规字段与值的映射的集合
+     *
+     * @param entries 映射集合
+     * @return 返回调用对象
+     */
     public Report putError(Set<Map.Entry<String, Object>> entries) {
         for (Map.Entry<String, Object> entry : entries) {
             this.errors.put(entry.getKey(), entry.getValue());
@@ -38,6 +51,12 @@ public class Report {
         return this;
     }
 
+    /**
+     * 添加违规字段与值的映射集合
+     *
+     * @param map 字段与值的键值对集合
+     * @return 返回调用对象
+     */
     public Report putError(Map<String, Object> map) {
         this.errors.putAll(map);
         return this;
@@ -53,8 +72,12 @@ public class Report {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Report report = (Report) o;
         return Objects.equals(ruleDefinition, report.ruleDefinition);
     }
@@ -67,8 +90,8 @@ public class Report {
     @Override
     public String toString() {
         return "Report{" +
-                "ruleInfo=" + ruleDefinition +
-                ", illegals=" + errors +
+                "ruleDefinition=" + ruleDefinition +
+                ", errors=" + errors +
                 '}';
     }
 }

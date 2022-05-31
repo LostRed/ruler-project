@@ -7,6 +7,7 @@ import java.util.Date;
 
 /**
  * 属性信息
+ * <p>规则引擎入参的字段属性信息</p>
  *
  * @author lostred
  */
@@ -14,6 +15,11 @@ public class PropertyInfo implements Serializable {
     private Class<?> domainClass;
     private Class<?> propertyType;
     private String propertyName;
+    /**
+     * 属性是否是内嵌类型
+     * <p>当属性不是String, Temporal, Date, Number类型时，值为true</p>
+     * 参考本类方法{@link PropertyInfo#isNested(Class)}
+     */
     private boolean nested;
 
     public static PropertyInfo of(PropertyDescriptor propertyDescriptor) {
@@ -33,7 +39,7 @@ public class PropertyInfo implements Serializable {
     }
 
     /**
-     * 是否是实体类类型
+     * 是否是内嵌类型
      *
      * @param _class 类的类对象
      * @return 是返回true，否则返回false

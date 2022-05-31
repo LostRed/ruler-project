@@ -61,7 +61,7 @@ public class Result implements Serializable {
     }
 
     /**
-     * 更新校验结果的严重等级，“违规”的优先级最高，其次是“可疑”，最后是“合格”
+     * 更新校验结果的严重等级，"ILLEGAL"的优先级最高，其次是"SUSPECTED"，最后是"QUALIFIED"
      *
      * @param grade 严重等级
      * @see Grade
