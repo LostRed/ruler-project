@@ -51,6 +51,7 @@ public interface RulesEngineFactory {
      * @param businessType     业务类型
      * @param beanResolver     Bean解析器
      * @param parser           表达式解析器
+     * @param globalFunctions  全局函数
      * @param rulesEngineClass 规则引擎类的类对象
      * @param <T>              规则引擎类型
      * @return 某个规则引擎类型的建造者实例对象
