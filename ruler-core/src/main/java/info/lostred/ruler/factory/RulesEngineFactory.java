@@ -7,6 +7,7 @@ import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,6 +35,13 @@ public interface RulesEngineFactory {
      * @return 规则引擎
      */
     RulesEngine getEngine(String businessType);
+
+    /**
+     * 获取所有规则引擎
+     *
+     * @return 规则引擎集合
+     */
+    Collection<? extends RulesEngine> getAllEngines();
 
     /**
      * 获取工厂的建造者对象

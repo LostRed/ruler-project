@@ -36,4 +36,9 @@ public class DefaultRulesEngineFactory implements RulesEngineFactory {
     public RulesEngine getEngine(String businessType) {
         return this.rulesEngines.get(businessType);
     }
+
+    @Override
+    public Collection<? extends RulesEngine> getAllEngines() {
+        return this.rulesEngines.values();
+    }
 }
