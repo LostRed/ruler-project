@@ -5,6 +5,7 @@ import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
@@ -103,4 +104,13 @@ public interface RulesEngine {
      * @param object  参数
      */
     void setVariable(StandardEvaluationContext context, String name, Object object);
+
+    /**
+     * 注册评估上下文函数
+     *
+     * @param context 评估上下文
+     * @param name    方法名
+     * @param method  方法
+     */
+    void registerFunction(StandardEvaluationContext context, String name, Method method);
 }

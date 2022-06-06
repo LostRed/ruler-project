@@ -9,6 +9,7 @@ import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -235,5 +236,10 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     @Override
     public void setVariable(StandardEvaluationContext context, String name, Object object) {
         context.setVariable(name, object);
+    }
+
+    @Override
+    public void registerFunction(StandardEvaluationContext context, String name, Method method) {
+        context.registerFunction(name, method);
     }
 }
