@@ -8,6 +8,9 @@ import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
 /**
  * 不完全执行返回详细结果的规则引擎
  *
@@ -15,14 +18,15 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
  */
 public class IncompleteRulesEngine extends DetailRulesEngine {
     public IncompleteRulesEngine(RuleFactory ruleFactory, String businessType,
-                                 BeanResolver beanResolver, ExpressionParser parser) {
-        super(ruleFactory, businessType, beanResolver, parser);
+                                 BeanResolver beanResolver, ExpressionParser parser, List<Method> globalFunctions) {
+        super(ruleFactory, businessType, beanResolver, parser, globalFunctions);
     }
 
     @Override
     public Result execute(Object object) {
         StandardEvaluationContext context = new StandardEvaluationContext(object);
         this.setBeanResolver(context);
+        this.registerFunctions(context, globalFunctions);
         Result result = Result.of();
         for (AbstractRule rule : rules) {
             this.handle(context, object, result, rule);

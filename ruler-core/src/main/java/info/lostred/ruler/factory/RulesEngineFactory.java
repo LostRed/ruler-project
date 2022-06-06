@@ -7,6 +7,7 @@ import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
@@ -55,9 +56,9 @@ public interface RulesEngineFactory {
      * @return 某个规则引擎类型的建造者实例对象
      */
     static <T extends AbstractRulesEngine> Builder<T> builder(RuleFactory ruleFactory, String businessType,
-                                                              BeanResolver beanResolver, ExpressionParser parser,
+                                                              BeanResolver beanResolver, ExpressionParser parser, List<Method> globalFunctions,
                                                               Class<T> rulesEngineClass) {
-        return new Builder<>(ruleFactory, businessType, beanResolver, parser, rulesEngineClass);
+        return new Builder<>(ruleFactory, businessType, beanResolver, parser, globalFunctions, rulesEngineClass);
     }
 
     /**
@@ -70,15 +71,17 @@ public interface RulesEngineFactory {
         private final String businessType;
         private final BeanResolver beanResolver;
         private final ExpressionParser parser;
+        private final List<Method> globalFunctions;
         private final Class<T> rulesEngineClass;
 
         public Builder(RuleFactory ruleFactory, String businessType,
-                       BeanResolver beanResolver, ExpressionParser parser,
+                       BeanResolver beanResolver, ExpressionParser parser, List<Method> globalFunctions,
                        Class<T> rulesEngineClass) {
             this.ruleFactory = ruleFactory;
             this.businessType = businessType;
             this.beanResolver = beanResolver;
             this.parser = parser;
+            this.globalFunctions = globalFunctions;
             this.rulesEngineClass = rulesEngineClass;
         }
 
@@ -90,8 +93,8 @@ public interface RulesEngineFactory {
         public T build() {
             try {
                 Constructor<T> constructor = rulesEngineClass.getDeclaredConstructor(
-                        RuleFactory.class, String.class, BeanResolver.class, ExpressionParser.class);
-                return constructor.newInstance(ruleFactory, businessType, beanResolver, parser);
+                        RuleFactory.class, String.class, BeanResolver.class, ExpressionParser.class, List.class);
+                return constructor.newInstance(ruleFactory, businessType, beanResolver, parser, globalFunctions);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {

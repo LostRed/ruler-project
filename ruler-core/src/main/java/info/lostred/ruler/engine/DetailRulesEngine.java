@@ -7,6 +7,9 @@ import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
 import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
 
 /**
@@ -16,8 +19,8 @@ import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
  */
 public abstract class DetailRulesEngine extends AbstractRulesEngine {
     public DetailRulesEngine(RuleFactory ruleFactory, String businessType,
-                             BeanResolver beanResolver, ExpressionParser parser) {
-        super(ruleFactory, businessType, beanResolver, parser);
+                             BeanResolver beanResolver, ExpressionParser parser, List<Method> globalFunctions) {
+        super(ruleFactory, businessType, beanResolver, parser, globalFunctions);
     }
 
     /**

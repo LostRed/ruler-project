@@ -109,8 +109,7 @@ public interface RulesEngine {
      * 注册评估上下文函数
      *
      * @param context 评估上下文
-     * @param name    方法名
-     * @param method  方法
+     * @param methods  方法集合
      */
-    void registerFunction(StandardEvaluationContext context, String name, Method method);
+    void registerFunctions(StandardEvaluationContext context, List<Method> methods);
 }

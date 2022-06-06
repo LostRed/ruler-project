@@ -40,16 +40,21 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      */
     protected final ExpressionParser parser;
     /**
+     * 全局函数
+     */
+    protected final List<Method> globalFunctions;
+    /**
      * 规则引擎中的规则集合
      */
     protected final List<AbstractRule> rules = new CopyOnWriteArrayList<>();
 
     public AbstractRulesEngine(RuleFactory ruleFactory, String businessType,
-                               BeanResolver beanResolver, ExpressionParser parser) {
+                               BeanResolver beanResolver, ExpressionParser parser, List<Method> globalFunctions) {
         this.ruleFactory = ruleFactory;
         this.businessType = businessType;
         this.beanResolver = beanResolver;
         this.parser = parser;
+        this.globalFunctions = globalFunctions;
         this.reloadRules();
     }
 
@@ -155,6 +160,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     public boolean evaluate(Object object) {
         StandardEvaluationContext context = new StandardEvaluationContext(object);
         this.setBeanResolver(context);
+        this.registerFunctions(context, globalFunctions);
         for (AbstractRule rule : rules) {
             if (this.handle(context, object, rule)) {
                 return true;
@@ -239,7 +245,11 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     @Override
-    public void registerFunction(StandardEvaluationContext context, String name, Method method) {
-        context.registerFunction(name, method);
+    public void registerFunctions(StandardEvaluationContext context, List<Method> methods) {
+        if (methods != null) {
+            for (Method method : methods) {
+                context.registerFunction(method.getName(), method);
+            }
+        }
     }
 }

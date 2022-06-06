@@ -22,10 +22,8 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -104,20 +102,21 @@ public class RulerAutoConfiguration {
         public RulesEngine rulesEngine(RuleFactory ruleFactory,
                                        BeanResolver beanResolver,
                                        ExpressionParser parser,
+                                       List<Method> globalFunctions,
                                        RulerProperties rulerProperties) {
             String type = rulerProperties.getEngineType().toUpperCase();
             String businessType = rulerProperties.getBusinessType();
             if (EngineType.COMPLETE.equals(EngineType.valueOf(type))) {
                 return RulesEngineFactory.builder(ruleFactory,
-                        businessType, beanResolver, parser,
+                        businessType, beanResolver, parser, globalFunctions,
                         CompleteRulesEngine.class).build();
             } else if (EngineType.INCOMPLETE.equals(EngineType.valueOf(type))) {
                 return RulesEngineFactory.builder(ruleFactory,
-                        businessType, beanResolver, parser,
+                        businessType, beanResolver, parser, globalFunctions,
                         IncompleteRulesEngine.class).build();
             } else {
                 return RulesEngineFactory.builder(ruleFactory,
-                        businessType, beanResolver, parser,
+                        businessType, beanResolver, parser, globalFunctions,
                         SimpleRulesEngine.class).build();
             }
         }
