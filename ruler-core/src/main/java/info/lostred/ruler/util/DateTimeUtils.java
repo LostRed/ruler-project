@@ -136,7 +136,7 @@ public final class DateTimeUtils {
         return sb.toString();
     }
 
-    public static boolean between(LocalDate data, String start, String end) {
+    public static boolean localDateBetween(LocalDate data, String start, String end) {
         LocalDate startDate = formatDate(start);
         LocalDate endDate = formatDate(end);
         startDate = startDate == null ? LocalDate.MIN : startDate;
@@ -145,7 +145,7 @@ public final class DateTimeUtils {
                 || data.isEqual(startDate) || data.isEqual(endDate);
     }
 
-    public static boolean between(LocalDateTime time, String start, String end) {
+    public static boolean localDateTimeBetween(LocalDateTime time, String start, String end) {
         LocalDateTime startTime = formatDateTime(start);
         LocalDateTime endTime = formatDateTime(end);
         startTime = startTime == null ? LocalDateTime.MIN : startTime;
@@ -154,7 +154,7 @@ public final class DateTimeUtils {
                 || time.isEqual(startTime) || time.isEqual(endTime);
     }
 
-    public static boolean between(Date date, String start, String end) {
+    public static boolean dateBetween(Date date, String start, String end) {
         Instant instant = date.toInstant();
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDateTime time = instant.atZone(zoneId).toLocalDateTime();

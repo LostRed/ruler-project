@@ -1,4 +1,4 @@
-package info.lostred.ruler.test.entity;
+package info.lostred.ruler.test.domain;
 
 public class Area {
     private String continent;

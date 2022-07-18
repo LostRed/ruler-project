@@ -10,8 +10,8 @@ import info.lostred.ruler.rule.AbstractRule;
         parameterExp = "gender",
         conditionExp = "gender!=null",
         predicateExp = "!@dict.get('gender').contains(gender)")
-public class GenderRule extends AbstractRule {
-    public GenderRule(RuleDefinition ruleDefinition) {
+public class GenderCodeRule extends AbstractRule {
+    public GenderCodeRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
 }

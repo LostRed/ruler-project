@@ -14,8 +14,10 @@ public class DomainFactoryTest {
     DomainFactory domainFactory;
 
     @Test
-    void test(){
-        List<PropertyInfo> propertyList = domainFactory.getPropertyList("info.lostred.ruler.test.entity.Person");
-        System.out.println(propertyList);
+    void printDomainProperties() {
+        List<PropertyInfo> propertyList = domainFactory.getPropertyList("info.lostred.ruler.test.domain.Person");
+        for (PropertyInfo propertyInfo : propertyList) {
+            System.out.println(propertyInfo.getPropertyType() + " " + propertyInfo.getPropertyName() + " " + propertyInfo.isNested());
+        }
     }
 }

@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.engine.RulesEngine;
 import info.lostred.ruler.factory.RulesEngineFactory;
-import info.lostred.ruler.test.entity.Area;
-import info.lostred.ruler.test.entity.Contact;
-import info.lostred.ruler.test.entity.Person;
+import info.lostred.ruler.test.domain.Area;
+import info.lostred.ruler.test.domain.Contact;
+import info.lostred.ruler.test.domain.Person;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ class RulesEngineTest {
         person.setGender("男");
         person.setAge(10);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date parse = simpleDateFormat.parse("2020-01-01");
+        Date parse = simpleDateFormat.parse("2019-01-01");
         person.setBirthday(parse);
         Area area = new Area();
         person.setArea(area);
@@ -56,7 +56,7 @@ class RulesEngineTest {
     }
 
     @Test
-    void rulesEngineFactoryTest() throws JsonProcessingException {
+    void executeTest() throws JsonProcessingException {
         RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
         long s = System.currentTimeMillis();
         Result result = rulesEngine.execute(person);

@@ -21,7 +21,7 @@ ruler:
   business-type: person #业务类型
   engine-type: complete #上述提到的规则引擎类型，默认为simple
   rule-default-scope: info.lostred.ruler.test.rule #规则类包扫描路径，与注解@RulerScan定义的路径会取并集并一起扫描
-  domain-default-scope: info.lostred.ruler.test.entity #领域模型类包扫描路径，与注解@DomainScan定义的路径会取并集并一起扫描
+  domain-default-scope: info.lostred.ruler.test.domain #领域模型类包扫描路径，与注解@DomainScan定义的路径会取并集并一起扫描
 ```
 
 ### 编写配置类(可选)
@@ -29,13 +29,15 @@ ruler:
 使用注解初始化方式必须配置GlobalConfiguration，单实例规则引擎不能满足项目时，可自定义规则引擎。
 
 ```java
-import info.lostred.ruler.autoconfigure.RulerProperties;
-import info.lostred.ruler.core.ValidConfiguration;
-
 @Configuration
 @RuleScan("info.lostred.ruler.test.rule")
-@DomainScan("info.lostred.ruler.test.entity")
+@DomainScan("info.lostred.ruler.test.domain")
 public class RulerConfig {
+    //注册全局函数，spEl表达式可以使用#methodName调用全局函数
+    @Bean
+    public List<Method> globalFunctions() {
+        return Arrays.asList(DateTimeUtils.class.getMethods());
+    }
 }
 ```
 
@@ -116,7 +118,7 @@ class ApplicationTest {
     }
 
     @Test
-    void rulesEngineFactoryTest() throws JsonProcessingException {
+    void executeTest() throws JsonProcessingException {
         RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
         long s = System.currentTimeMillis();
         Result result = rulesEngine.execute(person);
@@ -192,7 +194,7 @@ public class CertNoLengthRule extends AbstractRule {
 ```java
 @Configuration
 @RuleScan("info.lostred.ruler.test.rule")
-@DomainScan("info.lostred.ruler.test.entity")
+@DomainScan("info.lostred.ruler.test.domain")
 public class RulerConfig {
 }
 ```
