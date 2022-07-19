@@ -26,7 +26,7 @@ ruler:
 
 ### 编写配置类(可选)
 
-使用注解初始化方式必须配置GlobalConfiguration，单实例规则引擎不能满足项目时，可自定义规则引擎。
+使用注解初始化方式必须配置Configuration，单实例规则引擎不能满足项目时，可自定义规则引擎。
 
 ```java
 @Configuration
@@ -41,7 +41,7 @@ public class RulerConfig {
 }
 ```
 
-以上，Person为需要校验的类，下面是实体类的示例代码。
+以上，info.lostred.ruler.test.domain为需要校验类的包名路径，下面是需要校验类的示例代码。
 
 ```java
 @Data
@@ -128,7 +128,7 @@ class ApplicationTest {
 }
 ```
 
-这里注入的是RulesEngineFactory接口，使用该接口的dispatch()方法获取业务类型对应的规则引擎接口。当然也可以直接注入自己配置规则引擎的实现类。
+这里注入的是RulesEngineFactory接口，使用该接口的getEngine()方法获取业务类型对应的规则引擎接口。当然也可以直接注入自己配置规则引擎的实现类。
 
 ## 💻二次开发
 
