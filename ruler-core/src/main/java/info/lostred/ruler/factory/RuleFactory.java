@@ -16,7 +16,7 @@ public interface RuleFactory {
      * 注册规则定义
      *
      * @param ruleDefinition 规则定义
-     * @throws RulesException 规则异常
+     * @throws RulesException 注册规则定义失败时
      */
     void registerRuleDefinition(RuleDefinition ruleDefinition) throws RulesException;
 
@@ -31,14 +31,14 @@ public interface RuleFactory {
      * 创建规则
      *
      * @param ruleDefinition 规则定义
-     * @throws RulesException 规则异常
+     * @throws RulesException 实例化规则失败时
      */
     void createRule(RuleDefinition ruleDefinition) throws RulesException;
 
     /**
      * 销毁所有规则
      */
-    void destroyAllRule();
+    void destroyAllRules();
 
     /**
      * 销毁规则

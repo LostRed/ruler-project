@@ -19,7 +19,7 @@ import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
  */
 public class AbstractRule implements Judgement, Collector {
     /**
-     * 规则信息
+     * 规则定义
      */
     protected final RuleDefinition ruleDefinition;
 
@@ -32,7 +32,7 @@ public class AbstractRule implements Judgement, Collector {
     }
 
     @Override
-    public boolean isSupported(EvaluationContext context, ExpressionParser parser, Object object) {
+    public boolean supports(EvaluationContext context, ExpressionParser parser, Object object) {
         String conditionExp = ruleDefinition.getConditionExp();
         Boolean flag = parser.parseExpression(conditionExp).getValue(context, Boolean.class);
         return Boolean.TRUE.equals(flag);

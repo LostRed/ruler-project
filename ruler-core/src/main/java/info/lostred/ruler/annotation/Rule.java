@@ -6,8 +6,12 @@ import java.lang.annotation.*;
 
 /**
  * 规则注解
+ * <p>
+ * 规则工厂在初始化时，将会解析该注解中的属性，构建一个规则代理类
+ * </p>
  *
  * @author lostred
+ * @see info.lostred.ruler.factory.RuleFactory
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.lostred.ruler</groupId>
     <artifactId>integration-tests</artifactId>
-    <version>2.0.8</version>
+    <version>2.0.9</version>
     <name>integration tests</name>
     <description>tests for ruler project.</description>
 
@@ -19,7 +19,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.6.4</version>
+                <version>2.7.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>info.lostred.ruler</groupId>
             <artifactId>ruler-spring-boot-starter</artifactId>
-            <version>2.0.8</version>
+            <version>2.0.9</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

@@ -107,7 +107,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      */
     protected boolean executeForObject(StandardEvaluationContext context, Object object,
                                        AbstractRule rule) {
-        if (rule.isSupported(context, parser, object)) {
+        if (rule.supports(context, parser, object)) {
             return rule.judge(context, parser, object);
         }
         return false;
@@ -123,7 +123,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      */
     protected void executeForObject(StandardEvaluationContext context, Object object,
                                     AbstractRule rule, Result result) {
-        if (rule.isSupported(context, parser, object)) {
+        if (rule.supports(context, parser, object)) {
             if (rule.judge(context, parser, object)) {
                 Map<String, Object> map = rule.collectMappings(context, parser, object);
                 Report report = Report.of(rule.getRuleDefinition()).putError(map);

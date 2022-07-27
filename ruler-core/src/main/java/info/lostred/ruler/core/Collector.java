@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public interface Collector {
     /**
-     * 收集入参object中违规字段与值的映射关系
+     * 根据评估上下文与表达式解析器，收集入参object中字段与值的映射关系
      *
      * @param context 评估上下文
      * @param parser  表达式解析器

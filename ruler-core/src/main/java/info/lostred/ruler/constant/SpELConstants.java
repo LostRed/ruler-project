@@ -5,7 +5,7 @@ package info.lostred.ruler.constant;
  *
  * @author lostred
  */
-public class SpELConstants {
+public final class SpELConstants {
     public static final String INDEX_LABEL = "[#i]";
     public static final String INDEX = "#i";
     public static final String INDEX_KEY = "i";

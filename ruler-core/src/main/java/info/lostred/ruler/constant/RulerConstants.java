@@ -5,6 +5,6 @@ package info.lostred.ruler.constant;
  *
  * @author lostred
  */
-public class RulerConstants {
+public final class RulerConstants {
     public static final String COMMON_BUSINESS_TYPE = "COMMON";
 }
