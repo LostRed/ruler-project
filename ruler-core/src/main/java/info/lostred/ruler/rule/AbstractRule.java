@@ -17,7 +17,7 @@ import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
  *
  * @author lostred
  */
-public class AbstractRule implements Judgement, Collector {
+public abstract class AbstractRule implements Judgement, Collector {
     /**
      * 规则定义
      */
