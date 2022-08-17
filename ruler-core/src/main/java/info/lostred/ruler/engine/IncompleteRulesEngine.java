@@ -29,7 +29,7 @@ public class IncompleteRulesEngine extends DetailRulesEngine {
         this.registerFunctions(context, globalFunctions);
         Result result = Result.of();
         for (AbstractRule rule : rules) {
-            this.handle(context, object, result, rule);
+            this.handle(context, result, rule);
             if (Grade.ILLEGAL.equals(result.getGrade())) {
                 break;
             }

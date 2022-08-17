@@ -21,21 +21,21 @@ public class SpELRule extends AbstractRule {
     }
 
     @Override
-    public boolean supports(EvaluationContext context, ExpressionParser parser, Object object) {
+    public boolean supports(EvaluationContext context, ExpressionParser parser) {
         String conditionExp = ruleDefinition.getConditionExp();
         Boolean flag = parser.parseExpression(conditionExp).getValue(context, Boolean.class);
         return Boolean.TRUE.equals(flag);
     }
 
     @Override
-    public boolean judge(EvaluationContext context, ExpressionParser parser, Object object) {
+    public boolean judge(EvaluationContext context, ExpressionParser parser) {
         String predicateExp = ruleDefinition.getPredicateExp();
         Boolean flag = parser.parseExpression(predicateExp).getValue(context, Boolean.class);
         return Boolean.TRUE.equals(flag);
     }
 
     @Override
-    public Map<String, Object> collectMappings(EvaluationContext context, ExpressionParser parser, Object object) {
+    public Map<String, Object> collectMappings(EvaluationContext context, ExpressionParser parser) {
         Map<String, Object> map = new HashMap<>();
         String parameterExp = ruleDefinition.getParameterExp();
         Object value = parser.parseExpression(parameterExp).getValue(context);
