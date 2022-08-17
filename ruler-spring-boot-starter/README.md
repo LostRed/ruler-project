@@ -143,8 +143,8 @@ class ApplicationTest {
         conditionExp = "certNo!=null",
         predicateExp = "certNo.length()!=18")
 public class CertNoLengthRule extends AbstractRule {
-    public CertNoLengthRule(RuleDefinition ruleDefinition, ExpressionParser parser) {
-        super(ruleDefinition, parser);
+    public CertNoLengthRule(RuleDefinition ruleDefinition) {
+        super(ruleDefinition);
     }
 }
 ```
