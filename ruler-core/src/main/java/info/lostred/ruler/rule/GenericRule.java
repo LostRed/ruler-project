@@ -22,7 +22,17 @@ public abstract class GenericRule<T> extends SpELRule {
         Type type = this.getClass().getGenericSuperclass();
         if (type instanceof ParameterizedType) {
             Type[] types = ((ParameterizedType) type).getActualTypeArguments();
-            this.type = (Class<T>) types[0];
+            Type superType = types[0];
+            if (superType instanceof Class) {
+                this.type = (Class<T>) superType;
+            } else if (superType instanceof ParameterizedType) {
+                Type rawType = ((ParameterizedType) superType).getRawType();
+                if (rawType instanceof Class) {
+                    this.type = (Class<T>) rawType;
+                }
+            } else {
+                throw new IllegalArgumentException("GenericRule must be a parameterized type");
+            }
         }
     }
 
