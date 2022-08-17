@@ -49,6 +49,7 @@ class RulesEngineTest {
         person.setArea(area);
         Contact contact1 = new Contact();
         contact1.setArea(area);
+        contact1.setType("sdf");
         contact1.setPassword("1234");
         Contact contact2 = new Contact();
         contact2.setPassword("1234");

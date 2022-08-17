@@ -28,7 +28,7 @@ public class CompleteRulesEngine extends DetailRulesEngine {
         this.registerFunctions(context, globalFunctions);
         Result result = Result.of();
         for (AbstractRule rule : rules) {
-            this.handle(context, object, result, rule);
+            this.handle(context, result, rule);
         }
         result.statistic();
         return result;

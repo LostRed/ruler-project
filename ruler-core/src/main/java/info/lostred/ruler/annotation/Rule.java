@@ -74,7 +74,7 @@ public @interface Rule {
      *
      * @return 参数表达式
      */
-    String parameterExp() default "";
+    String parameterExp() default "#root";
 
     /**
      * 条件表达式
@@ -82,7 +82,7 @@ public @interface Rule {
      *
      * @return 条件表达式
      */
-    String conditionExp() default "";
+    String conditionExp() default "true";
 
     /**
      * 断定表达式
@@ -90,5 +90,5 @@ public @interface Rule {
      *
      * @return 断定表达式
      */
-    String predicateExp() default "";
+    String predicateExp() default "false";
 }

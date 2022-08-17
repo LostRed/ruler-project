@@ -72,7 +72,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             boolean flag = false;
             for (int i = 0; i < array.length; i++) {
                 context.setVariable(INDEX_KEY, i);
-                flag = flag || this.executeForObject(context, array[i], rule);
+                flag = flag || this.executeForObject(context, rule);
             }
             return flag;
         }
@@ -92,7 +92,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         if (array != null) {
             for (int i = 0; i < array.length; i++) {
                 context.setVariable(INDEX_KEY, i);
-                this.executeForObject(context, array[i], rule, result);
+                this.executeForObject(context, rule, result);
             }
         }
     }
@@ -101,14 +101,13 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * 针对对象参数执行
      *
      * @param context 评估上下文
-     * @param object  对象参数
      * @param rule    规则
      * @return 结果
      */
-    protected boolean executeForObject(StandardEvaluationContext context, Object object,
+    protected boolean executeForObject(StandardEvaluationContext context,
                                        AbstractRule rule) {
-        if (rule.supports(context, parser, object)) {
-            return rule.judge(context, parser, object);
+        if (rule.supports(context, parser)) {
+            return rule.judge(context, parser);
         }
         return false;
     }
@@ -117,15 +116,14 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * 针对对象参数执行，并收集违规字段与值，放入结果中
      *
      * @param context 评估上下文
-     * @param object  对象参数
      * @param rule    规则
      * @param result  引擎执行的结果
      */
-    protected void executeForObject(StandardEvaluationContext context, Object object,
+    protected void executeForObject(StandardEvaluationContext context,
                                     AbstractRule rule, Result result) {
-        if (rule.supports(context, parser, object)) {
-            if (rule.judge(context, parser, object)) {
-                Map<String, Object> map = rule.collectMappings(context, parser, object);
+        if (rule.supports(context, parser)) {
+            if (rule.judge(context, parser)) {
+                Map<String, Object> map = rule.collectMappings(context, parser);
                 Report report = Report.of(rule.getRuleDefinition()).putError(map);
                 result.addReport(report);
             }
@@ -136,18 +134,17 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * 针对无详细结果的处理
      *
      * @param context 评估上下文
-     * @param object  待校验的对象
      * @param rule    当前规则
      * @return 结果，true表示不通过，false表示通过
      */
-    protected boolean handle(StandardEvaluationContext context, Object object, AbstractRule rule) {
+    protected boolean handle(StandardEvaluationContext context, AbstractRule rule) {
         String parameterExp = rule.getRuleDefinition().getParameterExp();
         if (parameterExp.contains(INDEX_LABEL)) {
             String arrayExp = parameterExp.substring(0, parameterExp.indexOf(INDEX_LABEL));
             Object[] array = parser.parseExpression(arrayExp).getValue(context, Object[].class);
             return this.executeForArray(context, array, rule);
         } else {
-            return this.executeForObject(context, object, rule);
+            return this.executeForObject(context, rule);
         }
     }
 
@@ -162,7 +159,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.setBeanResolver(context);
         this.registerFunctions(context, globalFunctions);
         for (AbstractRule rule : rules) {
-            if (this.handle(context, object, rule)) {
+            if (this.handle(context, rule)) {
                 return true;
             }
         }

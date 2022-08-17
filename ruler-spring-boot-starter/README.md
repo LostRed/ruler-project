@@ -155,12 +155,12 @@ public class CertNoLengthRule extends SpELRule {
 2. 继承GenericDomainRule，重写GenericDomainRule的方法
 
 ```java
-import info.lostred.ruler.rule.GenericDomainRule;
+import info.lostred.ruler.rule.GenericRule;
 
 @Rule(ruleCode = "姓名必填",
         businessType = "person",
         description = "姓名不能为空")
-public class NameRule extends GenericDomainRule<Person> {
+public class NameRule extends GenericRule<Person> {
     public NameRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
