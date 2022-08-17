@@ -15,7 +15,7 @@ import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
  *
  * @author lostred
  */
-public abstract class SpELRule extends AbstractRule {
+public class SpELRule extends AbstractRule {
     public SpELRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
