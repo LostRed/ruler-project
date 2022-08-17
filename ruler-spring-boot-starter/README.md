@@ -152,36 +152,23 @@ public class CertNoLengthRule extends SpELRule {
 }
 ```
 
-2. 继承GenericDomainRule，重写GenericDomainRule的方法
+2. 继承GenericRule，重写GenericRule的方法
 
 ```java
 import info.lostred.ruler.rule.GenericRule;
 
 @Rule(ruleCode = "姓名必填",
         businessType = "person",
-        description = "姓名不能为空")
-public class NameRule extends GenericRule<Person> {
+        description = "姓名不能为空",
+        parameterExp = "name")
+public class NameRule extends GenericRule<String> {
     public NameRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
 
     @Override
-    protected boolean supports(Person object) {
-        return true;
-    }
-
-    @Override
-    protected boolean judge(Person object) {
-        return object.getName() == null;
-    }
-
-    @Override
-    protected Map<String, Object> collectMappings(Person object) {
-        Map<String, Object> map = new HashMap<>();
-        if (judge(object)) {
-            map.put("name", object.getName());
-        }
-        return map;
+    protected boolean doJudge(EvaluationContext context, ExpressionParser parser, String value) {
+        return value == null || value.isEmpty();
     }
 }
 ```
