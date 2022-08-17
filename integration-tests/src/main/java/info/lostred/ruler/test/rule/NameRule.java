@@ -29,9 +29,7 @@ public class NameRule extends GenericDomainRule<Person> {
     @Override
     protected Map<String, Object> collectMappings(Person object) {
         Map<String, Object> map = new HashMap<>();
-        if (judge(object)) {
-            map.put("name", object.getName());
-        }
+        map.put("name", object.getName());
         return map;
     }
 }
