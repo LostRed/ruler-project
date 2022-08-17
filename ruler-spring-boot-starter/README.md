@@ -134,46 +134,53 @@ class ApplicationTest {
 
 继承AbstractRule，并在类上添加@Rule注解。以下提供了开发规则两种方式。
 
-1. 使用注解直接配置表达式
+1. 继承SpELRule，使用注解直接配置表达式
+
 ```java
+import info.lostred.ruler.rule.SpELRule;
+
 @Rule(ruleCode = "rule_01",
         businessType = "person", //自定义的业务类型
         description = "身份证号码长度必须为18位",
         parameterExp = "certNo",
         conditionExp = "certNo!=null",
         predicateExp = "certNo.length()!=18")
-public class CertNoLengthRule extends AbstractRule {
+public class CertNoLengthRule extends SpELRule {
     public CertNoLengthRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
 }
 ```
 
-2. 重写Judgement和Collector的接口方法
+2. 继承GenericDomainRule，重写GenericDomainRule的方法
+
 ```java
-@Rule(ruleCode = "rule_01",
-        businessType = "person", //自定义的业务类型
-        description = "身份证号码长度必须为18位")
-public class CertNoLengthRule extends AbstractRule {
-    public CertNoLengthRule(RuleDefinition ruleDefinition) {
+import info.lostred.ruler.rule.GenericDomainRule;
+
+@Rule(ruleCode = "姓名必填",
+        businessType = "person",
+        description = "姓名不能为空")
+public class NameRule extends GenericDomainRule<Person> {
+    public NameRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
 
     @Override
-    public boolean isSupported(EvaluationContext context, ExpressionParser parser, Object object) {
-        return object instanceof Person && ((Person) object).getCertNo() != null;
+    protected boolean supports(Person object) {
+        return true;
     }
 
     @Override
-    public boolean judge(EvaluationContext context, ExpressionParser parser, Object object) {
-        return ((Person) object).getCertNo().length() != 18;
+    protected boolean judge(Person object) {
+        return object.getName() == null;
     }
 
     @Override
-    public Map<String, Object> collectMappings(EvaluationContext context, ExpressionParser parser, Object object) {
-        String certNo = ((Person) object).getCertNo();
-        Map<String, Object> map = new HashMap<>(1);
-        map.put("certNo", certNo);
+    protected Map<String, Object> collectMappings(Person object) {
+        Map<String, Object> map = new HashMap<>();
+        if (judge(object)) {
+            map.put("name", object.getName());
+        }
         return map;
     }
 }

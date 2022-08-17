@@ -2,7 +2,7 @@ package info.lostred.ruler.test.rule;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.rule.AbstractRule;
+import info.lostred.ruler.rule.SpELRule;
 
 @Rule(ruleCode = "生日范围",
         businessType = "person",
@@ -10,7 +10,7 @@ import info.lostred.ruler.rule.AbstractRule;
         parameterExp = "birthday",
         conditionExp = "birthday!=null",
         predicateExp = "!#dateBetween(birthday,'2020-01-01','2020-12-31')")
-public class BirthdayScopeRule extends AbstractRule {
+public class BirthdayScopeRule extends SpELRule {
     public BirthdayScopeRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }

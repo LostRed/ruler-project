@@ -36,7 +36,7 @@ public class DomainFactory {
      * 从包中注册校验类信息
      */
     private void registerFromPackages() {
-        if (scanPackages == null || scanPackages.length == 0) {
+        if (scanPackages == null) {
             throw new IllegalArgumentException("Have not to set the scan packages.");
         }
         for (String packageName : scanPackages) {

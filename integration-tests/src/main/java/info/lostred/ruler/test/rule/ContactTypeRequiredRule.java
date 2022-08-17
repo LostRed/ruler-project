@@ -2,7 +2,7 @@ package info.lostred.ruler.test.rule;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.rule.AbstractRule;
+import info.lostred.ruler.rule.SpELRule;
 
 @Rule(ruleCode = "联系方式类型必填",
         businessType = "person",
@@ -10,7 +10,7 @@ import info.lostred.ruler.rule.AbstractRule;
         parameterExp = "contacts[#i].type",
         conditionExp = "true",
         predicateExp = "contacts[#i].type==null||contacts[#i].type.isEmpty()")
-public class ContactTypeRequiredRule extends AbstractRule {
+public class ContactTypeRequiredRule extends SpELRule {
     public ContactTypeRequiredRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
