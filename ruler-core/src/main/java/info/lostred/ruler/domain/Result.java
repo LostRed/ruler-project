@@ -67,10 +67,9 @@ public class Result implements Serializable {
      * @see Grade
      */
     public void updateGrade(Grade grade) {
-        if (Grade.ILLEGAL.equals(grade)) {
-            this.grade = Grade.ILLEGAL;
-        } else if (Grade.SUSPECTED.equals(grade)) {
-            this.grade = Grade.SUSPECTED;
+        if (Grade.QUALIFIED.equals(this.grade)
+                || (Grade.SUSPECTED.equals(this.grade) && !Grade.QUALIFIED.equals(grade))) {
+            this.grade = grade;
         }
     }
 
