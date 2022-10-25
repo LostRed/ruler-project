@@ -2,6 +2,7 @@ package info.lostred.ruler.engine;
 
 import info.lostred.ruler.constant.Grade;
 import info.lostred.ruler.domain.Result;
+import info.lostred.ruler.exception.RulesEnginesException;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
@@ -29,7 +30,11 @@ public class IncompleteRulesEngine extends DetailRulesEngine {
         this.registerFunctions(context, globalFunctions);
         Result result = Result.of();
         for (AbstractRule rule : rules) {
-            this.handle(context, result, rule);
+            try {
+                this.handle(context, result, rule);
+            } catch (Exception e) {
+                throw new RulesEnginesException("rule[" + rule.getRuleDefinition().getRuleCode() + "] has occurred an exception: " + e.getMessage(), this.getBusinessType(), this.getClass());
+            }
             if (Grade.ILLEGAL.equals(result.getGrade())) {
                 break;
             }

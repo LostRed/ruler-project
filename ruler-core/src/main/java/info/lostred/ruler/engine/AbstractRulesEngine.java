@@ -3,6 +3,7 @@ package info.lostred.ruler.engine;
 import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
+import info.lostred.ruler.exception.RulesEnginesException;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
@@ -159,8 +160,12 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.setBeanResolver(context);
         this.registerFunctions(context, globalFunctions);
         for (AbstractRule rule : rules) {
-            if (this.handle(context, rule)) {
-                return true;
+            try {
+                if (this.handle(context, rule)) {
+                    return true;
+                }
+            } catch (Exception e) {
+                throw new RulesEnginesException("rule[" + rule.getRuleDefinition().getRuleCode() + "] has occurred an exception: " + e.getMessage(), this.getBusinessType(), this.getClass());
             }
         }
         return false;
