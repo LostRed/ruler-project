@@ -138,10 +138,12 @@ class RulesEngineTest {
 1. 继承DeclarativeRule，采用声明式开发，使用注解直接配置表达式
 
 ```java
+import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.DeclarativeRule;
 
-@Rule(ruleCode = "rule_01",
-        businessType = "person", //自定义的业务类型
+@Rule(ruleCode = "身份证号码长度",
+        businessType = "person",
         description = "身份证号码长度必须为18位",
         parameterExp = "certNo",
         conditionExp = "certNo!=null",
@@ -156,6 +158,8 @@ public class CertNoLengthRule extends DeclarativeRule {
 2. 继承ProgrammaticRule，采用编程式开发，重写ProgrammaticRule的方法
 
 ```java
+import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.ProgrammaticRule;
 
 @Rule(ruleCode = "姓名必填",
@@ -168,7 +172,12 @@ public class NameRule extends ProgrammaticRule<String> {
     }
 
     @Override
-    protected boolean doJudge(EvaluationContext context, ExpressionParser parser, String value) {
+    protected boolean doSupports(String value) {
+        return true;
+    }
+
+    @Override
+    protected boolean doJudge(String value) {
         return value == null || value.isEmpty();
     }
 }

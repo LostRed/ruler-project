@@ -38,17 +38,27 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
         }
     }
 
+    /**
+     * 解析参数值
+     *
+     * @param context 评估上下文
+     * @param parser  表达式解析器
+     * @return 解析后的参数值
+     */
+    protected T parseParameter(EvaluationContext context, ExpressionParser parser) {
+        String parameterExp = ruleDefinition.getParameterExp();
+        return parser.parseExpression(parameterExp).getValue(context, type);
+    }
+
     @Override
     public boolean supports(EvaluationContext context, ExpressionParser parser) {
-        String parameterExp = this.ruleDefinition.getParameterExp();
-        T value = parser.parseExpression(parameterExp).getValue(context, type);
+        T value = this.parseParameter(context, parser);
         return this.doSupports(value);
     }
 
     @Override
     public boolean judge(EvaluationContext context, ExpressionParser parser) {
-        String parameterExp = this.ruleDefinition.getParameterExp();
-        T value = parser.parseExpression(parameterExp).getValue(context, type);
+        T value = this.parseParameter(context, parser);
         return this.doJudge(value);
     }
 
