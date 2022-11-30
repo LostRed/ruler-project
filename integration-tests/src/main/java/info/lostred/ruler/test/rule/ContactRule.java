@@ -4,8 +4,6 @@ import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.GenericRule;
 import info.lostred.ruler.test.domain.Contact;
-import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.ExpressionParser;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class ContactRule extends GenericRule<List<Contact>> {
     }
 
     @Override
-    protected boolean doJudge(EvaluationContext context, ExpressionParser parser, List<Contact> value) {
+    protected boolean doJudge(List<Contact> value) {
         return value.stream().anyMatch(e -> e.getPassword().equals("1234"));
     }
 }

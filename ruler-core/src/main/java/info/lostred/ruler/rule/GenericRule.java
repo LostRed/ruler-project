@@ -40,16 +40,14 @@ public abstract class GenericRule<T> extends SpELRule {
     public boolean judge(EvaluationContext context, ExpressionParser parser) {
         String parameterExp = this.ruleDefinition.getParameterExp();
         T value = parser.parseExpression(parameterExp).getValue(context, type);
-        return this.doJudge(context, parser, value);
+        return this.doJudge(value);
     }
 
     /**
      * 判断校验值是否满足给定条件
      *
-     * @param context 评估上下文
-     * @param parser  表达式解析器
-     * @param value   校验值
+     * @param value 校验值
      * @return 满足返回true，否则返回false
      */
-    protected abstract boolean doJudge(EvaluationContext context, ExpressionParser parser, T value);
+    protected abstract boolean doJudge(T value);
 }
