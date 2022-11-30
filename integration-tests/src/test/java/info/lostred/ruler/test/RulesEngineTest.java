@@ -12,11 +12,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.expression.EvaluationContext;
 
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @SpringBootTest
 class RulesEngineTest {
@@ -26,6 +29,8 @@ class RulesEngineTest {
     RulesEngineFactory rulesEngineFactory;
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    List<Method> globalFunctions;
 
     String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
@@ -56,12 +61,15 @@ class RulesEngineTest {
         person.setContacts(Arrays.asList(contact1, contact2));
     }
 
+
     @Test
     void executeTest() throws JsonProcessingException {
         RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
         long s = System.currentTimeMillis();
-        Result result = rulesEngine.execute(person);
+        EvaluationContext context = rulesEngine.createEvaluationContext(person);
+        rulesEngine.execute(context);
         long e = System.currentTimeMillis();
+        Result result = rulesEngine.getResult(context);
         printResult(result, s, e);
     }
 }

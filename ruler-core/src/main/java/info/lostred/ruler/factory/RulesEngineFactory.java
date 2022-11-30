@@ -94,8 +94,8 @@ public interface RulesEngineFactory {
         public T build() {
             try {
                 Constructor<T> constructor = rulesEngineClass.getDeclaredConstructor(
-                        RuleFactory.class, String.class, BeanResolver.class, ExpressionParser.class, List.class);
-                return constructor.newInstance(ruleFactory, businessType, beanResolver, parser, globalFunctions);
+                        RuleFactory.class, String.class, ExpressionParser.class);
+                return constructor.newInstance(ruleFactory, businessType, parser);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {

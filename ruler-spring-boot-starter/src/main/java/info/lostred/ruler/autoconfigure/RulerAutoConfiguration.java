@@ -6,7 +6,6 @@ import info.lostred.ruler.constant.EngineType;
 import info.lostred.ruler.engine.CompleteRulesEngine;
 import info.lostred.ruler.engine.IncompleteRulesEngine;
 import info.lostred.ruler.engine.RulesEngine;
-import info.lostred.ruler.engine.SimpleRulesEngine;
 import info.lostred.ruler.factory.*;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -110,14 +109,10 @@ public class RulerAutoConfiguration {
                 return RulesEngineFactory.builder(ruleFactory,
                         businessType, beanResolver, parser, globalFunctions,
                         CompleteRulesEngine.class).build();
-            } else if (EngineType.INCOMPLETE.equals(EngineType.valueOf(type))) {
-                return RulesEngineFactory.builder(ruleFactory,
-                        businessType, beanResolver, parser, globalFunctions,
-                        IncompleteRulesEngine.class).build();
             } else {
                 return RulesEngineFactory.builder(ruleFactory,
                         businessType, beanResolver, parser, globalFunctions,
-                        SimpleRulesEngine.class).build();
+                        IncompleteRulesEngine.class).build();
             }
         }
     }

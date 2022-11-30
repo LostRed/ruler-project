@@ -11,11 +11,7 @@ public enum EngineType {
      */
     COMPLETE,
     /**
-     * 规则引擎在生成非法报告时将结束执行
+     * 规则引擎在非法等级规则触发后将结束执行
      */
-    INCOMPLETE,
-    /**
-     * 规则引擎不生成报告，只返回一个布尔值，值为true时表示违规，结果为false时表示不违规
-     */
-    SIMPLE
+    INCOMPLETE
 }

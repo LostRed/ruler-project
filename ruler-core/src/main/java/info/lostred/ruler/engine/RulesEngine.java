@@ -3,9 +3,8 @@ package info.lostred.ruler.engine;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.expression.EvaluationContext;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 
@@ -16,27 +15,34 @@ import java.util.List;
  */
 public interface RulesEngine {
     /**
+     * 创建评估上下文
+     *
+     * @param input 执行入参
+     * @return 评估上下文
+     */
+    EvaluationContext createEvaluationContext(Object input);
+
+    /**
+     * 执行
+     *
+     * @param context 评估上下文
+     */
+    void execute(EvaluationContext context);
+
+    /**
+     * 获取执行结果
+     *
+     * @param context 评估上下文
+     * @return 执行结果
+     */
+    Result getResult(EvaluationContext context);
+
+    /**
      * 获取引擎的业务类型
      *
      * @return 业务类型
      */
     String getBusinessType();
-
-    /**
-     * 执行规则
-     *
-     * @param object 待校验的对象
-     * @return 引擎执行的结果
-     */
-    Result execute(Object object);
-
-    /**
-     * 评估结果
-     *
-     * @param object 待校验的对象
-     * @return 引擎执行的布尔结果，true为不通过，false为通过
-     */
-    boolean evaluate(Object object);
 
     /**
      * 获取引擎中的所有规则定义
@@ -88,28 +94,4 @@ public interface RulesEngine {
      * <p>重新初始化规则引擎中的规则</p>
      */
     void reloadRules();
-
-    /**
-     * 设置bean解析器
-     *
-     * @param context 评估上下文
-     */
-    void setBeanResolver(StandardEvaluationContext context);
-
-    /**
-     * 设置评估上下文参数
-     *
-     * @param context 评估上下文
-     * @param name    参数名
-     * @param object  参数
-     */
-    void setVariable(StandardEvaluationContext context, String name, Object object);
-
-    /**
-     * 注册评估上下文函数
-     *
-     * @param context 评估上下文
-     * @param methods 方法集合
-     */
-    void registerFunctions(StandardEvaluationContext context, List<Method> methods);
 }

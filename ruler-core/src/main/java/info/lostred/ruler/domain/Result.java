@@ -3,9 +3,7 @@ package info.lostred.ruler.domain;
 import info.lostred.ruler.constant.Grade;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 引擎执行的结果
@@ -17,14 +15,6 @@ public class Result implements Serializable {
      * 校验结果等级
      */
     private Grade grade;
-    /**
-     * 可疑字段数量
-     */
-    private long suspectedCount;
-    /**
-     * 违规字段数量
-     */
-    private long illegalCount;
     /**
      * 校验报告集合
      */
@@ -39,7 +29,7 @@ public class Result implements Serializable {
      * @return 校验结果
      * @see Grade
      */
-    public static Result of() {
+    public static Result newInstance() {
         Result result = new Result();
         result.grade = Grade.QUALIFIED;
         result.reports = new HashMap<>();
@@ -47,17 +37,12 @@ public class Result implements Serializable {
     }
 
     /**
-     * 添加一份报告
-     *
-     * @param report 报告
+     * 添加一个初始值
      */
-    public void addReport(Report report) {
-        String ruleCode = report.getRuleDefinition().getRuleCode();
-        Report existed = this.reports.putIfAbsent(ruleCode, report);
-        if (existed != null) {
-            existed.putError(report.getErrors());
-        }
-        this.updateGrade(report.getRuleDefinition().getGrade());
+    public void addInitValue(RuleDefinition ruleDefinition, Object value) {
+        Report report = Report.newInstance(ruleDefinition.getDescription(), value);
+        this.reports.put(ruleDefinition.getRuleCode(), report);
+        this.updateGrade(ruleDefinition.getGrade());
     }
 
     /**
@@ -73,42 +58,26 @@ public class Result implements Serializable {
         }
     }
 
-    /**
-     * 统计可疑与违规字段数量
-     */
-    public void statistic() {
-        this.suspectedCount = reports.values().stream()
-                .filter(e -> Grade.SUSPECTED.equals(e.getRuleDefinition().getGrade()))
-                .mapToLong(e -> e.getErrors().size())
-                .sum();
-        this.illegalCount = reports.values().stream()
-                .filter(e -> Grade.ILLEGAL.equals(e.getRuleDefinition().getGrade()))
-                .mapToLong(e -> e.getErrors().size())
-                .sum();
-    }
-
     public Grade getGrade() {
         return grade;
     }
 
-    public long getSuspectedCount() {
-        return suspectedCount;
-    }
-
-    public long getIllegalCount() {
-        return illegalCount;
+    public void setGrade(Grade grade) {
+        this.grade = grade;
     }
 
     public Map<String, Report> getReports() {
-        return Collections.unmodifiableMap(this.reports);
+        return reports;
+    }
+
+    public void setReports(Map<String, Report> reports) {
+        this.reports = reports;
     }
 
     @Override
     public String toString() {
         return "Result{" +
-                "grade='" + grade + '\'' +
-                ", suspectedCount=" + suspectedCount +
-                ", illegalCount=" + illegalCount +
+                "grade=" + grade +
                 ", reports=" + reports +
                 '}';
     }

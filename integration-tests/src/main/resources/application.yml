@@ -9,3 +9,8 @@ logging:
     info.lostred.ruler.rule: debug
     info.lostred.ruler.engine: debug
     info.lostred.ruler.test.rule: debug
+
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8

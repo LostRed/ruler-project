@@ -1,12 +1,11 @@
 package info.lostred.ruler.engine;
 
-import info.lostred.ruler.domain.Report;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.exception.RulesEnginesException;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
+import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -14,12 +13,10 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-import static info.lostred.ruler.constant.SpELConstants.INDEX_KEY;
-import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
+import static info.lostred.ruler.constant.RulerConstants.RESULT;
 
 /**
  * 抽象规则引擎
@@ -27,6 +24,9 @@ import static info.lostred.ruler.constant.SpELConstants.INDEX_LABEL;
  * @author lostred
  */
 public abstract class AbstractRulesEngine implements RulesEngine {
+    /**
+     * 规则工厂
+     */
     private final RuleFactory ruleFactory;
     /**
      * 业务类型
@@ -59,25 +59,22 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.reloadRules();
     }
 
-    /**
-     * 针对数组参数执行
-     *
-     * @param context 评估上下文
-     * @param array   数组参数
-     * @param rule    规则
-     * @return 结果，数组中的所有元素有一个不通过时返回true，否则返回false
-     */
-    protected boolean executeForArray(StandardEvaluationContext context, Object[] array,
-                                      AbstractRule rule) {
-        if (array != null) {
-            boolean flag = false;
-            for (int i = 0; i < array.length; i++) {
-                context.setVariable(INDEX_KEY, i);
-                flag = flag || this.executeForObject(context, rule);
+    @Override
+    public EvaluationContext createEvaluationContext(Object input) {
+        StandardEvaluationContext context = new StandardEvaluationContext(input);
+        context.setVariable(RESULT, Result.newInstance());
+        context.setBeanResolver(beanResolver);
+        if (this.globalFunctions != null) {
+            for (Method method : globalFunctions) {
+                context.registerFunction(method.getName(), method);
             }
-            return flag;
         }
-        return false;
+        return context;
+    }
+
+    @Override
+    public Result getResult(EvaluationContext context) {
+        return this.parser.parseExpression("#" + RESULT).getValue(context, Result.class);
     }
 
     /**
@@ -86,16 +83,17 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * @param context 评估上下文
      * @param array   数组参数
      * @param rule    规则
-     * @param result  引擎执行的结果
+     * @return 结果，数组中的所有元素有一个不通过时返回true，否则返回false
      */
-    protected void executeForArray(StandardEvaluationContext context, Object[] array,
-                                   AbstractRule rule, Result result) {
+    protected boolean executeForArray(EvaluationContext context, ExpressionParser parser, Object[] array, AbstractRule rule) {
         if (array != null) {
+            boolean flag = false;
             for (int i = 0; i < array.length; i++) {
-                context.setVariable(INDEX_KEY, i);
-                this.executeForObject(context, rule, result);
+                flag = flag || this.executeForObject(context, parser, rule);
             }
+            return flag;
         }
+        return false;
     }
 
     /**
@@ -105,70 +103,36 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * @param rule    规则
      * @return 结果
      */
-    protected boolean executeForObject(StandardEvaluationContext context,
-                                       AbstractRule rule) {
+    protected boolean executeForObject(EvaluationContext context, ExpressionParser parser, AbstractRule rule) {
         if (rule.supports(context, parser)) {
-            return rule.judge(context, parser);
+            boolean flag = rule.judge(context, parser);
+            if (flag) {
+                rule.handle(context, parser);
+            }
+            return flag;
         }
         return false;
     }
 
     /**
-     * 针对对象参数执行，并收集违规字段与值，放入结果中
-     *
-     * @param context 评估上下文
-     * @param rule    规则
-     * @param result  引擎执行的结果
-     */
-    protected void executeForObject(StandardEvaluationContext context,
-                                    AbstractRule rule, Result result) {
-        if (rule.supports(context, parser)) {
-            if (rule.judge(context, parser)) {
-                Map<String, Object> map = rule.collectMappings(context, parser);
-                Report report = Report.of(rule.getRuleDefinition()).putError(map);
-                result.addReport(report);
-            }
-        }
-    }
-
-    /**
-     * 针对无详细结果的处理
+     * 规则执行
      *
      * @param context 评估上下文
      * @param rule    当前规则
-     * @return 结果，true表示不通过，false表示通过
      */
-    protected boolean handle(StandardEvaluationContext context, AbstractRule rule) {
+    protected boolean ruleExecute(EvaluationContext context, AbstractRule rule) {
         String parameterExp = rule.getRuleDefinition().getParameterExp();
-        if (parameterExp.contains(INDEX_LABEL)) {
-            String arrayExp = parameterExp.substring(0, parameterExp.indexOf(INDEX_LABEL));
-            Object[] array = parser.parseExpression(arrayExp).getValue(context, Object[].class);
-            return this.executeForArray(context, array, rule);
+        if (parameterExp.contains(".?") || parameterExp.contains(".!")) {
+            Object[] array = parser.parseExpression(parameterExp).getValue(context, Object[].class);
+            return this.executeForArray(context, parser, array, rule);
         } else {
-            return this.executeForObject(context, rule);
+            return this.executeForObject(context, parser, rule);
         }
     }
 
     @Override
     public String getBusinessType() {
         return businessType;
-    }
-
-    @Override
-    public boolean evaluate(Object object) {
-        StandardEvaluationContext context = new StandardEvaluationContext(object);
-        this.setBeanResolver(context);
-        this.registerFunctions(context, globalFunctions);
-        for (AbstractRule rule : rules) {
-            try {
-                if (this.handle(context, rule)) {
-                    return true;
-                }
-            } catch (Exception e) {
-                throw new RulesEnginesException("rule[" + rule.getRuleDefinition().getRuleCode() + "] has occurred an exception: " + e.getMessage(), this.getBusinessType(), this.getClass());
-            }
-        }
-        return false;
     }
 
     @Override
@@ -234,24 +198,5 @@ public abstract class AbstractRulesEngine implements RulesEngine {
                 .collect(Collectors.toList());
         this.rules.clear();
         this.rules.addAll(rules);
-    }
-
-    @Override
-    public void setBeanResolver(StandardEvaluationContext context) {
-        context.setBeanResolver(beanResolver);
-    }
-
-    @Override
-    public void setVariable(StandardEvaluationContext context, String name, Object object) {
-        context.setVariable(name, object);
-    }
-
-    @Override
-    public void registerFunctions(StandardEvaluationContext context, List<Method> methods) {
-        if (methods != null) {
-            for (Method method : methods) {
-                context.registerFunction(method.getName(), method);
-            }
-        }
     }
 }
