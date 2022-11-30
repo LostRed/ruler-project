@@ -11,8 +11,8 @@ import java.util.List;
         businessType = "person",
         description = "测试",
         parameterExp = "contacts")
-public class ContactParsedRule extends ProgrammaticRule<List<Contact>> {
-    public ContactParsedRule(RuleDefinition ruleDefinition) {
+public class ContactRule extends ProgrammaticRule<List<Contact>> {
+    public ContactRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
 
