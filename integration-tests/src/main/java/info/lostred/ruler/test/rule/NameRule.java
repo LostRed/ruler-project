@@ -8,8 +8,8 @@ import info.lostred.ruler.rule.ProgrammaticRule;
         businessType = "person",
         description = "姓名不能为空",
         parameterExp = "name")
-public class NameParsedRule extends ProgrammaticRule<String> {
-    public NameParsedRule(RuleDefinition ruleDefinition) {
+public class NameRule extends ProgrammaticRule<String> {
+    public NameRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
 
