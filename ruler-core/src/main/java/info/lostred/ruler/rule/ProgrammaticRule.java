@@ -1,11 +1,14 @@
 package info.lostred.ruler.rule;
 
+import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+
+import static info.lostred.ruler.constant.RulerConstants.RESULT;
 
 /**
  * 编程式规则
@@ -62,6 +65,16 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
         return this.doJudge(value);
     }
 
+    @Override
+    public void handle(EvaluationContext context, ExpressionParser parser) {
+        T value = this.parseParameter(context, parser);
+        Result result = parser.parseExpression("#" + RESULT).getValue(context, Result.class);
+        if (result != null) {
+            result.addInitValue(ruleDefinition, value);
+        }
+        this.doHandle(value);
+    }
+
     /**
      * 判断校验值是否需要该规则校验
      *
@@ -71,10 +84,18 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
     protected abstract boolean doSupports(T value);
 
     /**
-     * 判断校验值是否违反该规则
+     * 判断校验值是否触发规则
      *
      * @param value 校验值
-     * @return 违反返回true，否则返回false
+     * @return 触发返回true，否则返回false
      */
     protected abstract boolean doJudge(T value);
+
+    /**
+     * 规则触发后需要执行的逻辑
+     *
+     * @param value 校验值
+     */
+    protected void doHandle(T value) {
+    }
 }

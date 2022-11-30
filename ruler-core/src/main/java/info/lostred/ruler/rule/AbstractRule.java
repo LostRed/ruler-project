@@ -44,10 +44,10 @@ public abstract class AbstractRule implements Judgement, ResultHandler {
 
     @Override
     public void handle(EvaluationContext context, ExpressionParser parser) {
+        String parameterExp = ruleDefinition.getParameterExp();
+        Object value = parser.parseExpression(parameterExp).getValue(context);
         Result result = parser.parseExpression("#" + RESULT).getValue(context, Result.class);
         if (result != null) {
-            String parameterExp = ruleDefinition.getParameterExp();
-            Object value = parser.parseExpression(parameterExp).getValue(context);
             result.addInitValue(ruleDefinition, value);
         }
     }
