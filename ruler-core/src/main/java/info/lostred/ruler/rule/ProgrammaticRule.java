@@ -8,16 +8,18 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * 泛型值规则
+ * 编程式规则
+ * <p>由规则定义的parameterExp参数表达式解析出需要校验的对象，作为doSupports和doJudge方法的入参，
+ * 方便编程式开发。这种情况下无需定义conditionExp条件表达式和predicateExp断定表达式。</p>
  *
  * @param <T> 校验值的类型
  * @author lostred
  */
-@SuppressWarnings("unchecked")
-public abstract class GenericRule<T> extends SpELRule {
+public abstract class ProgrammaticRule<T> extends AbstractRule {
     protected Class<T> type;
 
-    public GenericRule(RuleDefinition ruleDefinition) {
+    @SuppressWarnings("unchecked")
+    public ProgrammaticRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
         Type type = this.getClass().getGenericSuperclass();
         if (type instanceof ParameterizedType) {
@@ -37,6 +39,13 @@ public abstract class GenericRule<T> extends SpELRule {
     }
 
     @Override
+    public boolean supports(EvaluationContext context, ExpressionParser parser) {
+        String parameterExp = this.ruleDefinition.getParameterExp();
+        T value = parser.parseExpression(parameterExp).getValue(context, type);
+        return this.doSupports(value);
+    }
+
+    @Override
     public boolean judge(EvaluationContext context, ExpressionParser parser) {
         String parameterExp = this.ruleDefinition.getParameterExp();
         T value = parser.parseExpression(parameterExp).getValue(context, type);
@@ -44,10 +53,18 @@ public abstract class GenericRule<T> extends SpELRule {
     }
 
     /**
-     * 判断校验值是否满足给定条件
+     * 判断校验值是否需要该规则校验
      *
      * @param value 校验值
-     * @return 满足返回true，否则返回false
+     * @return 需要返回true，否则返回false
+     */
+    protected abstract boolean doSupports(T value);
+
+    /**
+     * 判断校验值是否违反该规则
+     *
+     * @param value 校验值
+     * @return 违反返回true，否则返回false
      */
     protected abstract boolean doJudge(T value);
 }

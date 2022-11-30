@@ -2,7 +2,7 @@ package info.lostred.ruler.test.rule;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.rule.GenericRule;
+import info.lostred.ruler.rule.ProgrammaticRule;
 import info.lostred.ruler.test.domain.Contact;
 
 import java.util.List;
@@ -11,9 +11,14 @@ import java.util.List;
         businessType = "person",
         description = "测试",
         parameterExp = "contacts")
-public class ContactRule extends GenericRule<List<Contact>> {
-    public ContactRule(RuleDefinition ruleDefinition) {
+public class ContactParsedRule extends ProgrammaticRule<List<Contact>> {
+    public ContactParsedRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
+    }
+
+    @Override
+    protected boolean doSupports(List<Contact> value) {
+        return value != null && !value.isEmpty();
     }
 
     @Override

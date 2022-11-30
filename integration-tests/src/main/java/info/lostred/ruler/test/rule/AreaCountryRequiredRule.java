@@ -2,7 +2,7 @@ package info.lostred.ruler.test.rule;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.rule.SpELRule;
+import info.lostred.ruler.rule.DeclarativeRule;
 
 @Rule(ruleCode = "地区国家必填",
         businessType = "person",
@@ -10,7 +10,7 @@ import info.lostred.ruler.rule.SpELRule;
         parameterExp = "area.country",
         conditionExp = "true",
         predicateExp = "area.country==null||area.country.isEmpty()")
-public class AreaCountryRequiredRule extends SpELRule {
+public class AreaCountryRequiredRule extends DeclarativeRule {
     public AreaCountryRequiredRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }

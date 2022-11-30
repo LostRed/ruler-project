@@ -81,7 +81,7 @@ public class Contact {
 
 ```java
 @SpringBootTest
-class ApplicationTest {
+class RulesEngineTest {
     static String businessType = "person";
     static Person person;
     @Autowired
@@ -105,12 +105,13 @@ class ApplicationTest {
         person.setGender("男");
         person.setAge(10);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date parse = simpleDateFormat.parse("2020-01-01");
+        Date parse = simpleDateFormat.parse("2019-01-01");
         person.setBirthday(parse);
         Area area = new Area();
         person.setArea(area);
         Contact contact1 = new Contact();
         contact1.setArea(area);
+        contact1.setType("sdf");
         contact1.setPassword("1234");
         Contact contact2 = new Contact();
         contact2.setPassword("1234");
@@ -130,14 +131,14 @@ class ApplicationTest {
 
 这里注入的是RulesEngineFactory接口，使用该接口的getEngine()方法获取业务类型对应的规则引擎接口。当然也可以直接注入自己配置规则引擎的实现类。
 
-## 💻二次开发
+## 💻规则开发
 
 继承AbstractRule，并在类上添加@Rule注解。以下提供了开发规则两种方式。
 
-1. 继承SpELRule，使用注解直接配置表达式
+1. 继承DeclarativeRule，采用声明式开发，使用注解直接配置表达式
 
 ```java
-import info.lostred.ruler.rule.SpELRule;
+import info.lostred.ruler.rule.DeclarativeRule;
 
 @Rule(ruleCode = "rule_01",
         businessType = "person", //自定义的业务类型
@@ -145,23 +146,23 @@ import info.lostred.ruler.rule.SpELRule;
         parameterExp = "certNo",
         conditionExp = "certNo!=null",
         predicateExp = "certNo.length()!=18")
-public class CertNoLengthRule extends SpELRule {
+public class CertNoLengthRule extends DeclarativeRule {
     public CertNoLengthRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
 }
 ```
 
-2. 继承GenericRule，重写GenericRule的方法
+2. 继承ProgrammaticRule，采用编程式开发，重写ProgrammaticRule的方法
 
 ```java
-import info.lostred.ruler.rule.GenericRule;
+import info.lostred.ruler.rule.ProgrammaticRule;
 
 @Rule(ruleCode = "姓名必填",
         businessType = "person",
         description = "姓名不能为空",
         parameterExp = "name")
-public class NameRule extends GenericRule<String> {
+public class NameRule extends ProgrammaticRule<String> {
     public NameRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
@@ -175,7 +176,8 @@ public class NameRule extends GenericRule<String> {
 
 ### Rule注解
 
-在类上标记该注解，规则工厂在扫描包时，会将其放入RuleFactory的单例池，统一管理。
+在类上标记该注解，规则工厂在扫描包时，会将其放入RuleFactory的单例池，统一管理。同时RuleFactory规则工厂提供了动态注册规则的方法registerRuleDefinition，通过该方法可以动态地将声明好的规则定义注册到规则工厂。
+需要注意的是，注册到规则工厂的规则并不会立即被规则引擎所使用，还需要调用RulesEngineFactory规则引擎工厂的reloadRules方法，才能将所有引擎中的方法重新初始化。
 
 ### RuleScan注解
 
@@ -186,6 +188,7 @@ public class NameRule extends GenericRule<String> {
 在配置类上标记该注解，规则工厂会扫描其value指定的包路径。当使用spring时，需将该配置类注册到spring容器。
 
 ```java
+
 @Configuration
 @RuleScan("info.lostred.ruler.test.rule")
 @DomainScan("info.lostred.ruler.test.domain")
