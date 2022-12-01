@@ -6,6 +6,7 @@ import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
 import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -81,11 +82,11 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * 针对数组参数执行
      *
      * @param context 评估上下文
-     * @param array   数组参数
      * @param rule    规则
+     * @param array   数组参数
      * @return 结果，数组中的所有元素有一个不通过时返回true，否则返回false
      */
-    protected boolean executeForArray(EvaluationContext context, ExpressionParser parser, Object[] array, AbstractRule rule) {
+    protected boolean executeForArray(EvaluationContext context, ExpressionParser parser, AbstractRule rule, Object[] array) {
         if (array != null) {
             boolean flag = false;
             for (int i = 0; i < array.length; i++) {
@@ -105,9 +106,10 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      */
     protected boolean executeForObject(EvaluationContext context, ExpressionParser parser, AbstractRule rule) {
         if (rule.supports(context, parser)) {
-            boolean flag = rule.judge(context, parser);
+            boolean flag = rule.evaluate(context, parser);
             if (flag) {
-                rule.handle(context, parser);
+                Object value = rule.getValue(context, parser, Object.class);
+                this.getResult(context).addInitValue(rule.getRuleDefinition(), value);
             }
             return flag;
         }
@@ -120,11 +122,14 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * @param context 评估上下文
      * @param rule    当前规则
      */
-    protected boolean ruleExecute(EvaluationContext context, AbstractRule rule) {
+    protected boolean executeInternal(EvaluationContext context, AbstractRule rule) {
         String parameterExp = rule.getRuleDefinition().getParameterExp();
-        if (parameterExp.contains(".?") || parameterExp.contains(".!")) {
+        Expression expression = parser.parseExpression(parameterExp);
+        Class<?> valueType = expression.getValueType(context);
+        assert valueType != null;
+        if (Collection.class.isAssignableFrom(valueType) || Object[].class.isAssignableFrom(valueType)) {
             Object[] array = parser.parseExpression(parameterExp).getValue(context, Object[].class);
-            return this.executeForArray(context, parser, array, rule);
+            return this.executeForArray(context, parser, rule, array);
         } else {
             return this.executeForObject(context, parser, rule);
         }

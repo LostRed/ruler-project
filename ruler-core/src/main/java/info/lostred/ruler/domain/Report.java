@@ -1,11 +1,13 @@
 package info.lostred.ruler.domain;
 
+import java.io.Serializable;
+
 /**
  * 规则执行报告
  *
  * @author lostred
  */
-public class Report {
+public class Report implements Serializable {
     /**
      * 规则描述
      */

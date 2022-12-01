@@ -25,7 +25,7 @@ public class IncompleteRulesEngine extends AbstractRulesEngine {
     public void execute(EvaluationContext context) {
         for (AbstractRule rule : rules) {
             try {
-                if (this.ruleExecute(context, rule)) {
+                if (this.executeInternal(context, rule)) {
                     return;
                 }
             } catch (Exception e) {

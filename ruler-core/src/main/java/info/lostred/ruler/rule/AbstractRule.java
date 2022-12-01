@@ -1,20 +1,16 @@
 package info.lostred.ruler.rule;
 
-import info.lostred.ruler.core.Judgement;
-import info.lostred.ruler.core.ResultHandler;
-import info.lostred.ruler.domain.Result;
+import info.lostred.ruler.core.Evaluator;
 import info.lostred.ruler.domain.RuleDefinition;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
-
-import static info.lostred.ruler.constant.RulerConstants.RESULT;
 
 /**
  * 抽象规则
  *
  * @author lostred
  */
-public abstract class AbstractRule implements Judgement, ResultHandler {
+public abstract class AbstractRule implements Evaluator {
     /**
      * 规则定义
      */
@@ -36,19 +32,22 @@ public abstract class AbstractRule implements Judgement, ResultHandler {
     }
 
     @Override
-    public boolean judge(EvaluationContext context, ExpressionParser parser) {
+    public boolean evaluate(EvaluationContext context, ExpressionParser parser) {
         String predicateExp = ruleDefinition.getPredicateExp();
         Boolean flag = parser.parseExpression(predicateExp).getValue(context, Boolean.class);
         return Boolean.TRUE.equals(flag);
     }
 
-    @Override
-    public void handle(EvaluationContext context, ExpressionParser parser) {
+    /**
+     * 解析参数表达式
+     *
+     * @param context 评估上下文
+     * @param parser  表达式解析器
+     * @param <T>     解析目标类型
+     * @return 解析后的值
+     */
+    public <T> T getValue(EvaluationContext context, ExpressionParser parser, Class<T> targetClass) {
         String parameterExp = ruleDefinition.getParameterExp();
-        Object value = parser.parseExpression(parameterExp).getValue(context);
-        Result result = parser.parseExpression("#" + RESULT).getValue(context, Result.class);
-        if (result != null) {
-            result.addInitValue(ruleDefinition, value);
-        }
+        return parser.parseExpression(parameterExp).getValue(context, targetClass);
     }
 }

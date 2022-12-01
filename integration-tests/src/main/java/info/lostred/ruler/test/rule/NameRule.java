@@ -14,12 +14,12 @@ public class NameRule extends ProgrammaticRule<String> {
     }
 
     @Override
-    protected boolean doSupports(String value) {
+    protected boolean supportsInternal(String value) {
         return true;
     }
 
     @Override
-    protected boolean doJudge(String value) {
+    protected boolean evaluateInternal(String value) {
         return value == null || value.isEmpty();
     }
 }

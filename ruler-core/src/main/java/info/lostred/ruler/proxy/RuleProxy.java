@@ -1,6 +1,5 @@
 package info.lostred.ruler.proxy;
 
-import info.lostred.ruler.constant.Grade;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
 import net.sf.cglib.proxy.Enhancer;
@@ -8,7 +7,6 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -58,22 +56,12 @@ public class RuleProxy implements MethodInterceptor {
      * @param method 方法
      * @param result 方法返回值
      */
-    @SuppressWarnings("unchecked")
     protected void printLog(Method method, Object result) {
-        if ("collectMappings".equals(method.getName()) && result instanceof Map) {
-            Map<String, Object> map = (Map<String, Object>) result;
-            if (!map.isEmpty()) {
-                logger.config("ruleCode=" + target.getRuleDefinition().getRuleCode() +
-                        ", report=" + map);
-            }
-        } else if ("judge".equals(method.getName()) && result instanceof Boolean) {
-            if ((Boolean) result) {
-                logger.config("ruleCode=" + target.getRuleDefinition().getRuleCode() +
-                        ", grade=" + target.getRuleDefinition().getGrade());
-            } else {
-                logger.config("ruleCode=" + target.getRuleDefinition().getRuleCode() +
-                        ", grade=" + Grade.QUALIFIED.name());
-            }
+        String methodName = method.getName();
+        RuleDefinition ruleDefinition = target.getRuleDefinition();
+        if ("getValue".equals(methodName)) {
+            logger.config("[" + ruleDefinition.getRuleCode() + " " + ruleDefinition.getGrade() + "]" +
+                    "initValue=" + result + ", description=" + ruleDefinition.getDescription());
         }
     }
 }

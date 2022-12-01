@@ -16,12 +16,12 @@ public class ContactRule extends ProgrammaticRule<List<String>> {
     }
 
     @Override
-    protected boolean doSupports(List<String> value) {
+    protected boolean supportsInternal(List<String> value) {
         return value != null && !value.isEmpty();
     }
 
     @Override
-    protected boolean doJudge(List<String> value) {
+    protected boolean evaluateInternal(List<String> value) {
         return value.stream().anyMatch(e -> e.equals("1234"));
     }
 }

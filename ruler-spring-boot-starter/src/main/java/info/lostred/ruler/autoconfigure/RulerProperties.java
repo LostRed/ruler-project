@@ -11,8 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties("ruler")
 public class RulerProperties {
-    private String businessType = RulerConstants.COMMON_BUSINESS_TYPE;
-    private String engineType = EngineType.SIMPLE.name();
+    private String businessType = RulerConstants.BUSINESS_TYPE_COMMON;
+    private String engineType = EngineType.COMPLETE.name();
     private String[] ruleScanPackages;
     private String[] domainScanPackages;
 

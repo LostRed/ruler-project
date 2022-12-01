@@ -1,5 +1,6 @@
 package info.lostred.ruler.engine;
 
+import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesEnginesException;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
@@ -25,9 +26,10 @@ public class CompleteRulesEngine extends AbstractRulesEngine {
     public void execute(EvaluationContext context) {
         for (AbstractRule rule : rules) {
             try {
-                this.ruleExecute(context, rule);
+                this.executeInternal(context, rule);
             } catch (Exception e) {
-                throw new RulesEnginesException("rule[" + rule.getRuleDefinition().getRuleCode() + "] has occurred an exception: " + e.getMessage(), this.getBusinessType(), this.getClass());
+                RuleDefinition ruleDefinition = rule.getRuleDefinition();
+                throw new RulesEnginesException("rule[" + ruleDefinition.getRuleCode() + " " + ruleDefinition.getGrade() + "] has occurred an exception: " + e.getMessage(), this.getBusinessType(), this.getClass());
             }
         }
     }

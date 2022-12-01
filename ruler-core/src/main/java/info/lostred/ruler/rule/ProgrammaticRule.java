@@ -1,14 +1,11 @@
 package info.lostred.ruler.rule;
 
-import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-
-import static info.lostred.ruler.constant.RulerConstants.RESULT;
 
 /**
  * 编程式规则
@@ -41,61 +38,31 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
         }
     }
 
-    /**
-     * 解析参数值
-     *
-     * @param context 评估上下文
-     * @param parser  表达式解析器
-     * @return 解析后的参数值
-     */
-    protected T parseParameter(EvaluationContext context, ExpressionParser parser) {
-        String parameterExp = ruleDefinition.getParameterExp();
-        return parser.parseExpression(parameterExp).getValue(context, type);
-    }
-
     @Override
     public boolean supports(EvaluationContext context, ExpressionParser parser) {
-        T value = this.parseParameter(context, parser);
-        return this.doSupports(value);
+        T value = this.getValue(context, parser, type);
+        return this.supportsInternal(value);
     }
 
     @Override
-    public boolean judge(EvaluationContext context, ExpressionParser parser) {
-        T value = this.parseParameter(context, parser);
-        return this.doJudge(value);
-    }
-
-    @Override
-    public void handle(EvaluationContext context, ExpressionParser parser) {
-        T value = this.parseParameter(context, parser);
-        Result result = parser.parseExpression("#" + RESULT).getValue(context, Result.class);
-        if (result != null) {
-            result.addInitValue(ruleDefinition, value);
-        }
-        this.doHandle(value);
+    public boolean evaluate(EvaluationContext context, ExpressionParser parser) {
+        T value = this.getValue(context, parser, type);
+        return this.evaluateInternal(value);
     }
 
     /**
-     * 判断校验值是否需要该规则校验
+     * 规则是否支持对该参数进行判断
      *
      * @param value 校验值
      * @return 需要返回true，否则返回false
      */
-    protected abstract boolean doSupports(T value);
+    protected abstract boolean supportsInternal(T value);
 
     /**
-     * 判断校验值是否触发规则
+     * 评估参数是否满足特定的条件
      *
      * @param value 校验值
      * @return 触发返回true，否则返回false
      */
-    protected abstract boolean doJudge(T value);
-
-    /**
-     * 规则触发后需要执行的逻辑
-     *
-     * @param value 校验值
-     */
-    protected void doHandle(T value) {
-    }
+    protected abstract boolean evaluateInternal(T value);
 }
