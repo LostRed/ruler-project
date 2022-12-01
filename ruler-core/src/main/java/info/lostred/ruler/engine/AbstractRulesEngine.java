@@ -86,11 +86,11 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * @param array   数组参数
      * @return 结果，数组中的所有元素有一个不通过时返回true，否则返回false
      */
-    protected boolean executeForArray(EvaluationContext context, ExpressionParser parser, AbstractRule rule, Object[] array) {
+    protected boolean executeForArray(EvaluationContext context, AbstractRule rule, Object[] array) {
         if (array != null) {
             boolean flag = false;
             for (int i = 0; i < array.length; i++) {
-                flag = flag || this.executeForObject(context, parser, rule);
+                flag = flag || this.executeForObject(context, rule);
             }
             return flag;
         }
@@ -104,7 +104,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * @param rule    规则
      * @return 结果
      */
-    protected boolean executeForObject(EvaluationContext context, ExpressionParser parser, AbstractRule rule) {
+    protected boolean executeForObject(EvaluationContext context, AbstractRule rule) {
         if (rule.supports(context, parser)) {
             boolean flag = rule.evaluate(context, parser);
             if (flag) {
@@ -129,9 +129,9 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         assert valueType != null;
         if (Collection.class.isAssignableFrom(valueType) || Object[].class.isAssignableFrom(valueType)) {
             Object[] array = parser.parseExpression(parameterExp).getValue(context, Object[].class);
-            return this.executeForArray(context, parser, rule, array);
+            return this.executeForArray(context, rule, array);
         } else {
-            return this.executeForObject(context, parser, rule);
+            return this.executeForObject(context, rule);
         }
     }
 

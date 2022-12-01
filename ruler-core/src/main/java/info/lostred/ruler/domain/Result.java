@@ -38,6 +38,9 @@ public class Result implements Serializable {
 
     /**
      * 添加一个初始值
+     *
+     * @param ruleDefinition 规则定义
+     * @param value          初始值
      */
     public void addInitValue(RuleDefinition ruleDefinition, Object value) {
         Report report = Report.newInstance(ruleDefinition.getDescription(), value);
