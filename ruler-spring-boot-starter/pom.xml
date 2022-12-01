@@ -52,7 +52,7 @@
         <dependency>
             <groupId>info.lostred.ruler</groupId>
             <artifactId>ruler-core</artifactId>
-            <version>3.0.1</version>
+            <version>3.0.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
