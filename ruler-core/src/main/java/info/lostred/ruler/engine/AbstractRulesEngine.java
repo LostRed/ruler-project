@@ -108,7 +108,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         if (rule.supports(context, parser)) {
             boolean flag = rule.evaluate(context, parser);
             if (flag) {
-                Object value = rule.getValue(context, parser, Object.class);
+                Object value = rule.getValue(context, parser);
                 this.getResult(context).addInitValue(rule.getRuleDefinition(), value);
             }
             return flag;

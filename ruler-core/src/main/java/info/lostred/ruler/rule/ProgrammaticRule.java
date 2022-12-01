@@ -40,14 +40,19 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
 
     @Override
     public boolean supports(EvaluationContext context, ExpressionParser parser) {
-        T value = this.getValue(context, parser, type);
+        T value = this.getValueInternal(context, parser);
         return this.supportsInternal(value);
     }
 
     @Override
     public boolean evaluate(EvaluationContext context, ExpressionParser parser) {
-        T value = this.getValue(context, parser, type);
+        T value = this.getValueInternal(context, parser);
         return this.evaluateInternal(value);
+    }
+
+    @Override
+    public Object getValue(EvaluationContext context, ExpressionParser parser) {
+        return this.getValueInternal(context, parser);
     }
 
     /**
@@ -65,4 +70,16 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
      * @return 触发返回true，否则返回false
      */
     protected abstract boolean evaluateInternal(T value);
+
+    /**
+     * 解析参数表达式，并转换成泛型类
+     *
+     * @param context 评估上下文
+     * @param parser  表达式解析器
+     * @return 解析后的值
+     */
+    protected T getValueInternal(EvaluationContext context, ExpressionParser parser) {
+        String parameterExp = ruleDefinition.getParameterExp();
+        return parser.parseExpression(parameterExp).getValue(context, type);
+    }
 }
