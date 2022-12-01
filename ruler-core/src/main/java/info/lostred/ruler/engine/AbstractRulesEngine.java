@@ -121,6 +121,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      *
      * @param context 评估上下文
      * @param rule    当前规则
+     * @return 规则执行的结果，触发规则返回true，否则返回false
      */
     protected boolean executeInternal(EvaluationContext context, AbstractRule rule) {
         String parameterExp = rule.getRuleDefinition().getParameterExp();
