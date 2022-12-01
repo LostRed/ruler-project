@@ -38,59 +38,15 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
         }
     }
 
-    @Override
-    public boolean supports(EvaluationContext context, ExpressionParser parser) {
-        T value = this.getGenericParameter(context, parser);
-        return this.supportsInternal(value);
-    }
-
-    @Override
-    public boolean evaluate(EvaluationContext context, ExpressionParser parser) {
-        T value = this.getGenericParameter(context, parser);
-        return this.evaluateInternal(value);
-    }
-
-    @Override
-    public Object getInitValue(EvaluationContext context, ExpressionParser parser) {
-        T value = this.getGenericParameter(context, parser);
-        return this.getInitValueInternal(value);
-    }
-
     /**
-     * 解析参数表达式的值，并转换成泛型类
+     * 获取评估上下文根对象，并转换成泛型类
      *
      * @param context 评估上下文
      * @param parser  表达式解析器
      * @return 解析后的值
      */
-    protected T getGenericParameter(EvaluationContext context, ExpressionParser parser) {
+    protected T getRootObject(EvaluationContext context, ExpressionParser parser) {
         String parameterExp = ruleDefinition.getParameterExp();
         return parser.parseExpression(parameterExp).getValue(context, type);
-    }
-
-    /**
-     * 规则是否支持对该参数进行判断
-     *
-     * @param value 校验值
-     * @return 需要返回true，否则返回false
-     */
-    protected abstract boolean supportsInternal(T value);
-
-    /**
-     * 评估参数是否满足特定的条件
-     *
-     * @param value 校验值
-     * @return 触发返回true，否则返回false
-     */
-    protected abstract boolean evaluateInternal(T value);
-
-    /**
-     * 从参数中获取初始值
-     *
-     * @param value 参数
-     * @return 初始值
-     */
-    protected Object getInitValueInternal(T value) {
-        return value;
     }
 }

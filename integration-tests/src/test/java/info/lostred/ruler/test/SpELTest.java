@@ -12,7 +12,6 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class SpELTest {
     @Test
     public void test1() {
@@ -22,7 +21,7 @@ public class SpELTest {
         EvaluationContext context = new StandardEvaluationContext();
         context.setVariable("person", person);
         Object value = expression.getValue(context);
-        System.out.println(person.getContacts());
+        System.out.println(value);
     }
 
     @Test

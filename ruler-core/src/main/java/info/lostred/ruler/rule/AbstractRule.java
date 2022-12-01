@@ -24,20 +24,6 @@ public abstract class AbstractRule implements Evaluator {
         return ruleDefinition;
     }
 
-    @Override
-    public boolean supports(EvaluationContext context, ExpressionParser parser) {
-        String conditionExp = ruleDefinition.getConditionExp();
-        Boolean flag = parser.parseExpression(conditionExp).getValue(context, Boolean.class);
-        return Boolean.TRUE.equals(flag);
-    }
-
-    @Override
-    public boolean evaluate(EvaluationContext context, ExpressionParser parser) {
-        String predicateExp = ruleDefinition.getPredicateExp();
-        Boolean flag = parser.parseExpression(predicateExp).getValue(context, Boolean.class);
-        return Boolean.TRUE.equals(flag);
-    }
-
     /**
      * 获取参数表达式的值
      *
@@ -45,8 +31,5 @@ public abstract class AbstractRule implements Evaluator {
      * @param parser  表达式解析器
      * @return 解析后的值
      */
-    public Object getInitValue(EvaluationContext context, ExpressionParser parser) {
-        String parameterExp = ruleDefinition.getParameterExp();
-        return parser.parseExpression(parameterExp).getValue(context);
-    }
+    public abstract Object getInitValue(EvaluationContext context, ExpressionParser parser);
 }
