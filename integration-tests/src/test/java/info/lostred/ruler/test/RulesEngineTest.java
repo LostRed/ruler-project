@@ -57,7 +57,7 @@ class RulesEngineTest {
         contact1.setType("sdf");
         contact1.setPassword("1234");
         Contact contact2 = new Contact();
-        contact2.setPassword("1234");
+        contact2.setPassword("12234");
         person.setContacts(Arrays.asList(contact1, contact2));
     }
 

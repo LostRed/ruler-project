@@ -6,7 +6,6 @@ import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
 import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -79,32 +78,13 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     /**
-     * 针对数组参数执行
+     * 规则执行
      *
      * @param context 评估上下文
-     * @param rule    规则
-     * @param array   数组参数
-     * @return 结果，数组中的所有元素有一个不通过时返回true，否则返回false
+     * @param rule    当前规则
+     * @return 规则执行的结果，触发规则返回true，否则返回false
      */
-    protected boolean executeForArray(EvaluationContext context, AbstractRule rule, Object[] array) {
-        if (array != null) {
-            boolean flag = false;
-            for (int i = 0; i < array.length; i++) {
-                flag = flag || this.executeForObject(context, rule);
-            }
-            return flag;
-        }
-        return false;
-    }
-
-    /**
-     * 针对对象参数执行
-     *
-     * @param context 评估上下文
-     * @param rule    规则
-     * @return 结果
-     */
-    protected boolean executeForObject(EvaluationContext context, AbstractRule rule) {
+    protected boolean executeInternal(EvaluationContext context, AbstractRule rule) {
         if (rule.supports(context, parser)) {
             boolean flag = rule.evaluate(context, parser);
             if (flag) {
@@ -114,26 +94,6 @@ public abstract class AbstractRulesEngine implements RulesEngine {
             return flag;
         }
         return false;
-    }
-
-    /**
-     * 规则执行
-     *
-     * @param context 评估上下文
-     * @param rule    当前规则
-     * @return 规则执行的结果，触发规则返回true，否则返回false
-     */
-    protected boolean executeInternal(EvaluationContext context, AbstractRule rule) {
-        String parameterExp = rule.getRuleDefinition().getParameterExp();
-        Expression expression = parser.parseExpression(parameterExp);
-        Class<?> valueType = expression.getValueType(context);
-        assert valueType != null;
-        if (Collection.class.isAssignableFrom(valueType) || Object[].class.isAssignableFrom(valueType)) {
-            Object[] array = parser.parseExpression(parameterExp).getValue(context, Object[].class);
-            return this.executeForArray(context, rule, array);
-        } else {
-            return this.executeForObject(context, rule);
-        }
     }
 
     @Override

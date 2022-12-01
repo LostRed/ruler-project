@@ -9,7 +9,7 @@ import java.util.List;
 @Rule(ruleCode = "联系方式",
         businessType = "person",
         description = "测试",
-        parameterExp = "contacts?.![password]")
+        parameterExp = "contacts?.![password].?[#this.equals('1234')]")
 public class ContactRule extends ProgrammaticRule<List<String>> {
     public ContactRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
