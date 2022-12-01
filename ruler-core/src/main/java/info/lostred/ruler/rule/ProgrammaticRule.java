@@ -40,19 +40,32 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
 
     @Override
     public boolean supports(EvaluationContext context, ExpressionParser parser) {
-        T value = this.getValueInternal(context, parser);
+        T value = this.getGenericParameter(context, parser);
         return this.supportsInternal(value);
     }
 
     @Override
     public boolean evaluate(EvaluationContext context, ExpressionParser parser) {
-        T value = this.getValueInternal(context, parser);
+        T value = this.getGenericParameter(context, parser);
         return this.evaluateInternal(value);
     }
 
     @Override
-    public Object getValue(EvaluationContext context, ExpressionParser parser) {
-        return this.getValueInternal(context, parser);
+    public Object getInitValue(EvaluationContext context, ExpressionParser parser) {
+        T value = this.getGenericParameter(context, parser);
+        return this.getInitValueInternal(value);
+    }
+
+    /**
+     * 解析参数表达式的值，并转换成泛型类
+     *
+     * @param context 评估上下文
+     * @param parser  表达式解析器
+     * @return 解析后的值
+     */
+    protected T getGenericParameter(EvaluationContext context, ExpressionParser parser) {
+        String parameterExp = ruleDefinition.getParameterExp();
+        return parser.parseExpression(parameterExp).getValue(context, type);
     }
 
     /**
@@ -72,14 +85,12 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
     protected abstract boolean evaluateInternal(T value);
 
     /**
-     * 解析参数表达式，并转换成泛型类
+     * 从参数中获取初始值
      *
-     * @param context 评估上下文
-     * @param parser  表达式解析器
-     * @return 解析后的值
+     * @param value 参数
+     * @return 初始值
      */
-    protected T getValueInternal(EvaluationContext context, ExpressionParser parser) {
-        String parameterExp = ruleDefinition.getParameterExp();
-        return parser.parseExpression(parameterExp).getValue(context, type);
+    protected Object getInitValueInternal(T value) {
+        return value;
     }
 }

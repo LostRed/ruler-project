@@ -39,13 +39,13 @@ public abstract class AbstractRule implements Evaluator {
     }
 
     /**
-     * 解析参数表达式
+     * 获取参数表达式的值
      *
      * @param context 评估上下文
      * @param parser  表达式解析器
      * @return 解析后的值
      */
-    public Object getValue(EvaluationContext context, ExpressionParser parser) {
+    public Object getInitValue(EvaluationContext context, ExpressionParser parser) {
         String parameterExp = ruleDefinition.getParameterExp();
         return parser.parseExpression(parameterExp).getValue(context);
     }
