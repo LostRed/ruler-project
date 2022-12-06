@@ -122,8 +122,10 @@ class RulesEngineTest {
     void executeTest() throws JsonProcessingException {
         RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
         long s = System.currentTimeMillis();
-        Result result = rulesEngine.execute(person);
+        EvaluationContext context = rulesEngine.createEvaluationContext(person);
+        rulesEngine.execute(context);
         long e = System.currentTimeMillis();
+        Result result = rulesEngine.getResult(context);
         printResult(result, s, e);
     }
 }
@@ -164,21 +166,28 @@ import info.lostred.ruler.rule.ProgrammaticRule;
 
 @Rule(ruleCode = "姓名必填",
         businessType = "person",
-        description = "姓名不能为空",
-        parameterExp = "name")
-public class NameRule extends ProgrammaticRule<String> {
+        description = "姓名不能为空")
+public class NameRule extends ProgrammaticRule<Person> {
     public NameRule(RuleDefinition ruleDefinition) {
         super(ruleDefinition);
     }
 
     @Override
-    protected boolean doSupports(String value) {
-        return true;
+    public Object getInitValue(EvaluationContext context, ExpressionParser parser) {
+        Person person = this.getRootObject(context, parser);
+        return person.getName();
     }
 
     @Override
-    protected boolean doJudge(String value) {
-        return value == null || value.isEmpty();
+    public boolean supports(EvaluationContext context, ExpressionParser parser) {
+        Person person = this.getRootObject(context, parser);
+        return !ObjectUtils.isEmpty(person);
+    }
+
+    @Override
+    public boolean evaluate(EvaluationContext context, ExpressionParser parser) {
+        Person person = this.getRootObject(context, parser);
+        return ObjectUtils.isEmpty(person.getName());
     }
 }
 ```
@@ -197,7 +206,6 @@ public class NameRule extends ProgrammaticRule<String> {
 在配置类上标记该注解，规则工厂会扫描其value指定的包路径。当使用spring时，需将该配置类注册到spring容器。
 
 ```java
-
 @Configuration
 @RuleScan("info.lostred.ruler.test.rule")
 @DomainScan("info.lostred.ruler.test.domain")

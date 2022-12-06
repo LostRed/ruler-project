@@ -98,21 +98,26 @@ public class RulerAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnProperty("ruler.engine-type")
-        public RulesEngine rulesEngine(RuleFactory ruleFactory,
-                                       BeanResolver beanResolver,
-                                       ExpressionParser parser,
-                                       List<Method> globalFunctions,
-                                       RulerProperties rulerProperties) {
+        public RulesEngine rulesEngine(RuleFactory ruleFactory, ExpressionParser expressionParser, BeanResolver beanResolver,
+                                       List<Method> globalFunctions, RulerProperties rulerProperties) {
             String type = rulerProperties.getEngineType().toUpperCase();
             String businessType = rulerProperties.getBusinessType();
             if (EngineType.COMPLETE.equals(EngineType.valueOf(type))) {
-                return RulesEngineFactory.builder(ruleFactory,
-                        businessType, beanResolver, parser, globalFunctions,
-                        CompleteRulesEngine.class).build();
+                return RulesEngineFactory.builder(CompleteRulesEngine.class)
+                        .setBusinessType(businessType)
+                        .setRuleFactory(ruleFactory)
+                        .setExpressionParser(expressionParser)
+                        .setBeanResolver(beanResolver)
+                        .setGlobalFunctions(globalFunctions)
+                        .build();
             } else {
-                return RulesEngineFactory.builder(ruleFactory,
-                        businessType, beanResolver, parser, globalFunctions,
-                        IncompleteRulesEngine.class).build();
+                return RulesEngineFactory.builder(IncompleteRulesEngine.class)
+                        .setBusinessType(businessType)
+                        .setRuleFactory(ruleFactory)
+                        .setExpressionParser(expressionParser)
+                        .setBeanResolver(beanResolver)
+                        .setGlobalFunctions(globalFunctions)
+                        .build();
             }
         }
     }

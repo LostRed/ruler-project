@@ -16,9 +16,9 @@ import java.util.List;
  * @author lostred
  */
 public class IncompleteRulesEngine extends AbstractRulesEngine {
-    public IncompleteRulesEngine(RuleFactory ruleFactory, String businessType,
-                                 BeanResolver beanResolver, ExpressionParser parser, List<Method> globalFunctions) {
-        super(ruleFactory, businessType, beanResolver, parser, globalFunctions);
+    public IncompleteRulesEngine(String businessType, RuleFactory ruleFactory, BeanResolver beanResolver,
+                                 ExpressionParser expressionParser, List<Method> globalFunctions) {
+        super(businessType, ruleFactory, expressionParser, beanResolver, globalFunctions);
     }
 
     @Override

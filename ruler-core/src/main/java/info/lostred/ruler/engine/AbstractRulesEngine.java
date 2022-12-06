@@ -25,21 +25,25 @@ import static info.lostred.ruler.constant.RulerConstants.RESULT;
  */
 public abstract class AbstractRulesEngine implements RulesEngine {
     /**
-     * 规则工厂
+     * 默认业务类型
      */
-    private final RuleFactory ruleFactory;
+    public final static String DEFAULT_BUSINESS_TYPE = "COMMON";
     /**
      * 业务类型
      */
     private final String businessType;
     /**
-     * bean解析器
+     * 规则工厂
      */
-    protected final BeanResolver beanResolver;
+    private final RuleFactory ruleFactory;
     /**
      * 表达式解析器
      */
-    protected final ExpressionParser parser;
+    protected final ExpressionParser expressionParser;
+    /**
+     * bean解析器
+     */
+    protected final BeanResolver beanResolver;
     /**
      * 全局函数
      */
@@ -49,12 +53,12 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      */
     protected final List<AbstractRule> rules = new CopyOnWriteArrayList<>();
 
-    public AbstractRulesEngine(RuleFactory ruleFactory, String businessType,
-                               BeanResolver beanResolver, ExpressionParser parser, List<Method> globalFunctions) {
-        this.ruleFactory = ruleFactory;
+    public AbstractRulesEngine(String businessType, RuleFactory ruleFactory, ExpressionParser expressionParser,
+                               BeanResolver beanResolver, List<Method> globalFunctions) {
         this.businessType = businessType;
+        this.ruleFactory = ruleFactory;
+        this.expressionParser = expressionParser;
         this.beanResolver = beanResolver;
-        this.parser = parser;
         this.globalFunctions = globalFunctions;
         this.reloadRules();
     }
@@ -74,7 +78,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
 
     @Override
     public Result getResult(EvaluationContext context) {
-        return this.parser.parseExpression("#" + RESULT).getValue(context, Result.class);
+        return this.expressionParser.parseExpression("#" + RESULT).getValue(context, Result.class);
     }
 
     /**
@@ -85,10 +89,10 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * @return 规则执行的结果，触发规则返回true，否则返回false
      */
     protected boolean executeInternal(EvaluationContext context, AbstractRule rule) {
-        if (rule.supports(context, parser)) {
-            boolean flag = rule.evaluate(context, parser);
+        if (rule.supports(context, expressionParser)) {
+            boolean flag = rule.evaluate(context, expressionParser);
             if (flag) {
-                Object value = rule.getInitValue(context, parser);
+                Object value = rule.getInitValue(context, expressionParser);
                 this.getResult(context).addInitValue(rule.getRuleDefinition(), value);
             }
             return flag;

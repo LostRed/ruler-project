@@ -21,7 +21,7 @@ public interface RuleFactory {
     void registerRuleDefinition(RuleDefinition ruleDefinition) throws RulesException;
 
     /**
-     * 注册规则
+     * 注册规则及其规则定义
      *
      * @param rule 规则
      */
@@ -31,9 +31,10 @@ public interface RuleFactory {
      * 创建规则
      *
      * @param ruleDefinition 规则定义
+     * @return 抽象规则
      * @throws RulesException 实例化规则失败时
      */
-    void createRule(RuleDefinition ruleDefinition) throws RulesException;
+    AbstractRule createRule(RuleDefinition ruleDefinition) throws RulesException;
 
     /**
      * 销毁所有规则

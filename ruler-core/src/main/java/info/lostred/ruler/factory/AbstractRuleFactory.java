@@ -18,7 +18,15 @@ import java.util.stream.Collectors;
  * @author lostred
  */
 public abstract class AbstractRuleFactory implements RuleFactory {
+    /**
+     * 规则定义缓存
+     * <p>所有注册过的规则的规则定义都会被存放在这里</p>
+     */
     protected final Map<String, RuleDefinition> ruleDefinitionMap = new ConcurrentHashMap<>();
+    /**
+     * 规则缓存
+     * <p>所有注册过的规则都会被存放在这里</p>
+     */
     protected final Map<String, AbstractRule> rules = new ConcurrentHashMap<>();
 
     @Override
@@ -37,9 +45,8 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     }
 
     @Override
-    public void createRule(RuleDefinition ruleDefinition) {
-        AbstractRule rule = this.builder(ruleDefinition).build();
-        this.rules.put(ruleDefinition.getRuleCode(), rule);
+    public AbstractRule createRule(RuleDefinition ruleDefinition) {
+        return this.builder(ruleDefinition).build();
     }
 
     @Override

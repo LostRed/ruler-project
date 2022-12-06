@@ -4,7 +4,7 @@
 
 - 框架侵入性低，可扩展性强
 - 一处配置，处处使用
-- 可根据需求配置不同的引擎类型(simple, incomplete, complete)
+- 可根据需求配置不同的引擎类型(incomplete, complete)
 
 ## 2️⃣核心概念
 
@@ -28,6 +28,10 @@
 
 - incomplete类型的实现类会输出报告，有违规也会直接返回结果
 - complete类型的实现类会输出报告，并且会执行完所有的规则
+
+```
+注：3.x版本移除了原本的simple类型的实现类
+```
 
 ### AbstractRule抽象类
 

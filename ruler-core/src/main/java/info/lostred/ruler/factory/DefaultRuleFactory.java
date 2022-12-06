@@ -11,20 +11,20 @@ import info.lostred.ruler.util.PackageScanUtils;
  * @author lostred
  */
 public class DefaultRuleFactory extends AbstractRuleFactory {
-    private final String[] scanPackages;
-
     public DefaultRuleFactory(String... scanPackages) {
-        this.scanPackages = scanPackages;
-        this.registerFromPackages();
+        this.registerRules(scanPackages);
     }
 
     /**
-     * 从包中注册规则信息与规则
+     * 从包中注册规则定义，并创建规则
+     *
+     * @param scanPackages 规则类所在的包名
      */
-    private void registerFromPackages() {
+    public void registerRules(String... scanPackages) {
         if (scanPackages == null || scanPackages.length == 0) {
-            return;
+            throw new IllegalArgumentException("scanPackages cannot be null or empty.");
         }
+        //注册规则定义
         for (String packageName : scanPackages) {
             PackageScanUtils.getClasses(packageName).stream()
                     .filter(AbstractRule.class::isAssignableFrom)
@@ -32,12 +32,20 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
                     .map(this::buildRuleDefinition)
                     .forEach(this::registerRuleDefinition);
         }
+        //创建并注册规则
         for (String ruleCode : this.ruleDefinitionMap.keySet()) {
             RuleDefinition ruleDefinition = this.ruleDefinitionMap.get(ruleCode);
-            this.createRule(ruleDefinition);
+            AbstractRule rule = this.createRule(ruleDefinition);
+            this.rules.put(ruleDefinition.getRuleCode(), rule);
         }
     }
 
+    /**
+     * 构建规则定义
+     *
+     * @param ruleClass 规则定义
+     * @return 规则定义
+     */
     @SuppressWarnings("unchecked")
     private RuleDefinition buildRuleDefinition(Class<?> ruleClass) {
         if (!AbstractRule.class.isAssignableFrom(ruleClass)) {
