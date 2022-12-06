@@ -19,7 +19,7 @@
 ```yaml
 ruler:
   business-type: person #业务类型
-  engine-type: complete #上述提到的规则引擎类型，默认为simple
+  engine-type: complete #上述提到的规则引擎类型，默认为complete
   rule-default-scope: info.lostred.ruler.test.rule #规则类包扫描路径，与注解@RuleScan定义的路径会取并集并一起扫描
   domain-default-scope: info.lostred.ruler.test.domain #领域模型类包扫描路径，与注解@DomainScan定义的路径会取并集并一起扫描
 ```
