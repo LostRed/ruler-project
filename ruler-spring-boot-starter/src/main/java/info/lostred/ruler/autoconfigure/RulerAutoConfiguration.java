@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
@@ -37,7 +38,7 @@ public class RulerAutoConfiguration {
     @ConditionalOnMissingBean
     public DomainFactory domainFactory(DefaultListableBeanFactory defaultListableBeanFactory,
                                        RulerProperties rulerProperties) {
-        Stream<String> stream = getConfigClasses(defaultListableBeanFactory, DomainScan.class).stream()
+        Stream<String> stream = getClassesByAnnotation(defaultListableBeanFactory, DomainScan.class).stream()
                 .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()));
         if (rulerProperties.getDomainScanPackages() == null) {
             return new DomainFactory(stream.toArray(String[]::new));
@@ -70,7 +71,7 @@ public class RulerAutoConfiguration {
         @ConditionalOnMissingBean
         public RuleFactory ruleFactory(DefaultListableBeanFactory defaultListableBeanFactory,
                                        RulerProperties rulerProperties) {
-            Stream<String> stream = getConfigClasses(defaultListableBeanFactory, RuleScan.class).stream()
+            Stream<String> stream = getClassesByAnnotation(defaultListableBeanFactory, RuleScan.class).stream()
                     .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()));
             if (rulerProperties.getRuleScanPackages() == null) {
                 return new DefaultRuleFactory(stream.toArray(String[]::new));
@@ -122,19 +123,24 @@ public class RulerAutoConfiguration {
         }
     }
 
-    public static Set<Class<?>> getConfigClasses(DefaultListableBeanFactory defaultListableBeanFactory,
-                                                 Class<? extends Annotation> annotationClass) {
+    /**
+     * 根据指定的注解类在bean工厂中获取标有改注解的类对象集合
+     *
+     * @param defaultListableBeanFactory bean工厂
+     * @param annotationClass            注解类
+     * @return 符合条件的类对象集合
+     */
+    public static Set<Class<?>> getClassesByAnnotation(DefaultListableBeanFactory defaultListableBeanFactory,
+                                                       Class<? extends Annotation> annotationClass) {
         String[] beanNames = defaultListableBeanFactory.getBeanNamesForAnnotation(annotationClass);
         return Arrays.stream(beanNames)
                 .map(defaultListableBeanFactory::getBeanDefinition)
+                .filter(e -> e instanceof ScannedGenericBeanDefinition)
+                .map(e -> (ScannedGenericBeanDefinition) e)
                 .map(beanDefinition -> {
-                    String beanClassName = beanDefinition.getBeanClassName();
-                    assert beanClassName != null;
-                    if (beanClassName.contains("$$")) {
-                        beanClassName = beanClassName.substring(0, beanClassName.indexOf("$$"));
-                    }
+                    String className = beanDefinition.getMetadata().getClassName();
                     try {
-                        return RulerAutoConfiguration.class.getClassLoader().loadClass(beanClassName);
+                        return RulerAutoConfiguration.class.getClassLoader().loadClass(className);
                     } catch (ClassNotFoundException ignored) {
                         return null;
                     }

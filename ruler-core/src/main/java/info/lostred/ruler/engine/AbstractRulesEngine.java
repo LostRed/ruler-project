@@ -64,8 +64,8 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     @Override
-    public EvaluationContext createEvaluationContext(Object input) {
-        StandardEvaluationContext context = new StandardEvaluationContext(input);
+    public EvaluationContext createEvaluationContext(Object rootObject) {
+        StandardEvaluationContext context = new StandardEvaluationContext(rootObject);
         context.setVariable(RESULT, Result.newInstance());
         context.setBeanResolver(beanResolver);
         if (this.globalFunctions != null) {

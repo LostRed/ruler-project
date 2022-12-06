@@ -17,10 +17,10 @@ public interface RulesEngine {
     /**
      * 创建评估上下文
      *
-     * @param input 执行入参
+     * @param rootObject 根对象
      * @return 评估上下文
      */
-    EvaluationContext createEvaluationContext(Object input);
+    EvaluationContext createEvaluationContext(Object rootObject);
 
     /**
      * 执行
