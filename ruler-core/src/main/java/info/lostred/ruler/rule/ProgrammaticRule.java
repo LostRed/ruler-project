@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
  *
  * @param <T> 校验值的类型
  * @author lostred
+ * @since 2.2.0
  */
 public abstract class ProgrammaticRule<T> extends AbstractRule {
     protected Class<T> type;

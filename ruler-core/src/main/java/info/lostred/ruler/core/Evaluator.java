@@ -7,6 +7,7 @@ import org.springframework.expression.ExpressionParser;
  * 评估接口
  *
  * @author lostred
+ * @since 3.0.0
  */
 public interface Evaluator {
     /**

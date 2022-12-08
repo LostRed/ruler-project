@@ -24,6 +24,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -33,12 +34,15 @@ import java.util.stream.Stream;
  * @author lostred
  */
 @Configuration(proxyBeanMethods = false)
+@EnableConfigurationProperties(RulerProperties.class)
 public class RulerAutoConfiguration {
+    private final static Logger logger = Logger.getLogger(RulerAutoConfiguration.class.getName());
+
     @Bean
     @ConditionalOnMissingBean
     public DomainFactory domainFactory(DefaultListableBeanFactory defaultListableBeanFactory,
                                        RulerProperties rulerProperties) {
-        Stream<String> stream = getClassesByAnnotation(defaultListableBeanFactory, DomainScan.class).stream()
+        Stream<String> stream = classWithAnnotation(defaultListableBeanFactory, DomainScan.class).stream()
                 .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()));
         if (rulerProperties.getDomainScanPackages() == null) {
             return new DomainFactory(stream.toArray(String[]::new));
@@ -57,7 +61,7 @@ public class RulerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ExpressionParser parser() {
+    public ExpressionParser ExpressionParser() {
         return new SpelExpressionParser();
     }
 
@@ -65,13 +69,12 @@ public class RulerAutoConfiguration {
      * 规则自动配置类
      */
     @Configuration(proxyBeanMethods = false)
-    @EnableConfigurationProperties(RulerProperties.class)
     public static class RuleAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         public RuleFactory ruleFactory(DefaultListableBeanFactory defaultListableBeanFactory,
                                        RulerProperties rulerProperties) {
-            Stream<String> stream = getClassesByAnnotation(defaultListableBeanFactory, RuleScan.class).stream()
+            Stream<String> stream = classWithAnnotation(defaultListableBeanFactory, RuleScan.class).stream()
                     .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()));
             if (rulerProperties.getRuleScanPackages() == null) {
                 return new DefaultRuleFactory(stream.toArray(String[]::new));
@@ -88,7 +91,6 @@ public class RulerAutoConfiguration {
      */
     @Configuration(proxyBeanMethods = false)
     @AutoConfigureAfter(RuleAutoConfiguration.class)
-    @EnableConfigurationProperties(RulerProperties.class)
     public static class RulesEngineAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
@@ -130,18 +132,18 @@ public class RulerAutoConfiguration {
      * @param annotationClass            注解类
      * @return 符合条件的类对象集合
      */
-    public static Set<Class<?>> getClassesByAnnotation(DefaultListableBeanFactory defaultListableBeanFactory,
-                                                       Class<? extends Annotation> annotationClass) {
+    private static Set<Class<?>> classWithAnnotation(DefaultListableBeanFactory defaultListableBeanFactory,
+                                                     Class<? extends Annotation> annotationClass) {
         String[] beanNames = defaultListableBeanFactory.getBeanNamesForAnnotation(annotationClass);
         return Arrays.stream(beanNames)
                 .map(defaultListableBeanFactory::getBeanDefinition)
-                .filter(e -> e instanceof ScannedGenericBeanDefinition)
-                .map(e -> (ScannedGenericBeanDefinition) e)
+                .map(ScannedGenericBeanDefinition.class::cast)
                 .map(beanDefinition -> {
                     String className = beanDefinition.getMetadata().getClassName();
                     try {
-                        return RulerAutoConfiguration.class.getClassLoader().loadClass(className);
+                        return Thread.currentThread().getContextClassLoader().loadClass(className);
                     } catch (ClassNotFoundException ignored) {
+                        logger.warning(className + " is not found.");
                         return null;
                     }
                 })

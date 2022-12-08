@@ -1,5 +1,6 @@
 package info.lostred.ruler.factory;
 
+import info.lostred.ruler.constant.RulerConstants;
 import info.lostred.ruler.engine.AbstractRulesEngine;
 import info.lostred.ruler.engine.RulesEngine;
 import org.springframework.expression.BeanResolver;
@@ -62,7 +63,7 @@ public interface RulesEngineFactory {
      */
     class Builder<T extends AbstractRulesEngine> {
         private final Class<T> rulesEngineClass;
-        private String businessType = AbstractRulesEngine.DEFAULT_BUSINESS_TYPE;
+        private String businessType = RulerConstants.BUSINESS_TYPE_COMMON;
         private RuleFactory ruleFactory;
         private ExpressionParser expressionParser;
         private BeanResolver beanResolver;

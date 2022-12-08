@@ -59,7 +59,7 @@ public class RuleProxy implements MethodInterceptor {
     protected void printLog(Method method, Object result) {
         String methodName = method.getName();
         RuleDefinition ruleDefinition = target.getRuleDefinition();
-        if ("getValue".equals(methodName)) {
+        if ("getInitValue".equals(methodName)) {
             logger.config("[" + ruleDefinition.getRuleCode() + " " + ruleDefinition.getGrade() + "]" +
                     "initValue=" + result + ", description=" + ruleDefinition.getDescription());
         }

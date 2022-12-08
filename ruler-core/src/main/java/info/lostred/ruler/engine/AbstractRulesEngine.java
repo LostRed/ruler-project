@@ -25,10 +25,6 @@ import static info.lostred.ruler.constant.RulerConstants.RESULT;
  */
 public abstract class AbstractRulesEngine implements RulesEngine {
     /**
-     * 默认业务类型
-     */
-    public final static String DEFAULT_BUSINESS_TYPE = "COMMON";
-    /**
      * 业务类型
      */
     private final String businessType;

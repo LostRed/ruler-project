@@ -12,8 +12,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.expression.AccessException;
-import org.springframework.expression.BeanResolver;
 import org.springframework.expression.EvaluationContext;
 
 import java.text.ParseException;
@@ -60,7 +58,7 @@ class RulesEngineTest {
     }
 
     @Test
-    void executeTest() throws JsonProcessingException, AccessException {
+    void executeTest() throws JsonProcessingException {
         RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
         long s = System.currentTimeMillis();
         EvaluationContext context = rulesEngine.createEvaluationContext(person);
