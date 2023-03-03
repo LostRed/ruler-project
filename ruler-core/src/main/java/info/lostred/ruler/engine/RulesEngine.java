@@ -17,6 +17,7 @@ public interface RulesEngine {
      * 执行
      *
      * @param rootObject – 根对象
+     * @return 执行结果
      */
     Result execute(Object rootObject);
 
