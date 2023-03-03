@@ -4,7 +4,6 @@ import info.lostred.ruler.core.Evaluator;
 import info.lostred.ruler.domain.RuleDefinition;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
  * 抽象规则

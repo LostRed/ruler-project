@@ -3,7 +3,8 @@ package info.lostred.ruler.domain;
 import info.lostred.ruler.constant.Grade;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 引擎执行的结果
