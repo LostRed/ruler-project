@@ -1,7 +1,6 @@
 package info.lostred.ruler.rule;
 
 import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -41,29 +40,28 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
      * 获取评估上下文根对象，并转换成泛型类
      *
      * @param context 评估上下文
-     * @param parser  表达式解析器
      * @return 解析后的值
      */
-    protected T getRootObject(EvaluationContext context, ExpressionParser parser) {
+    protected T getRootObject(EvaluationContext context) {
         String parameterExp = this.getRuleDefinition().getParameterExp();
-        return parser.parseExpression(parameterExp).getValue(context, type);
+        return this.getExpressionParser().parseExpression(parameterExp).getValue(context, type);
     }
 
     @Override
-    public Object getValue(EvaluationContext context, ExpressionParser parser) {
-        T rootObject = this.getRootObject(context, parser);
+    public Object getValue(EvaluationContext context) {
+        T rootObject = this.getRootObject(context);
         return this.getValueInternal(rootObject);
     }
 
     @Override
-    public boolean supports(EvaluationContext context, ExpressionParser parser) {
-        T rootObject = this.getRootObject(context, parser);
+    public boolean supports(EvaluationContext context) {
+        T rootObject = this.getRootObject(context);
         return this.supportsInternal(rootObject);
     }
 
     @Override
-    public boolean evaluate(EvaluationContext context, ExpressionParser parser) {
-        T rootObject = this.getRootObject(context, parser);
+    public boolean evaluate(EvaluationContext context) {
+        T rootObject = this.getRootObject(context);
         return this.evaluateInternal(rootObject);
     }
 

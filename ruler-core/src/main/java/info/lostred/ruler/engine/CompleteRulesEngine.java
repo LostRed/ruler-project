@@ -1,11 +1,12 @@
 package info.lostred.ruler.engine;
 
+import info.lostred.ruler.core.RulerContextHolder;
+import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesEnginesException;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.expression.BeanResolver;
-import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.Method;
@@ -23,14 +24,21 @@ public class CompleteRulesEngine extends AbstractRulesEngine {
     }
 
     @Override
-    public void execute(EvaluationContext context) {
-        for (AbstractRule rule : rules) {
-            try {
-                this.executeInternal(context, rule);
-            } catch (Exception e) {
-                RuleDefinition ruleDefinition = rule.getRuleDefinition();
-                throw new RulesEnginesException("rule[" + ruleDefinition.getRuleCode() + " " + ruleDefinition.getGrade() + "] has occurred an exception: " + e.getMessage(), this.getBusinessType(), this.getClass());
+    public Result execute(Object rootObject) {
+        try {
+            this.initContext(rootObject);
+            Result result = Result.newInstance();
+            for (AbstractRule rule : rules) {
+                try {
+                    this.executeInternal(RulerContextHolder.getContext(), rule, result);
+                } catch (Exception e) {
+                    RuleDefinition ruleDefinition = rule.getRuleDefinition();
+                    throw new RulesEnginesException("rule[" + ruleDefinition.getRuleCode() + " " + ruleDefinition.getGrade() + "] has occurred an exception: " + e.getMessage(), this.getBusinessType(), this.getClass());
+                }
             }
+            return result;
+        } finally {
+            RulerContextHolder.clear();
         }
     }
 }

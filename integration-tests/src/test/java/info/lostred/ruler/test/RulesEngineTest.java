@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.expression.EvaluationContext;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,10 +60,8 @@ class RulesEngineTest {
     void executeTest() throws JsonProcessingException {
         RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
         long s = System.currentTimeMillis();
-        EvaluationContext context = rulesEngine.createEvaluationContext(person);
-        rulesEngine.execute(context);
+        Result result = rulesEngine.execute(person);
         long e = System.currentTimeMillis();
-        Result result = rulesEngine.getResult(context);
         printResult(result, s, e);
     }
 }

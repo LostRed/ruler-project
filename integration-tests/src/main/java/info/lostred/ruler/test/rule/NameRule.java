@@ -1,6 +1,7 @@
 package info.lostred.ruler.test.rule;
 
 import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.core.RulerContextHolder;
 import info.lostred.ruler.rule.SimpleRule;
 import info.lostred.ruler.test.domain.Person;
 import org.springframework.util.ObjectUtils;
@@ -11,7 +12,7 @@ import org.springframework.util.ObjectUtils;
 public class NameRule extends SimpleRule<Person> {
     @Override
     public Object getValueInternal(Person person) {
-        return person.getName() + "";
+        return this.getExpressionParser().parseExpression("@name").getValue(RulerContextHolder.getContext(), String.class);
     }
 
     @Override

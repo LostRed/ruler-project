@@ -3,7 +3,6 @@ package info.lostred.ruler.engine;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
-import org.springframework.expression.EvaluationContext;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,27 +14,11 @@ import java.util.List;
  */
 public interface RulesEngine {
     /**
-     * 创建评估上下文
-     *
-     * @param rootObject 根对象
-     * @return 评估上下文
-     */
-    EvaluationContext createEvaluationContext(Object rootObject);
-
-    /**
      * 执行
      *
-     * @param context 评估上下文
+     * @param rootObject – 根对象
      */
-    void execute(EvaluationContext context);
-
-    /**
-     * 获取执行结果
-     *
-     * @param context 评估上下文
-     * @return 执行结果
-     */
-    Result getResult(EvaluationContext context);
+    Result execute(Object rootObject);
 
     /**
      * 获取引擎的业务类型

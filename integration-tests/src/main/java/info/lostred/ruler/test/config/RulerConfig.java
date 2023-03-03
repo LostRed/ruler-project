@@ -25,4 +25,9 @@ public class RulerConfig {
     public List<Method> globalFunctions() {
         return Arrays.asList(DateTimeUtils.class.getMethods());
     }
+
+    @Bean
+    public String name() {
+        return "lostred";
+    }
 }

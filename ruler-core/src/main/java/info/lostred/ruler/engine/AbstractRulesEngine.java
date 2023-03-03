@@ -1,5 +1,6 @@
 package info.lostred.ruler.engine;
 
+import info.lostred.ruler.core.RulerContextHolder;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.factory.RuleFactory;
@@ -16,8 +17,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
-
-import static info.lostred.ruler.constant.RulerConstants.RESULT;
 
 /**
  * 抽象规则引擎
@@ -36,15 +35,15 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     /**
      * 表达式解析器
      */
-    protected final ExpressionParser expressionParser;
+    private final ExpressionParser expressionParser;
     /**
      * bean解析器
      */
-    protected final BeanResolver beanResolver;
+    private final BeanResolver beanResolver;
     /**
      * 全局函数
      */
-    protected final List<Method> globalFunctions;
+    private final List<Method> globalFunctions;
     /**
      * 规则引擎中的规则集合
      */
@@ -60,22 +59,15 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.reloadRules();
     }
 
-    @Override
-    public EvaluationContext createEvaluationContext(Object rootObject) {
+    protected void initContext(Object rootObject) {
         StandardEvaluationContext context = new StandardEvaluationContext(rootObject);
-        context.setVariable(RESULT, Result.newInstance());
         context.setBeanResolver(beanResolver);
         if (this.globalFunctions != null) {
             for (Method method : globalFunctions) {
                 context.registerFunction(method.getName(), method);
             }
         }
-        return context;
-    }
-
-    @Override
-    public Result getResult(EvaluationContext context) {
-        return this.expressionParser.parseExpression("#" + RESULT).getValue(context, Result.class);
+        RulerContextHolder.setContext(context);
     }
 
     /**
@@ -83,21 +75,22 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      *
      * @param context 评估上下文
      * @param rule    当前规则
+     * @param result  执行结果
      * @return 规则执行的结果，触发规则返回true，否则返回false
      */
-    protected boolean executeInternal(EvaluationContext context, AbstractRule rule) {
-        if (rule.supports(context, expressionParser)) {
+    protected boolean executeInternal(EvaluationContext context, AbstractRule rule, Result result) {
+        if (rule.supports(context)) {
             if (rule instanceof SimpleRule) {
-                Object value = rule.getValue(context, expressionParser);
+                Object value = rule.getValue(context);
                 if (value != null) {
-                    this.getResult(context).addReport(rule.getRuleDefinition(), value);
+                    result.addReport(rule.getRuleDefinition(), value);
                     return true;
                 }
             } else {
-                boolean flag = rule.evaluate(context, expressionParser);
+                boolean flag = rule.evaluate(context);
                 if (flag) {
-                    Object value = rule.getValue(context, expressionParser);
-                    this.getResult(context).addReport(rule.getRuleDefinition(), value);
+                    Object value = rule.getValue(context);
+                    result.addReport(rule.getRuleDefinition(), value);
                 }
                 return flag;
             }
@@ -169,6 +162,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     public void reloadRules() {
         List<AbstractRule> rules = ruleFactory.findRules(businessType).stream()
                 .filter(rule -> rule.getRuleDefinition().isEnabled())
+                .peek(rule -> rule.setExpressionParser(expressionParser))
                 .sorted(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()))
                 .collect(Collectors.toList());
         this.rules.clear();
