@@ -1,7 +1,6 @@
 package info.lostred.ruler.test.rule;
 
 import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.DeclarativeRule;
 
 @Rule(ruleCode = "性别码值",
@@ -11,7 +10,4 @@ import info.lostred.ruler.rule.DeclarativeRule;
         conditionExp = "gender!=null",
         predicateExp = "!@dict.get('gender').contains(gender)")
 public class GenderCodeRule extends DeclarativeRule {
-    public GenderCodeRule(RuleDefinition ruleDefinition) {
-        super(ruleDefinition);
-    }
 }

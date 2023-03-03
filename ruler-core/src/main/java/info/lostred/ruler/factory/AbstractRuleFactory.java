@@ -103,9 +103,10 @@ public abstract class AbstractRuleFactory implements RuleFactory {
         public AbstractRule build() {
             Class<?> ruleClass = ruleDefinition.getRuleClass();
             try {
-                Constructor<?> constructor = ruleClass.getDeclaredConstructor(RuleDefinition.class);
-                Object object = constructor.newInstance(ruleDefinition);
+                Constructor<?> constructor = ruleClass.getDeclaredConstructor();
+                Object object = constructor.newInstance();
                 if (object instanceof AbstractRule) {
+                    ((AbstractRule) object).setRuleDefinition(ruleDefinition);
                     //创建代理器
                     RuleProxy proxy = new RuleProxy((AbstractRule) object);
                     //拿到代理对象

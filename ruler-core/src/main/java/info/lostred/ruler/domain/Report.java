@@ -13,24 +13,24 @@ public class Report implements Serializable {
      */
     private final String description;
     /**
-     * 记录初始值
+     * 返回值
      */
-    private final Object initValue;
+    private final Object returnValue;
 
-    public static Report newInstance(String description, Object initValue) {
-        return new Report(description, initValue);
+    public static Report newInstance(String description, Object returnValue) {
+        return new Report(description, returnValue);
     }
 
-    private Report(String description, Object initValue) {
+    private Report(String description, Object returnValue) {
         this.description = description;
-        this.initValue = initValue;
+        this.returnValue = returnValue;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public Object getInitValue() {
-        return initValue;
+    public Object getReturnValue() {
+        return returnValue;
     }
 }

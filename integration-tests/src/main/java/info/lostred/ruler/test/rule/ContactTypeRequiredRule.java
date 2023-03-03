@@ -1,7 +1,6 @@
 package info.lostred.ruler.test.rule;
 
 import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.DeclarativeRule;
 
 @Rule(ruleCode = "联系方式类型必填",
@@ -11,7 +10,4 @@ import info.lostred.ruler.rule.DeclarativeRule;
         conditionExp = "true",
         predicateExp = "contacts?.?[type==null||''.equals(type)].size()>0")
 public class ContactTypeRequiredRule extends DeclarativeRule {
-    public ContactTypeRequiredRule(RuleDefinition ruleDefinition) {
-        super(ruleDefinition);
-    }
 }

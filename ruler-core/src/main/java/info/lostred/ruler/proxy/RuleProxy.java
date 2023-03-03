@@ -40,7 +40,8 @@ public class RuleProxy implements MethodInterceptor {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(target.getClass());
         enhancer.setCallback(this);
-        return (T) enhancer.create(new Class[]{RuleDefinition.class}, new Object[]{null});
+        enhancer.setClassLoader(target.getClass().getClassLoader());
+        return (T) enhancer.create();
     }
 
     @Override

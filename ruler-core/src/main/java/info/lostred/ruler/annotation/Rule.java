@@ -22,7 +22,7 @@ public @interface Rule {
      *
      * @return 规则编号
      */
-    String ruleCode() default "";
+    String ruleCode();
 
     /**
      * 业务类型
@@ -43,7 +43,7 @@ public @interface Rule {
      *
      * @return 规则描述
      */
-    String description();
+    String description() default "";
 
     /**
      * 规则执行的顺序号

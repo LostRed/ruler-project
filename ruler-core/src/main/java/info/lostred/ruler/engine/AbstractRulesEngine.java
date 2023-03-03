@@ -4,6 +4,7 @@ import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
+import info.lostred.ruler.rule.SimpleRule;
 import org.springframework.expression.BeanResolver;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
@@ -86,12 +87,20 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      */
     protected boolean executeInternal(EvaluationContext context, AbstractRule rule) {
         if (rule.supports(context, expressionParser)) {
-            boolean flag = rule.evaluate(context, expressionParser);
-            if (flag) {
-                Object value = rule.getInitValue(context, expressionParser);
-                this.getResult(context).addInitValue(rule.getRuleDefinition(), value);
+            if (rule instanceof SimpleRule) {
+                Object value = rule.getValue(context, expressionParser);
+                if (value != null) {
+                    this.getResult(context).addReport(rule.getRuleDefinition(), value);
+                    return true;
+                }
+            } else {
+                boolean flag = rule.evaluate(context, expressionParser);
+                if (flag) {
+                    Object value = rule.getValue(context, expressionParser);
+                    this.getResult(context).addReport(rule.getRuleDefinition(), value);
+                }
+                return flag;
             }
-            return flag;
         }
         return false;
     }

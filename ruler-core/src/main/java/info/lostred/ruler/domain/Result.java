@@ -37,12 +37,12 @@ public class Result implements Serializable {
     }
 
     /**
-     * 添加一个初始值
+     * 添加一个报告
      *
      * @param ruleDefinition 规则定义
-     * @param value          初始值
+     * @param value          需要记录的值
      */
-    public void addInitValue(RuleDefinition ruleDefinition, Object value) {
+    public void addReport(RuleDefinition ruleDefinition, Object value) {
         Report report = Report.newInstance(ruleDefinition.getDescription(), value);
         this.reports.put(ruleDefinition.getRuleCode(), report);
         this.updateGrade(ruleDefinition.getGrade());
