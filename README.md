@@ -36,3 +36,5 @@
 ### AbstractRule抽象类
 
 基于spring的spEL表达式实现主要逻辑功能，定义了规则的主要方法，开发者可扩展该类，实现其他特殊的规则。
+
+<img src="https://cdn.jsdelivr.net/gh/LostRed/pic-repository@master/ruler-project.72lfu3ibjfg0.webp">
