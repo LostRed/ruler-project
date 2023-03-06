@@ -36,3 +36,11 @@
 ### AbstractRule抽象类
 
 基于spring的spEL表达式实现主要逻辑功能，定义了规则的主要方法，开发者可扩展该类，实现其他特殊的规则。
+
+
+## 3️⃣核心接口关系
+
+- Domain通常为RulesEngine中execute方法的入参，通过RulesEngine中所有Rule规则执行后得到一个对应的Result结果。
+- Rule统一由RuleFactory管理，这些规则与规则引擎之间依靠businessType属性联系
+
+<img src="https://cdn.jsdelivr.net/gh/LostRed/pic-repository@master/ruler-project.72lfu3ibjfg0.webp" alt="">
