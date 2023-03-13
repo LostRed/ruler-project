@@ -19,7 +19,7 @@
       "type": "java.lang.String",
       "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
       "description": "容器单实例规则引擎的默认引擎类型.",
-      "defaultValue": "simple"
+      "defaultValue": "complete"
     },
     {
       "name": "ruler.rule-scan-packages",
