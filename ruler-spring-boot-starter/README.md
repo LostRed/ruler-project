@@ -5,6 +5,7 @@
 ### 引入依赖
 
 ```xml
+
 <dependency>
     <groupId>info.lostred.ruler</groupId>
     <artifactId>ruler-spring-boot-starter</artifactId>
@@ -29,6 +30,7 @@ ruler:
 使用注解初始化方式必须配置Configuration，单实例规则引擎不能满足项目时，可自定义规则引擎。
 
 ```java
+
 @Configuration
 @RuleScan("info.lostred.ruler.test.rule")
 @DomainScan("info.lostred.ruler.test.domain")
@@ -44,6 +46,7 @@ public class RulerConfig {
 以上，info.lostred.ruler.test.domain为需要校验类的包名路径，下面是需要校验类的示例代码。
 
 ```java
+
 @Data
 public class Person {
     private String certNo;
@@ -80,6 +83,7 @@ public class Contact {
 以下是单元测试案例。
 
 ```java
+
 @SpringBootTest
 class RulesEngineTest {
     static String businessType = "person";
@@ -140,9 +144,6 @@ class RulesEngineTest {
 1. 继承DeclarativeRule，采用声明式开发，使用注解直接配置表达式
 
 ```java
-import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.rule.DeclarativeRule;
 
 @Rule(ruleCode = "身份证号码长度",
         businessType = "person",
@@ -160,34 +161,34 @@ public class CertNoLengthRule extends DeclarativeRule {
 2. 继承ProgrammaticRule，采用编程式开发，重写ProgrammaticRule的方法
 
 ```java
-import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.rule.ProgrammaticRule;
 
-@Rule(ruleCode = "姓名必填",
+@Rule(ruleCode = "联系方式",
         businessType = "person",
-        description = "姓名不能为空")
-public class NameRule extends ProgrammaticRule<Person> {
-    public NameRule(RuleDefinition ruleDefinition) {
-        super(ruleDefinition);
+        description = "联系方式密码不能为1234")
+public class ContactRule extends ProgrammaticRule<Person> {
+    @Override
+    public void init() {
+
+    }
+    
+    @Override
+    public Object getValueInternal(Person person) {
+        return person.getContacts().stream()
+                .map(Contact::getPassword)
+                .filter("1234"::equals)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Object getInitValue(EvaluationContext context, ExpressionParser parser) {
-        Person person = this.getRootObject(context, parser);
-        return person.getName();
+    public boolean supportsInternal(Person person) {
+        return !ObjectUtils.isEmpty(person.getContacts());
     }
 
     @Override
-    public boolean supports(EvaluationContext context, ExpressionParser parser) {
-        Person person = this.getRootObject(context, parser);
-        return !ObjectUtils.isEmpty(person);
-    }
-
-    @Override
-    public boolean evaluate(EvaluationContext context, ExpressionParser parser) {
-        Person person = this.getRootObject(context, parser);
-        return ObjectUtils.isEmpty(person.getName());
+    public boolean evaluateInternal(Person person) {
+        return person.getContacts().stream()
+                .map(Contact::getPassword)
+                .anyMatch("1234"::equals);
     }
 }
 ```
@@ -206,6 +207,7 @@ public class NameRule extends ProgrammaticRule<Person> {
 在配置类上标记该注解，规则工厂会扫描其value指定的包路径。当使用spring时，需将该配置类注册到spring容器。
 
 ```java
+
 @Configuration
 @RuleScan("info.lostred.ruler.test.rule")
 @DomainScan("info.lostred.ruler.test.domain")

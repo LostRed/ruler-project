@@ -7,8 +7,6 @@ import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.rule.SimpleRule;
 import org.springframework.expression.BeanResolver;
-import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.lang.reflect.Method;
@@ -27,38 +25,57 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     /**
      * 业务类型
      */
-    private final String businessType;
+    private String businessType;
     /**
      * 规则工厂
      */
-    private final RuleFactory ruleFactory;
-    /**
-     * 表达式解析器
-     */
-    private final ExpressionParser expressionParser;
+    private RuleFactory ruleFactory;
     /**
      * bean解析器
      */
-    private final BeanResolver beanResolver;
+    private BeanResolver beanResolver;
     /**
      * 全局函数
      */
-    private final List<Method> globalFunctions;
+    private List<Method> globalFunctions;
     /**
      * 规则引擎中的规则集合
      */
     protected final List<AbstractRule> rules = new CopyOnWriteArrayList<>();
 
-    public AbstractRulesEngine(String businessType, RuleFactory ruleFactory, ExpressionParser expressionParser,
-                               BeanResolver beanResolver, List<Method> globalFunctions) {
+    public void setBusinessType(String businessType) {
         this.businessType = businessType;
-        this.ruleFactory = ruleFactory;
-        this.expressionParser = expressionParser;
-        this.beanResolver = beanResolver;
-        this.globalFunctions = globalFunctions;
-        this.reloadRules();
     }
 
+    public RuleFactory getRuleFactory() {
+        return ruleFactory;
+    }
+
+    public void setRuleFactory(RuleFactory ruleFactory) {
+        this.ruleFactory = ruleFactory;
+    }
+
+    public BeanResolver getBeanResolver() {
+        return beanResolver;
+    }
+
+    public void setBeanResolver(BeanResolver beanResolver) {
+        this.beanResolver = beanResolver;
+    }
+
+    public List<Method> getGlobalFunctions() {
+        return globalFunctions;
+    }
+
+    public void setGlobalFunctions(List<Method> globalFunctions) {
+        this.globalFunctions = globalFunctions;
+    }
+
+    /**
+     * 初始化评估上下文
+     *
+     * @param rootObject 根对象
+     */
     protected void initContext(Object rootObject) {
         StandardEvaluationContext context = new StandardEvaluationContext(rootObject);
         context.setBeanResolver(beanResolver);
@@ -73,23 +90,23 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     /**
      * 规则执行
      *
-     * @param context 评估上下文
-     * @param rule    当前规则
-     * @param result  执行结果
+     * @param rootObject 根对象
+     * @param rule       当前规则
+     * @param result     执行结果
      * @return 规则执行的结果，触发规则返回true，否则返回false
      */
-    protected boolean executeInternal(EvaluationContext context, AbstractRule rule, Result result) {
-        if (rule.supports(context)) {
+    protected boolean executeInternal(Object rootObject, AbstractRule rule, Result result) {
+        if (rule.supports(rootObject)) {
             if (rule instanceof SimpleRule) {
-                Object value = rule.getValue(context);
+                Object value = rule.getValue(rootObject);
                 if (value != null) {
                     result.addReport(rule.getRuleDefinition(), value);
                     return true;
                 }
             } else {
-                boolean flag = rule.evaluate(context);
+                boolean flag = rule.evaluate(rootObject);
                 if (flag) {
-                    Object value = rule.getValue(context);
+                    Object value = rule.getValue(rootObject);
                     result.addReport(rule.getRuleDefinition(), value);
                 }
                 return flag;
@@ -162,7 +179,6 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     public void reloadRules() {
         List<AbstractRule> rules = ruleFactory.findRules(businessType).stream()
                 .filter(rule -> rule.getRuleDefinition().isEnabled())
-                .peek(rule -> rule.setExpressionParser(expressionParser))
                 .sorted(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()))
                 .collect(Collectors.toList());
         this.rules.clear();

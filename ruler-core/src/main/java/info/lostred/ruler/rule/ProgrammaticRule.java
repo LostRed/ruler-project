@@ -1,7 +1,5 @@
 package info.lostred.ruler.rule;
 
-import org.springframework.expression.EvaluationContext;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -31,38 +29,27 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
                     this.type = (Class<T>) rawType;
                 }
             } else {
-                throw new IllegalArgumentException("GenericRule must be a parameterized type");
+                throw new IllegalArgumentException("ProgrammaticRule must be a parameterized type");
             }
         }
     }
 
-    /**
-     * 获取评估上下文根对象，并转换成泛型类
-     *
-     * @param context 评估上下文
-     * @return 解析后的值
-     */
-    protected T getRootObject(EvaluationContext context) {
-        String parameterExp = this.getRuleDefinition().getParameterExp();
-        return this.getExpressionParser().parseExpression(parameterExp).getValue(context, type);
+    @SuppressWarnings("unchecked")
+    @Override
+    public Object getValue(Object object) {
+        return this.getValueInternal((T) object);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Object getValue(EvaluationContext context) {
-        T rootObject = this.getRootObject(context);
-        return this.getValueInternal(rootObject);
+    public boolean supports(Object object) {
+        return this.supportsInternal((T) object);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean supports(EvaluationContext context) {
-        T rootObject = this.getRootObject(context);
-        return this.supportsInternal(rootObject);
-    }
-
-    @Override
-    public boolean evaluate(EvaluationContext context) {
-        T rootObject = this.getRootObject(context);
-        return this.evaluateInternal(rootObject);
+    public boolean evaluate(Object object) {
+        return this.evaluateInternal((T) object);
     }
 
     public abstract Object getValueInternal(T object);

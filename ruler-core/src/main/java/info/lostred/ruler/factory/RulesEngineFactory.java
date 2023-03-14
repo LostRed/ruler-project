@@ -1,10 +1,8 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.constant.RulerConstants;
 import info.lostred.ruler.engine.AbstractRulesEngine;
 import info.lostred.ruler.engine.RulesEngine;
 import org.springframework.expression.BeanResolver;
-import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -62,15 +60,17 @@ public interface RulesEngineFactory {
      * @param <T> 规则引擎类型
      */
     class Builder<T extends AbstractRulesEngine> {
-        private final Class<T> rulesEngineClass;
-        private String businessType = RulerConstants.BUSINESS_TYPE_COMMON;
-        private RuleFactory ruleFactory;
-        private ExpressionParser expressionParser;
-        private BeanResolver beanResolver;
-        private List<Method> globalFunctions;
+        private final T abstractRulesEngine;
 
         public Builder(Class<T> rulesEngineClass) {
-            this.rulesEngineClass = rulesEngineClass;
+            try {
+                Constructor<T> constructor = rulesEngineClass.getDeclaredConstructor();
+                abstractRulesEngine = constructor.newInstance();
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new IllegalArgumentException(e);
+            }
         }
 
         /**
@@ -79,8 +79,8 @@ public interface RulesEngineFactory {
          * @param businessType 业务类型
          * @return 规则引擎建造者
          */
-        public Builder<T> setBusinessType(String businessType) {
-            this.businessType = businessType;
+        public Builder<T> businessType(String businessType) {
+            abstractRulesEngine.setBusinessType(businessType);
             return this;
         }
 
@@ -90,19 +90,8 @@ public interface RulesEngineFactory {
          * @param ruleFactory 规则工厂
          * @return 规则引擎建造者
          */
-        public Builder<T> setRuleFactory(RuleFactory ruleFactory) {
-            this.ruleFactory = ruleFactory;
-            return this;
-        }
-
-        /**
-         * 设置spEL表达式解析器
-         *
-         * @param expressionParser 表达式解析器
-         * @return 规则引擎建造者
-         */
-        public Builder<T> setExpressionParser(ExpressionParser expressionParser) {
-            this.expressionParser = expressionParser;
+        public Builder<T> ruleFactory(RuleFactory ruleFactory) {
+            abstractRulesEngine.setRuleFactory(ruleFactory);
             return this;
         }
 
@@ -112,8 +101,8 @@ public interface RulesEngineFactory {
          * @param beanResolver bean解析器
          * @return 规则引擎建造者
          */
-        public Builder<T> setBeanResolver(BeanResolver beanResolver) {
-            this.beanResolver = beanResolver;
+        public Builder<T> beanResolver(BeanResolver beanResolver) {
+            abstractRulesEngine.setBeanResolver(beanResolver);
             return this;
         }
 
@@ -123,8 +112,8 @@ public interface RulesEngineFactory {
          * @param globalFunctions 全局函数方法
          * @return 规则引擎建造者
          */
-        public Builder<T> setGlobalFunctions(List<Method> globalFunctions) {
-            this.globalFunctions = globalFunctions;
+        public Builder<T> globalFunctions(List<Method> globalFunctions) {
+            abstractRulesEngine.setGlobalFunctions(globalFunctions);
             return this;
         }
 
@@ -134,21 +123,14 @@ public interface RulesEngineFactory {
          * @return 规则引擎实例
          */
         public T build() {
-            if (ruleFactory == null) {
+            if (abstractRulesEngine.getBusinessType() == null) {
+                throw new IllegalArgumentException("there is not a businessType to be set in builder.");
+            }
+            if (abstractRulesEngine.getRuleFactory() == null) {
                 throw new IllegalArgumentException("there is not a ruleFactory to be set in builder.");
             }
-            if (expressionParser == null) {
-                throw new IllegalArgumentException("there is not an expressionParser to be set in builder.");
-            }
-            try {
-                Constructor<T> constructor = rulesEngineClass.getDeclaredConstructor(
-                        String.class, RuleFactory.class, ExpressionParser.class, BeanResolver.class, List.class);
-                return constructor.newInstance(businessType, ruleFactory, expressionParser, beanResolver, globalFunctions);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                throw new IllegalArgumentException(e);
-            }
+            this.abstractRulesEngine.reloadRules();
+            return this.abstractRulesEngine;
         }
     }
 }
