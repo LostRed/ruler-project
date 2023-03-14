@@ -61,10 +61,10 @@ public abstract class AbstractRule implements Evaluator {
     protected <T> T getBean(String beanName, Class<T> beanClass) {
         try {
             Object object = this.getBeanResolver().resolve(null, beanName);
-            if (object.getClass().isAssignableFrom(beanClass)) {
+            if (beanClass.isAssignableFrom(object.getClass())) {
                 return (T) object;
             }
-            throw new RuntimeException("不存在bean名称为" + beanName + "的" + beanClass + "对象");
+            throw new RuntimeException("no qualifying bean of type '" + beanClass.getName() + "' available");
         } catch (AccessException e) {
             throw new RuntimeException(e);
         }
