@@ -2,7 +2,8 @@ package info.lostred.ruler.rule;
 
 import info.lostred.ruler.core.Evaluator;
 import info.lostred.ruler.domain.RuleDefinition;
-import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.AccessException;
+import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 
 /**
@@ -19,6 +20,10 @@ public abstract class AbstractRule implements Evaluator {
      * 表达式解析器
      */
     private ExpressionParser expressionParser;
+    /**
+     * bean解析器
+     */
+    private BeanResolver beanResolver;
 
     public RuleDefinition getRuleDefinition() {
         return ruleDefinition;
@@ -36,19 +41,53 @@ public abstract class AbstractRule implements Evaluator {
         this.expressionParser = expressionParser;
     }
 
+    public BeanResolver getBeanResolver() {
+        return beanResolver;
+    }
+
+    public void setBeanResolver(BeanResolver beanResolver) {
+        this.beanResolver = beanResolver;
+    }
+
+    /**
+     * 从bean解析器中解析bean
+     *
+     * @param beanName  bean的名称
+     * @param beanClass bean的类对象
+     * @param <T>       bean类型
+     * @return bean对象
+     */
+    @SuppressWarnings("unchecked")
+    protected <T> T getBean(String beanName, Class<T> beanClass) {
+        try {
+            Object object = this.getBeanResolver().resolve(null, beanName);
+            if (object.getClass().isAssignableFrom(beanClass)) {
+                return (T) object;
+            }
+            throw new RuntimeException("不存在bean名称为" + beanName + "的" + beanClass + "对象");
+        } catch (AccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 规则初始化
+     */
+    public abstract void init();
+
     /**
      * 在给定的评估上下文与表达式解析器下，评估接口是否支持对该参数进行判断
      *
-     * @param context 评估上下文
+     * @param object 参数
      * @return 支持返回true，否则返回false
      */
-    public abstract boolean supports(EvaluationContext context);
+    public abstract boolean supports(Object object);
 
     /**
      * 获取需要记录的值
      *
-     * @param context 评估上下文
+     * @param object 参数
      * @return 需要记录的值
      */
-    public abstract Object getValue(EvaluationContext context);
+    public abstract Object getValue(Object object);
 }

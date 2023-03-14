@@ -4,6 +4,8 @@ import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.proxy.RuleProxy;
 import info.lostred.ruler.rule.AbstractRule;
+import org.springframework.expression.BeanResolver;
+import org.springframework.expression.ExpressionParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -45,8 +47,11 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     }
 
     @Override
-    public AbstractRule createRule(RuleDefinition ruleDefinition) {
-        return this.builder(ruleDefinition).build();
+    public AbstractRule createRule(RuleDefinition ruleDefinition, ExpressionParser expressionParser, BeanResolver beanResolver) {
+        return this.builder(ruleDefinition)
+                .expressionParser(expressionParser)
+                .beanResolver(beanResolver)
+                .build();
     }
 
     @Override
@@ -94,13 +99,9 @@ public abstract class AbstractRuleFactory implements RuleFactory {
      * 规则建造者
      */
     private static class Builder {
-        private final RuleDefinition ruleDefinition;
+        private final AbstractRule abstractRule;
 
         private Builder(RuleDefinition ruleDefinition) {
-            this.ruleDefinition = ruleDefinition;
-        }
-
-        public AbstractRule build() {
             Class<?> ruleClass = ruleDefinition.getRuleClass();
             try {
                 Constructor<?> constructor = ruleClass.getDeclaredConstructor();
@@ -110,15 +111,31 @@ public abstract class AbstractRuleFactory implements RuleFactory {
                     //创建代理器
                     RuleProxy proxy = new RuleProxy((AbstractRule) object);
                     //拿到代理对象
-                    return proxy.newProxyInstance();
+                    this.abstractRule = proxy.newProxyInstance();
+                } else {
+                    throw new RulesException("Internal error: " + ruleClass.getName() +
+                            " cannot be instantiated, because it is not instance of AbstractRule.", ruleDefinition);
                 }
-                throw new RulesException("Internal error: " + ruleClass.getName() +
-                        " cannot be instantiated, because it is not instance of AbstractRule.", this.ruleDefinition);
             } catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
                      IllegalAccessException e) {
                 throw new RulesException("Internal error: " + ruleClass.getName() +
-                        " cannot be instantiated.", e, this.ruleDefinition);
+                        " cannot be instantiated.", e, ruleDefinition);
             }
+        }
+
+        public Builder expressionParser(ExpressionParser expressionParser) {
+            this.abstractRule.setExpressionParser(expressionParser);
+            return this;
+        }
+
+        public Builder beanResolver(BeanResolver beanResolver) {
+            this.abstractRule.setBeanResolver(beanResolver);
+            return this;
+        }
+
+        public AbstractRule build() {
+            this.abstractRule.init();
+            return this.abstractRule;
         }
     }
 }

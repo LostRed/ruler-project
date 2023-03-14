@@ -73,16 +73,18 @@ public class RulerAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         public RuleFactory ruleFactory(DefaultListableBeanFactory defaultListableBeanFactory,
+                                       ExpressionParser expressionParser,
+                                       BeanResolver beanResolver,
                                        RulerProperties rulerProperties) {
             Stream<String> stream = classWithAnnotation(defaultListableBeanFactory, RuleScan.class).stream()
                     .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()));
             if (rulerProperties.getRuleScanPackages() == null) {
-                return new DefaultRuleFactory(stream.toArray(String[]::new));
+                return new DefaultRuleFactory(expressionParser, beanResolver, stream.toArray(String[]::new));
             }
             String[] ruleScanPackages = Stream.concat(stream, Arrays.stream(rulerProperties.getRuleScanPackages()))
                     .distinct()
                     .toArray(String[]::new);
-            return new DefaultRuleFactory(ruleScanPackages);
+            return new DefaultRuleFactory(expressionParser, beanResolver, ruleScanPackages);
         }
     }
 
@@ -101,25 +103,23 @@ public class RulerAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnProperty("ruler.engine-type")
-        public RulesEngine rulesEngine(RuleFactory ruleFactory, ExpressionParser expressionParser, BeanResolver beanResolver,
+        public RulesEngine rulesEngine(RuleFactory ruleFactory, BeanResolver beanResolver,
                                        List<Method> globalFunctions, RulerProperties rulerProperties) {
             String type = rulerProperties.getEngineType().toUpperCase();
             String businessType = rulerProperties.getBusinessType();
             if (EngineType.COMPLETE.equals(EngineType.valueOf(type))) {
                 return RulesEngineFactory.builder(CompleteRulesEngine.class)
-                        .setBusinessType(businessType)
-                        .setRuleFactory(ruleFactory)
-                        .setExpressionParser(expressionParser)
-                        .setBeanResolver(beanResolver)
-                        .setGlobalFunctions(globalFunctions)
+                        .businessType(businessType)
+                        .ruleFactory(ruleFactory)
+                        .beanResolver(beanResolver)
+                        .globalFunctions(globalFunctions)
                         .build();
             } else {
                 return RulesEngineFactory.builder(IncompleteRulesEngine.class)
-                        .setBusinessType(businessType)
-                        .setRuleFactory(ruleFactory)
-                        .setExpressionParser(expressionParser)
-                        .setBeanResolver(beanResolver)
-                        .setGlobalFunctions(globalFunctions)
+                        .businessType(businessType)
+                        .ruleFactory(ruleFactory)
+                        .beanResolver(beanResolver)
+                        .globalFunctions(globalFunctions)
                         .build();
             }
         }

@@ -1,7 +1,7 @@
 package info.lostred.ruler.rule;
 
 import info.lostred.ruler.core.Evaluator;
-import org.springframework.expression.EvaluationContext;
+import info.lostred.ruler.core.RulerContextHolder;
 
 /**
  * 声明式规则
@@ -12,22 +12,33 @@ import org.springframework.expression.EvaluationContext;
  */
 public class DeclarativeRule extends AbstractRule implements Evaluator {
     @Override
-    public boolean supports(EvaluationContext context) {
+    public void init() {
+
+    }
+
+    @Override
+    public boolean supports(Object object) {
         String conditionExp = this.getRuleDefinition().getConditionExp();
-        Boolean flag = this.getExpressionParser().parseExpression(conditionExp).getValue(context, Boolean.class);
+        Boolean flag = this.getExpressionParser()
+                .parseExpression(conditionExp)
+                .getValue(RulerContextHolder.getContext(), Boolean.class);
         return Boolean.TRUE.equals(flag);
     }
 
     @Override
-    public boolean evaluate(EvaluationContext context) {
+    public boolean evaluate(Object object) {
         String predicateExp = this.getRuleDefinition().getPredicateExp();
-        Boolean flag = this.getExpressionParser().parseExpression(predicateExp).getValue(context, Boolean.class);
+        Boolean flag = this.getExpressionParser()
+                .parseExpression(predicateExp)
+                .getValue(RulerContextHolder.getContext(), Boolean.class);
         return Boolean.TRUE.equals(flag);
     }
 
     @Override
-    public Object getValue(EvaluationContext context) {
+    public Object getValue(Object object) {
         String parameterExp = this.getRuleDefinition().getParameterExp();
-        return this.getExpressionParser().parseExpression(parameterExp).getValue(context);
+        return this.getExpressionParser()
+                .parseExpression(parameterExp)
+                .getValue(RulerContextHolder.getContext());
     }
 }
