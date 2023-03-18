@@ -73,7 +73,8 @@ public abstract class AbstractRule implements Evaluator {
     /**
      * 规则初始化
      */
-    public abstract void init();
+    public void init() {
+    }
 
     /**
      * 在给定的评估上下文与表达式解析器下，评估接口是否支持对该参数进行判断

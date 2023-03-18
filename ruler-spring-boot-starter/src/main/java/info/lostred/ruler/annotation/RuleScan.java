@@ -1,5 +1,7 @@
 package info.lostred.ruler.annotation;
 
+import org.springframework.context.annotation.Import;
+
 import java.lang.annotation.*;
 
 /**
@@ -10,6 +12,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Import(RuleScannerRegistrar.class)
 public @interface RuleScan {
     /**
      * 包扫描路径

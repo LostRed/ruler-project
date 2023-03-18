@@ -32,16 +32,14 @@ public class RuleProxy implements MethodInterceptor {
     /**
      * 创建一个代理实例对象
      *
-     * @param <T> 代理目标的类型
      * @return 代理实例对象
      */
-    @SuppressWarnings("unchecked")
-    public <T> T newProxyInstance() {
+    public AbstractRule newProxyInstance() {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(target.getClass());
-        enhancer.setCallback(this);
         enhancer.setClassLoader(target.getClass().getClassLoader());
-        return (T) enhancer.create();
+        enhancer.setCallback(this);
+        return (AbstractRule) enhancer.create();
     }
 
     @Override

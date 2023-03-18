@@ -62,6 +62,14 @@ public interface RuleFactory {
     AbstractRule getRule(String ruleCode);
 
     /**
+     * 根据规则类型获取规则
+     *
+     * @param ruleClass 规则类型
+     * @return 规则
+     */
+    AbstractRule getRule(Class<? extends AbstractRule> ruleClass);
+
+    /**
      * 根据业务类型与约束对象类型查找规则集合
      *
      * @param businessType 业务类型

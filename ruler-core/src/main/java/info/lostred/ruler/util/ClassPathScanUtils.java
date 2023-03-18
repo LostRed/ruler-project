@@ -10,12 +10,12 @@ import java.util.jar.JarEntry;
 import java.util.logging.Logger;
 
 /**
- * 包扫描工具
+ * 类路径扫描工具
  *
  * @author lostred
  */
-public final class PackageScanUtils {
-    private static final Logger logger = Logger.getLogger(PackageScanUtils.class.getName());
+public final class ClassPathScanUtils {
+    private static final Logger logger = Logger.getLogger(ClassPathScanUtils.class.getName());
 
     /**
      * 找到包扫描路径下的所有类对象集合

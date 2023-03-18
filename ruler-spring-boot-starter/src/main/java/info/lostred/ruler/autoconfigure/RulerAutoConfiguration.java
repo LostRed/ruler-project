@@ -1,25 +1,34 @@
 package info.lostred.ruler.autoconfigure;
 
 import info.lostred.ruler.annotation.DomainScan;
-import info.lostred.ruler.annotation.RuleScan;
+import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.constant.EngineType;
 import info.lostred.ruler.engine.CompleteRulesEngine;
 import info.lostred.ruler.engine.IncompleteRulesEngine;
 import info.lostred.ruler.engine.RulesEngine;
 import info.lostred.ruler.factory.*;
+import info.lostred.ruler.rule.AbstractRule;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.core.env.Environment;
 import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.util.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -42,15 +51,13 @@ public class RulerAutoConfiguration {
     @ConditionalOnMissingBean
     public DomainFactory domainFactory(DefaultListableBeanFactory defaultListableBeanFactory,
                                        RulerProperties rulerProperties) {
-        Stream<String> stream = classWithAnnotation(defaultListableBeanFactory, DomainScan.class).stream()
-                .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()));
-        if (rulerProperties.getDomainScanPackages() == null) {
-            return new DomainFactory(stream.toArray(String[]::new));
-        }
-        String[] domainScanPackages = Stream.concat(stream, Arrays.stream(rulerProperties.getDomainScanPackages()))
+        Set<Class<?>> classes = classWithAnnotation(defaultListableBeanFactory, DomainScan.class);
+        String[] scanPackages = Stream.concat(Arrays.stream(rulerProperties.getDomainScanPackages()),
+                        classes.stream().flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value())))
+                .filter(StringUtils::hasText)
                 .distinct()
                 .toArray(String[]::new);
-        return new DomainFactory(domainScanPackages);
+        return new DomainFactory(scanPackages);
     }
 
     @Bean
@@ -69,22 +76,34 @@ public class RulerAutoConfiguration {
      * 规则自动配置类
      */
     @Configuration(proxyBeanMethods = false)
-    public static class RuleAutoConfiguration {
+    public static class RuleAutoConfiguration implements BeanDefinitionRegistryPostProcessor, EnvironmentAware {
+        private final static String RULE_SCAN_PACKAGES_KEY = "ruler.rule-scan-packages";
+        private Environment environment;
+
         @Bean
         @ConditionalOnMissingBean
-        public RuleFactory ruleFactory(DefaultListableBeanFactory defaultListableBeanFactory,
-                                       ExpressionParser expressionParser,
-                                       BeanResolver beanResolver,
-                                       RulerProperties rulerProperties) {
-            Stream<String> stream = classWithAnnotation(defaultListableBeanFactory, RuleScan.class).stream()
-                    .flatMap(e -> Arrays.stream(e.getAnnotation(RuleScan.class).value()));
-            if (rulerProperties.getRuleScanPackages() == null) {
-                return new DefaultRuleFactory(expressionParser, beanResolver, stream.toArray(String[]::new));
-            }
-            String[] ruleScanPackages = Stream.concat(stream, Arrays.stream(rulerProperties.getRuleScanPackages()))
+        public RuleFactory ruleFactory(ObjectProvider<AbstractRule> abstractRules) {
+            return new DefaultRuleFactory(abstractRules);
+        }
+
+        @Override
+        public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+            String[] basePackages = Arrays.stream(StringUtils.commaDelimitedListToStringArray(environment.getProperty(RULE_SCAN_PACKAGES_KEY)))
+                    .filter(StringUtils::hasText)
                     .distinct()
                     .toArray(String[]::new);
-            return new DefaultRuleFactory(expressionParser, beanResolver, ruleScanPackages);
+            ClassPathRuleScanner classPathRuleScanner = new ClassPathRuleScanner(registry);
+            classPathRuleScanner.addIncludeFilter((metadataReader, metadataReaderFactory) -> metadataReader.getAnnotationMetadata().hasAnnotation(Rule.class.getName()));
+            classPathRuleScanner.scan(basePackages);
+        }
+
+        @Override
+        public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        }
+
+        @Override
+        public void setEnvironment(Environment environment) {
+            this.environment = environment;
         }
     }
 

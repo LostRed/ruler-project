@@ -1,7 +1,7 @@
 package info.lostred.ruler.factory;
 
 import info.lostred.ruler.domain.PropertyInfo;
-import info.lostred.ruler.util.PackageScanUtils;
+import info.lostred.ruler.util.ClassPathScanUtils;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -25,22 +25,20 @@ public class DomainFactory {
      * <p>key为全限定类名，值为属性信息集合</p>
      */
     private final Map<String, List<PropertyInfo>> propertyInfoMap = new HashMap<>();
-    private final String[] scanPackages;
 
     public DomainFactory(String... scanPackages) {
-        this.scanPackages = scanPackages;
-        this.registerFromPackages();
+        this.registerDomains(scanPackages);
     }
 
     /**
      * 从包中注册校验类信息
      */
-    private void registerFromPackages() {
-        if (scanPackages == null) {
-            throw new IllegalArgumentException("Have not to set the scan packages.");
+    private void registerDomains(String... scanPackages) {
+        if (scanPackages == null || scanPackages.length == 0) {
+            throw new IllegalArgumentException("At least one base package must be specified");
         }
         for (String packageName : scanPackages) {
-            PackageScanUtils.getClasses(packageName).stream()
+            ClassPathScanUtils.getClasses(packageName).stream()
                     .peek(this.domainSet::add)
                     .forEach(e -> this.propertyInfoMap.put(e.getName(), this.getPropertyList(e)));
         }
@@ -79,5 +77,15 @@ public class DomainFactory {
      */
     public Set<Class<?>> getAllDomain() {
         return this.domainSet;
+    }
+
+    /**
+     * 注册领域类型
+     *
+     * @param domainClass 领域类对象
+     */
+    public void registerDomain(Class<?> domainClass) {
+        this.domainSet.add(domainClass);
+        this.propertyInfoMap.put(domainClass.getName(), this.getPropertyList(domainClass));
     }
 }

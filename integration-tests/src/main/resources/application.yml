@@ -1,7 +1,7 @@
 ruler:
   business-type: person
   engine-type: complete
-  rule-scan-packages: info.lostred.ruler.test.rule
+  rule-scan-packages: info.lostred.ruler.test.rule,com.ylz
   domain-scan-packages: info.lostred.ruler.test.domain
 
 logging:

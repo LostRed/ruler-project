@@ -72,6 +72,16 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     }
 
     @Override
+    public AbstractRule getRule(Class<? extends AbstractRule> ruleClass) {
+        for (AbstractRule abstractRule : rules.values()) {
+            if (abstractRule.getClass().equals(ruleClass)) {
+                return abstractRule;
+            }
+        }
+        throw new IllegalArgumentException("there is not type of '" + ruleClass.getName() + "' rule");
+    }
+
+    @Override
     public List<AbstractRule> findRules(String businessType) {
         return this.rules.values().stream()
                 .filter(e -> e.getRuleDefinition().getBusinessType().equals(businessType))
