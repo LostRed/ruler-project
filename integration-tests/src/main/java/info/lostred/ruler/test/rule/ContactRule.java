@@ -13,11 +13,6 @@ import java.util.stream.Collectors;
         description = "联系方式密码不能为1234")
 public class ContactRule extends ProgrammaticRule<Person> {
     @Override
-    public void init() {
-
-    }
-
-    @Override
     public Object getValueInternal(Person person) {
         return person.getContacts().stream()
                 .map(Contact::getPassword)

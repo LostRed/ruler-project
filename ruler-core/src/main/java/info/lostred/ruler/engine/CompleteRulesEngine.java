@@ -1,6 +1,6 @@
 package info.lostred.ruler.engine;
 
-import info.lostred.ruler.core.RulerContextHolder;
+import info.lostred.ruler.core.ExecutionContextHolder;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesEnginesException;
@@ -27,7 +27,7 @@ public class CompleteRulesEngine extends AbstractRulesEngine {
             }
             return result;
         } finally {
-            RulerContextHolder.clear();
+            ExecutionContextHolder.clear();
         }
     }
 }

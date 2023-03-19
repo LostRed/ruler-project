@@ -13,8 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class RulerProperties {
     private String businessType = RulerConstants.BUSINESS_TYPE_COMMON;
     private String engineType = EngineType.COMPLETE.name();
-    private String[] ruleScanPackages;
-    private String[] domainScanPackages;
+    private String[] ruleScanPackages = {};
+    private String[] domainScanPackages = {};
 
     public String getBusinessType() {
         return businessType;

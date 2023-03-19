@@ -3,8 +3,6 @@ package info.lostred.ruler.factory;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.rule.AbstractRule;
-import org.springframework.expression.BeanResolver;
-import org.springframework.expression.ExpressionParser;
 
 import java.util.List;
 
@@ -23,37 +21,6 @@ public interface RuleFactory {
     void registerRuleDefinition(RuleDefinition ruleDefinition) throws RulesException;
 
     /**
-     * 注册规则及其规则定义
-     *
-     * @param rule 规则
-     */
-    void registerRule(AbstractRule rule);
-
-    /**
-     * 创建规则
-     *
-     * @param ruleDefinition   规则定义
-     * @param expressionParser 表达式解析器
-     * @param beanResolver     bean解析器
-     * @return 抽象规则
-     * @throws RulesException 实例化规则失败时
-     */
-    AbstractRule createRule(RuleDefinition ruleDefinition, ExpressionParser expressionParser, BeanResolver beanResolver) throws RulesException;
-
-    /**
-     * 销毁所有规则
-     */
-    void destroyAllRules();
-
-    /**
-     * 销毁规则
-     *
-     * @param ruleCode 规则编号
-     * @return 被销毁的规则
-     */
-    AbstractRule destroyRule(String ruleCode);
-
-    /**
      * 根据规则编号获取规则
      *
      * @param ruleCode 规则编号
@@ -62,17 +29,31 @@ public interface RuleFactory {
     AbstractRule getRule(String ruleCode);
 
     /**
+     * 根据规则类型获取规则
+     *
+     * @param ruleClass 规则类型
+     * @return 规则
+     */
+    AbstractRule getRule(Class<? extends AbstractRule> ruleClass);
+
+    /**
      * 根据业务类型与约束对象类型查找规则集合
      *
      * @param businessType 业务类型
      * @return 规则集合
      */
-    List<AbstractRule> findRules(String businessType);
+    List<AbstractRule> getRulesWithBusinessType(String businessType);
 
     /**
-     * 获取所有规则定义
+     * 注销规则
      *
-     * @return 规则定义集合
+     * @param ruleCode 规则编号
+     * @return 被注销的规则
      */
-    List<RuleDefinition> getRuleDefinitions();
+    AbstractRule unregisterRule(String ruleCode);
+
+    /**
+     * 注销所有规则
+     */
+    void unregisterAllRules();
 }

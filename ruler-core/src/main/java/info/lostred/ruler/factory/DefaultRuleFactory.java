@@ -1,11 +1,16 @@
 package info.lostred.ruler.factory;
 
 import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.builder.RuleBuilder;
+import info.lostred.ruler.builder.RuleDefinitionBuilder;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
-import info.lostred.ruler.util.PackageScanUtils;
-import org.springframework.expression.BeanResolver;
+import info.lostred.ruler.util.ClassPathScanUtils;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * 默认的规则工厂
@@ -13,49 +18,62 @@ import org.springframework.expression.ExpressionParser;
  * @author lostred
  */
 public class DefaultRuleFactory extends AbstractRuleFactory {
-    public DefaultRuleFactory(ExpressionParser expressionParser, BeanResolver beanResolver, String... scanPackages) {
-        this.registerRules(expressionParser, beanResolver, scanPackages);
-    }
+    private final ExpressionParser expressionParser = new SpelExpressionParser();
 
-    /**
-     * 从包中注册规则定义，并创建规则
-     *
-     * @param expressionParser 表达式解析器
-     * @param beanResolver     bean解析器
-     * @param scanPackages     规则类所在的包名
-     */
-    public void registerRules(ExpressionParser expressionParser, BeanResolver beanResolver, String... scanPackages) {
+    public DefaultRuleFactory(String... scanPackages) {
         if (scanPackages == null || scanPackages.length == 0) {
-            throw new IllegalArgumentException("scanPackages cannot be null or empty.");
+            throw new IllegalArgumentException("At least one base package must be specified");
         }
-        //注册规则定义
-        for (String packageName : scanPackages) {
-            PackageScanUtils.getClasses(packageName).stream()
-                    .filter(AbstractRule.class::isAssignableFrom)
-                    .filter(e -> e.isAnnotationPresent(Rule.class))
-                    .map(this::buildRuleDefinition)
-                    .forEach(this::registerRuleDefinition);
-        }
-        //创建并注册规则
-        for (String ruleCode : this.ruleDefinitionMap.keySet()) {
-            RuleDefinition ruleDefinition = this.ruleDefinitionMap.get(ruleCode);
-            AbstractRule rule = this.createRule(ruleDefinition, expressionParser, beanResolver);
-            this.rules.put(ruleDefinition.getRuleCode(), rule);
+        Arrays.stream(scanPackages)
+                .flatMap(e -> ClassPathScanUtils.getClasses(e).stream())
+                .filter(AbstractRule.class::isAssignableFrom)
+                .filter(e -> e.isAnnotationPresent(Rule.class))
+                .map(e -> RuleDefinitionBuilder.build(e).getRuleDefinition())
+                .forEach(this::registerRuleDefinition);
+
+    }
+
+    @Override
+    public AbstractRule getRule(String ruleCode) {
+        Map<String, AbstractRule> abstractRuleMap = this.getAbstractRuleMap();
+        if (abstractRuleMap.containsKey(ruleCode)) {
+            return abstractRuleMap.get(ruleCode);
+        } else {
+            RuleDefinition ruleDefinition = this.getRuleDefinitionMap().get(ruleCode);
+            if (ruleDefinition == null) {
+                throw new RuntimeException("The rule [" + ruleCode + "] is not found in RuleFactory");
+            }
+            return this.createRule(ruleCode, ruleDefinition);
         }
     }
 
-    /**
-     * 构建规则定义
-     *
-     * @param ruleClass 规则定义
-     * @return 规则定义
-     */
-    @SuppressWarnings("unchecked")
-    protected RuleDefinition buildRuleDefinition(Class<?> ruleClass) {
-        if (!AbstractRule.class.isAssignableFrom(ruleClass)) {
-            throw new IllegalArgumentException("Class '" + ruleClass.getName() + "' is not a AbstractRule.");
-        }
+    @Override
+    public AbstractRule getRule(Class<? extends AbstractRule> ruleClass) {
         Rule rule = ruleClass.getAnnotation(Rule.class);
-        return RuleDefinition.of(rule, (Class<? extends AbstractRule>) ruleClass);
+        if (rule == null) {
+            throw new IllegalArgumentException("@Rule is missing on the type of '" + ruleClass.getName() + "'");
+        }
+        String ruleCode = rule.ruleCode();
+        return this.getRule(ruleCode);
+    }
+
+    /**
+     * 创建规则
+     *
+     * @param ruleCode       规则编号
+     * @param ruleDefinition 规则定义
+     * @return 抽象规则
+     */
+    protected synchronized AbstractRule createRule(String ruleCode, RuleDefinition ruleDefinition) {
+        Map<String, AbstractRule> abstractRuleMap = this.getAbstractRuleMap();
+        if (abstractRuleMap.containsKey(ruleCode)) {
+            return abstractRuleMap.get(ruleCode);
+        } else {
+            AbstractRule proxyRule = RuleBuilder.build(ruleDefinition)
+                    .expressionParser(expressionParser)
+                    .getProxyRule();
+            this.getAbstractRuleMap().put(ruleCode, proxyRule);
+            return proxyRule;
+        }
     }
 }

@@ -9,16 +9,9 @@ import org.springframework.util.ObjectUtils;
         businessType = "person",
         description = "姓名不能为空")
 public class NameRule extends SimpleRule<Person> {
-    private String name;
-
-    @Override
-    public void init() {
-        name = this.getBean("name", String.class);
-    }
-
     @Override
     public Object getValueInternal(Person person) {
-        return name;
+        return ObjectUtils.isEmpty(person.getName()) ? person.getName() + "" : null;
     }
 
     @Override

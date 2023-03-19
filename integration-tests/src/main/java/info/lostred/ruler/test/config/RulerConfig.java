@@ -27,7 +27,7 @@ public class RulerConfig {
     }
 
     @Bean
-    public String name() {
-        return "lostred";
+    public Set<String> areaCities() {
+        return new HashSet<>(Arrays.asList("北京", "上海"));
     }
 }
