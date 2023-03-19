@@ -107,6 +107,9 @@ public class RulerAutoConfiguration {
                     .filter(StringUtils::hasText)
                     .distinct()
                     .toArray(String[]::new);
+            if (basePackages.length == 0) {
+                return;
+            }
             ClassPathRuleScanner classPathRuleScanner = new ClassPathRuleScanner(registry);
             classPathRuleScanner.addIncludeFilter((metadataReader, metadataReaderFactory) -> metadataReader.getAnnotationMetadata().hasAnnotation(Rule.class.getName()));
             classPathRuleScanner.scan(basePackages);
