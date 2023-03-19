@@ -26,7 +26,7 @@ public class RuleScannerRegistrar implements ImportBeanDefinitionRegistrar {
                 .distinct()
                 .toArray(String[]::new);
         ClassPathRuleScanner classPathRuleScanner = new ClassPathRuleScanner(registry);
-        classPathRuleScanner.addIncludeFilter((metadataReader, metadataReaderFactory) -> metadataReader.getAnnotationMetadata().hasAnnotation(Rule.class.getName()));
+        classPathRuleScanner.addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
         classPathRuleScanner.scan(basePackages);
     }
 }

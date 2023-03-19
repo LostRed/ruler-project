@@ -98,7 +98,7 @@ public class RulerAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         public RuleFactory ruleFactory(ObjectProvider<AbstractRule> abstractRules) {
-            return new SpringRuleFactory(abstractRules);
+            return new DefaultRuleFactory(abstractRules);
         }
 
         @Override
