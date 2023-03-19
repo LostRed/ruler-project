@@ -1,6 +1,6 @@
 package info.lostred.ruler.engine;
 
-import info.lostred.ruler.core.RulerContextHolder;
+import info.lostred.ruler.core.ExecutionContextHolder;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.exception.RulesEnginesException;
 import info.lostred.ruler.rule.AbstractRule;
@@ -18,7 +18,7 @@ public class IncompleteRulesEngine extends AbstractRulesEngine {
             Result result = Result.newInstance();
             for (AbstractRule rule : rules) {
                 try {
-                    if (this.executeInternal(RulerContextHolder.getContext(), rule, result)) {
+                    if (this.executeInternal(ExecutionContextHolder.getContext(), rule, result)) {
                         return result;
                     }
                 } catch (Exception e) {
@@ -27,7 +27,7 @@ public class IncompleteRulesEngine extends AbstractRulesEngine {
             }
             return result;
         } finally {
-            RulerContextHolder.clear();
+            ExecutionContextHolder.clear();
         }
     }
 }

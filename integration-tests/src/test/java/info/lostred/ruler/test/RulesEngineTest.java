@@ -20,7 +20,7 @@ import java.util.Date;
 
 @SpringBootTest
 class RulesEngineTest {
-    static String businessType = "person";
+    final static String businessType = "person";
     static Person person;
     @Autowired
     RulesEngineFactory rulesEngineFactory;
@@ -46,13 +46,14 @@ class RulesEngineTest {
         Date parse = simpleDateFormat.parse("2019-01-01");
         person.setBirthday(parse);
         Area area = new Area();
+        area.setCity("广州");
         person.setArea(area);
         Contact contact1 = new Contact();
         contact1.setArea(area);
-        contact1.setType("sdf");
+        contact1.setType("qq");
         contact1.setPassword("1234");
         Contact contact2 = new Contact();
-        contact2.setPassword("12234");
+        contact2.setPassword("12345");
         person.setContacts(Arrays.asList(contact1, contact2));
     }
 

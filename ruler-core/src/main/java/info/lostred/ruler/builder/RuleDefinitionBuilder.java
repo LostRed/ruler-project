@@ -1,7 +1,8 @@
-package info.lostred.ruler.rule;
+package info.lostred.ruler.builder;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.domain.RuleDefinition;
+import info.lostred.ruler.rule.AbstractRule;
 
 /**
  * 规则定义建造者
@@ -12,7 +13,7 @@ import info.lostred.ruler.domain.RuleDefinition;
 public class RuleDefinitionBuilder {
     private final RuleDefinition ruleDefinition;
 
-    public static RuleDefinitionBuilder of(Class<?> ruleClass) {
+    public static RuleDefinitionBuilder build(Class<?> ruleClass) {
         return new RuleDefinitionBuilder(ruleClass);
     }
 
@@ -22,7 +23,7 @@ public class RuleDefinitionBuilder {
             throw new IllegalArgumentException("Class '" + ruleClass.getName() + "' is not a AbstractRule.");
         }
         Rule rule = ruleClass.getAnnotation(Rule.class);
-        this.ruleDefinition = RuleDefinition.of(rule, (Class<? extends AbstractRule>) ruleClass);
+        ruleDefinition = RuleDefinition.of(rule, (Class<? extends AbstractRule>) ruleClass);
     }
 
     public RuleDefinition getRuleDefinition() {

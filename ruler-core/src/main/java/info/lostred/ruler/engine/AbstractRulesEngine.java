@@ -1,6 +1,6 @@
 package info.lostred.ruler.engine;
 
-import info.lostred.ruler.core.RulerContextHolder;
+import info.lostred.ruler.core.ExecutionContextHolder;
 import info.lostred.ruler.domain.Result;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.factory.RuleFactory;
@@ -63,10 +63,6 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.beanResolver = beanResolver;
     }
 
-    public List<Method> getGlobalFunctions() {
-        return globalFunctions;
-    }
-
     public void setGlobalFunctions(List<Method> globalFunctions) {
         this.globalFunctions = globalFunctions;
     }
@@ -79,12 +75,8 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     protected void initContext(Object rootObject) {
         StandardEvaluationContext context = new StandardEvaluationContext(rootObject);
         context.setBeanResolver(beanResolver);
-        if (this.globalFunctions != null) {
-            for (Method method : globalFunctions) {
-                context.registerFunction(method.getName(), method);
-            }
-        }
-        RulerContextHolder.setContext(context);
+        globalFunctions.forEach(e -> context.registerFunction(e.getName(), e));
+        ExecutionContextHolder.setContext(context);
     }
 
     /**
@@ -177,7 +169,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
 
     @Override
     public void reloadRules() {
-        List<AbstractRule> rules = ruleFactory.findRules(businessType).stream()
+        List<AbstractRule> rules = ruleFactory.getRulesWithBusinessType(businessType).stream()
                 .filter(rule -> rule.getRuleDefinition().isEnabled())
                 .sorted(Comparator.comparingInt(rule -> rule.getRuleDefinition().getOrder()))
                 .collect(Collectors.toList());

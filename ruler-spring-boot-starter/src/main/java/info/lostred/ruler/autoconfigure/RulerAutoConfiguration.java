@@ -2,6 +2,7 @@ package info.lostred.ruler.autoconfigure;
 
 import info.lostred.ruler.annotation.DomainScan;
 import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.builder.RulesEngineBuilder;
 import info.lostred.ruler.constant.EngineType;
 import info.lostred.ruler.engine.CompleteRulesEngine;
 import info.lostred.ruler.engine.IncompleteRulesEngine;
@@ -30,11 +31,12 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.StringUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -51,9 +53,22 @@ public class RulerAutoConfiguration {
     @ConditionalOnMissingBean
     public DomainFactory domainFactory(DefaultListableBeanFactory defaultListableBeanFactory,
                                        RulerProperties rulerProperties) {
-        Set<Class<?>> classes = classWithAnnotation(defaultListableBeanFactory, DomainScan.class);
-        String[] scanPackages = Stream.concat(Arrays.stream(rulerProperties.getDomainScanPackages()),
-                        classes.stream().flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value())))
+        String[] beanNames = defaultListableBeanFactory.getBeanNamesForAnnotation(DomainScan.class);
+        Stream<String> packageStream = Arrays.stream(beanNames)
+                .map(defaultListableBeanFactory::getBeanDefinition)
+                .map(ScannedGenericBeanDefinition.class::cast)
+                .map(beanDefinition -> {
+                    String className = beanDefinition.getMetadata().getClassName();
+                    try {
+                        return Thread.currentThread().getContextClassLoader().loadClass(className);
+                    } catch (ClassNotFoundException ignored) {
+                        logger.warning(className + " is not found.");
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()));
+        String[] scanPackages = Stream.concat(Arrays.stream(rulerProperties.getDomainScanPackages()), packageStream)
                 .filter(StringUtils::hasText)
                 .distinct()
                 .toArray(String[]::new);
@@ -83,7 +98,7 @@ public class RulerAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean
         public RuleFactory ruleFactory(ObjectProvider<AbstractRule> abstractRules) {
-            return new DefaultRuleFactory(abstractRules);
+            return new SpringRuleFactory(abstractRules);
         }
 
         @Override
@@ -127,46 +142,20 @@ public class RulerAutoConfiguration {
             String type = rulerProperties.getEngineType().toUpperCase();
             String businessType = rulerProperties.getBusinessType();
             if (EngineType.COMPLETE.equals(EngineType.valueOf(type))) {
-                return RulesEngineFactory.builder(CompleteRulesEngine.class)
+                return RulesEngineBuilder.build(CompleteRulesEngine.class)
                         .businessType(businessType)
                         .ruleFactory(ruleFactory)
                         .beanResolver(beanResolver)
                         .globalFunctions(globalFunctions)
-                        .build();
+                        .getRulesEngine();
             } else {
-                return RulesEngineFactory.builder(IncompleteRulesEngine.class)
+                return RulesEngineBuilder.build(IncompleteRulesEngine.class)
                         .businessType(businessType)
                         .ruleFactory(ruleFactory)
                         .beanResolver(beanResolver)
                         .globalFunctions(globalFunctions)
-                        .build();
+                        .getRulesEngine();
             }
         }
-    }
-
-    /**
-     * 根据指定的注解类在bean工厂中获取标有改注解的类对象集合
-     *
-     * @param defaultListableBeanFactory bean工厂
-     * @param annotationClass            注解类
-     * @return 符合条件的类对象集合
-     */
-    private static Set<Class<?>> classWithAnnotation(DefaultListableBeanFactory defaultListableBeanFactory,
-                                                     Class<? extends Annotation> annotationClass) {
-        String[] beanNames = defaultListableBeanFactory.getBeanNamesForAnnotation(annotationClass);
-        return Arrays.stream(beanNames)
-                .map(defaultListableBeanFactory::getBeanDefinition)
-                .map(ScannedGenericBeanDefinition.class::cast)
-                .map(beanDefinition -> {
-                    String className = beanDefinition.getMetadata().getClassName();
-                    try {
-                        return Thread.currentThread().getContextClassLoader().loadClass(className);
-                    } catch (ClassNotFoundException ignored) {
-                        logger.warning(className + " is not found.");
-                        return null;
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
     }
 }

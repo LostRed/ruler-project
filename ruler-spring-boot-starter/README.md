@@ -139,7 +139,7 @@ class RulesEngineTest {
 
 ## 💻规则开发
 
-继承AbstractRule，并在类上添加@Rule注解。以下提供了开发规则两种方式。
+继承AbstractRule，并在类上添加@Rule注解。当使用spring-boot-starter启动场景下，标注该注解的规则将会交予Spring托管，成为Spring容器中的组件。以下提供了开发规则两种方式。
 
 1. 继承DeclarativeRule，采用声明式开发，使用注解直接配置表达式
 
@@ -170,7 +170,7 @@ public class ContactRule extends ProgrammaticRule<Person> {
     public void init() {
 
     }
-    
+
     @Override
     public Object getValueInternal(Person person) {
         return person.getContacts().stream()

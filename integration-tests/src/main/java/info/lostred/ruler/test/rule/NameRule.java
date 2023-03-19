@@ -5,18 +5,13 @@ import info.lostred.ruler.rule.SimpleRule;
 import info.lostred.ruler.test.domain.Person;
 import org.springframework.util.ObjectUtils;
 
-import javax.annotation.Resource;
-
 @Rule(ruleCode = "姓名必填",
         businessType = "person",
         description = "姓名不能为空")
 public class NameRule extends SimpleRule<Person> {
-    @Resource
-    private String name;
-
     @Override
     public Object getValueInternal(Person person) {
-        return name;
+        return ObjectUtils.isEmpty(person.getName()) ? person.getName() + "" : null;
     }
 
     @Override

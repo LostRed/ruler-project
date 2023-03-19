@@ -1,7 +1,8 @@
 package info.lostred.ruler.rule;
 
 import info.lostred.ruler.core.Evaluator;
-import info.lostred.ruler.core.RulerContextHolder;
+import info.lostred.ruler.core.ExecutionContextHolder;
+import org.springframework.expression.ExpressionParser;
 
 /**
  * 声明式规则
@@ -11,17 +12,17 @@ import info.lostred.ruler.core.RulerContextHolder;
  * @since 2.2.0
  */
 public class DeclarativeRule extends AbstractRule implements Evaluator {
-    @Override
-    public void init() {
-
-    }
+    /**
+     * 表达式解析器
+     */
+    private ExpressionParser expressionParser;
 
     @Override
     public boolean supports(Object object) {
         String conditionExp = this.getRuleDefinition().getConditionExp();
         Boolean flag = this.getExpressionParser()
                 .parseExpression(conditionExp)
-                .getValue(RulerContextHolder.getContext(), Boolean.class);
+                .getValue(ExecutionContextHolder.getContext(), Boolean.class);
         return Boolean.TRUE.equals(flag);
     }
 
@@ -30,7 +31,7 @@ public class DeclarativeRule extends AbstractRule implements Evaluator {
         String predicateExp = this.getRuleDefinition().getPredicateExp();
         Boolean flag = this.getExpressionParser()
                 .parseExpression(predicateExp)
-                .getValue(RulerContextHolder.getContext(), Boolean.class);
+                .getValue(ExecutionContextHolder.getContext(), Boolean.class);
         return Boolean.TRUE.equals(flag);
     }
 
@@ -39,6 +40,14 @@ public class DeclarativeRule extends AbstractRule implements Evaluator {
         String parameterExp = this.getRuleDefinition().getParameterExp();
         return this.getExpressionParser()
                 .parseExpression(parameterExp)
-                .getValue(RulerContextHolder.getContext());
+                .getValue(ExecutionContextHolder.getContext());
+    }
+
+    public ExpressionParser getExpressionParser() {
+        return expressionParser;
+    }
+
+    public void setExpressionParser(ExpressionParser expressionParser) {
+        this.expressionParser = expressionParser;
     }
 }

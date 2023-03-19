@@ -27,20 +27,12 @@ public class DomainFactory {
     private final Map<String, List<PropertyInfo>> propertyInfoMap = new HashMap<>();
 
     public DomainFactory(String... scanPackages) {
-        this.registerDomains(scanPackages);
-    }
-
-    /**
-     * 从包中注册校验类信息
-     */
-    private void registerDomains(String... scanPackages) {
-        if (scanPackages == null || scanPackages.length == 0) {
-            throw new IllegalArgumentException("At least one base package must be specified");
-        }
-        for (String packageName : scanPackages) {
-            ClassPathScanUtils.getClasses(packageName).stream()
-                    .peek(this.domainSet::add)
-                    .forEach(e -> this.propertyInfoMap.put(e.getName(), this.getPropertyList(e)));
+        if (scanPackages != null) {
+            for (String packageName : scanPackages) {
+                ClassPathScanUtils.getClasses(packageName).stream()
+                        .peek(this.domainSet::add)
+                        .forEach(e -> this.propertyInfoMap.put(e.getName(), this.getPropertyList(e)));
+            }
         }
     }
 
@@ -77,15 +69,5 @@ public class DomainFactory {
      */
     public Set<Class<?>> getAllDomain() {
         return this.domainSet;
-    }
-
-    /**
-     * 注册领域类型
-     *
-     * @param domainClass 领域类对象
-     */
-    public void registerDomain(Class<?> domainClass) {
-        this.domainSet.add(domainClass);
-        this.propertyInfoMap.put(domainClass.getName(), this.getPropertyList(domainClass));
     }
 }

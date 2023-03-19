@@ -1,18 +1,15 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.annotation.Rule;
+import info.lostred.ruler.builder.RuleBuilder;
+import info.lostred.ruler.builder.RuleDefinitionBuilder;
 import info.lostred.ruler.domain.RuleDefinition;
-import info.lostred.ruler.proxy.RuleProxy;
 import info.lostred.ruler.rule.AbstractRule;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.expression.BeanResolver;
 import org.springframework.expression.ExpressionParser;
-
-import java.lang.reflect.Constructor;
 
 /**
  * 规则工厂bean
@@ -29,20 +26,13 @@ public class RuleFactoryBean implements FactoryBean<AbstractRule>, ApplicationCo
     }
 
     @Override
-    public AbstractRule getObject() throws Exception {
-        Rule rule = ruleClass.getAnnotation(Rule.class);
-        RuleDefinition ruleDefinition = RuleDefinition.of(rule, ruleClass);
-        Constructor<?> constructor = ruleClass.getDeclaredConstructor();
-        Object object = constructor.newInstance();
-        AbstractRule abstractRule = (AbstractRule) object;
-        abstractRule.setRuleDefinition(ruleDefinition);
+    public AbstractRule getObject() {
         AutowireCapableBeanFactory autowireCapableBeanFactory = applicationContext.getAutowireCapableBeanFactory();
-        abstractRule.setExpressionParser(autowireCapableBeanFactory.getBean(ExpressionParser.class));
-        abstractRule.setBeanResolver(autowireCapableBeanFactory.getBean(BeanResolver.class));
-        autowireCapableBeanFactory.autowireBean(abstractRule);
-        abstractRule.init();
-        RuleProxy ruleProxy = new RuleProxy(abstractRule);
-        return ruleProxy.newProxyInstance();
+        RuleDefinition ruleDefinition = RuleDefinitionBuilder.build(ruleClass).getRuleDefinition();
+        RuleBuilder builder = RuleBuilder.build(ruleDefinition)
+                .expressionParser(autowireCapableBeanFactory.getBean(ExpressionParser.class));
+        autowireCapableBeanFactory.autowireBean(builder.getRawRule());
+        return builder.getProxyRule();
     }
 
     @Override
