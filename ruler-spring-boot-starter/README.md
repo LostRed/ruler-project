@@ -15,7 +15,7 @@
 
 ### 配置application.yaml
 
-框架默认只会根据application.yaml配置单实例规则引擎，项目中需要使用到多类规则引擎时，需要自己编写配置类。
+框架默认只会根据application.yaml配置单实例规则引擎，项目中需要使用到多类规则引擎时，需要自己配置规则引擎bean。
 
 ```yaml
 ruler:
@@ -158,7 +158,7 @@ public class CertNoLengthRule extends DeclarativeRule {
 }
 ```
 
-2. 继承ProgrammaticRule，采用编程式开发，重写ProgrammaticRule的方法
+2. (推荐)继承ProgrammaticRule或SimpleRule，采用编程式开发，重写ProgrammaticRule的方法
 
 ```java
 

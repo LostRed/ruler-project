@@ -5,9 +5,8 @@ import info.lostred.ruler.builder.RuleBuilder;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.rule.AbstractRule;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,10 +19,6 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractRuleFactory implements RuleFactory {
     /**
-     * 表达式解析器
-     */
-    private final ExpressionParser expressionParser = new SpelExpressionParser();
-    /**
      * 规则定义缓存
      * <p>所有注册过的规则的规则定义都会被存放在这里</p>
      */
@@ -33,6 +28,13 @@ public abstract class AbstractRuleFactory implements RuleFactory {
      * <p>所有注册过的规则都会被存放在这里</p>
      */
     private final Map<String, AbstractRule> abstractRuleMap = new ConcurrentHashMap<>();
+
+    public AbstractRuleFactory() {
+    }
+
+    public AbstractRuleFactory(Iterable<RuleDefinition> ruleDefinitions) {
+        ruleDefinitions.forEach(this::registerRuleDefinition);
+    }
 
     @Override
     public void registerRuleDefinition(RuleDefinition ruleDefinition) {
@@ -52,9 +54,9 @@ public abstract class AbstractRuleFactory implements RuleFactory {
             if (ruleDefinition == null) {
                 throw new RuntimeException("The rule [" + ruleCode + "] is not found in RuleFactory");
             }
-            AbstractRule proxyRule = this.createRule(ruleCode, ruleDefinition);
-            abstractRuleMap.put(ruleCode, proxyRule);
-            return proxyRule;
+            AbstractRule abstractRule = this.createRule(ruleCode, ruleDefinition);
+            abstractRuleMap.put(ruleCode, abstractRule);
+            return abstractRule;
         }
     }
 
@@ -80,9 +82,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
         if (abstractRuleMap.containsKey(ruleCode)) {
             return abstractRuleMap.get(ruleCode);
         } else {
-            return RuleBuilder.build(ruleDefinition)
-                    .expressionParser(expressionParser)
-                    .getProxyRule();
+            return RuleBuilder.build(ruleDefinition).getAbstractRule();
         }
     }
 
@@ -108,11 +108,16 @@ public abstract class AbstractRuleFactory implements RuleFactory {
         this.getAbstractRuleMap().clear();
     }
 
-    public Map<String, RuleDefinition> getRuleDefinitionMap() {
+    @Override
+    public Map<String, RuleDefinition> getRuleDefinitions() {
+        return Collections.unmodifiableMap(ruleDefinitionMap);
+    }
+
+    protected Map<String, RuleDefinition> getRuleDefinitionMap() {
         return ruleDefinitionMap;
     }
 
-    public Map<String, AbstractRule> getAbstractRuleMap() {
+    protected Map<String, AbstractRule> getAbstractRuleMap() {
         return abstractRuleMap;
     }
 }

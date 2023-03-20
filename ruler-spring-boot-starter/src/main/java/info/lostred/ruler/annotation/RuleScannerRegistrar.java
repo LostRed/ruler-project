@@ -1,6 +1,9 @@
 package info.lostred.ruler.annotation;
 
-import info.lostred.ruler.factory.ClassPathRuleScanner;
+import info.lostred.ruler.factory.RuleAnnotationPostProcessor;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -25,8 +28,9 @@ public class RuleScannerRegistrar implements ImportBeanDefinitionRegistrar {
                 .filter(StringUtils::hasText)
                 .distinct()
                 .toArray(String[]::new);
-        ClassPathRuleScanner classPathRuleScanner = new ClassPathRuleScanner(registry);
-        classPathRuleScanner.addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
-        classPathRuleScanner.scan(basePackages);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(RuleAnnotationPostProcessor.class);
+        builder.addConstructorArgValue(basePackages);
+        AbstractBeanDefinition beanDefinition = builder.getBeanDefinition();
+        BeanDefinitionReaderUtils.registerWithGeneratedName(beanDefinition, registry);
     }
 }

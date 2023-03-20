@@ -5,6 +5,7 @@ import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.rule.AbstractRule;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 规则工厂
@@ -19,6 +20,13 @@ public interface RuleFactory {
      * @throws RulesException 注册规则定义失败时
      */
     void registerRuleDefinition(RuleDefinition ruleDefinition) throws RulesException;
+
+    /**
+     * 获取规则定义
+     *
+     * @return 不可修改的规则定义集合
+     */
+    Map<String, RuleDefinition> getRuleDefinitions();
 
     /**
      * 根据规则编号获取规则

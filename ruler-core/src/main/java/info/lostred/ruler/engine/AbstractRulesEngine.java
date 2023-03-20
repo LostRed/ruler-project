@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -88,11 +89,15 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      * @return 规则执行的结果，触发规则返回true，否则返回false
      */
     protected boolean executeInternal(Object rootObject, AbstractRule rule, Result result) {
+        RuleDefinition ruleDefinition = rule.getRuleDefinition();
+        Logger logger = Logger.getLogger(rule.getClass().getName());
         if (rule.supports(rootObject)) {
             if (rule instanceof SimpleRule) {
                 Object value = rule.getValue(rootObject);
                 if (value != null) {
                     result.addReport(rule.getRuleDefinition(), value);
+                    logger.config("[" + ruleDefinition.getRuleCode() + " " + ruleDefinition.getGrade() + "]" +
+                            "returnValue=" + value + ", description=" + ruleDefinition.getDescription());
                     return true;
                 }
             } else {
@@ -100,6 +105,8 @@ public abstract class AbstractRulesEngine implements RulesEngine {
                 if (flag) {
                     Object value = rule.getValue(rootObject);
                     result.addReport(rule.getRuleDefinition(), value);
+                    logger.config("[" + ruleDefinition.getRuleCode() + " " + ruleDefinition.getGrade() + "]" +
+                            "returnValue=" + value + ", description=" + ruleDefinition.getDescription());
                 }
                 return flag;
             }

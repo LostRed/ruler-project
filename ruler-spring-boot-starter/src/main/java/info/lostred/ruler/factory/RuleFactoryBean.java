@@ -1,15 +1,7 @@
 package info.lostred.ruler.factory;
 
-import info.lostred.ruler.builder.RuleBuilder;
-import info.lostred.ruler.builder.RuleDefinitionBuilder;
-import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.rule.AbstractRule;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.expression.ExpressionParser;
 
 /**
  * 规则工厂bean
@@ -17,31 +9,22 @@ import org.springframework.expression.ExpressionParser;
  * @author lostred
  * @since 3.2.0
  */
-public class RuleFactoryBean implements FactoryBean<AbstractRule>, ApplicationContextAware {
+public class RuleFactoryBean implements FactoryBean<AbstractRule> {
     private final Class<? extends AbstractRule> ruleClass;
-    private ApplicationContext applicationContext;
+    private final RuleFactory ruleFactory;
 
-    public RuleFactoryBean(Class<? extends AbstractRule> ruleClass) {
+    public RuleFactoryBean(Class<? extends AbstractRule> ruleClass, RuleFactory ruleFactory) {
         this.ruleClass = ruleClass;
+        this.ruleFactory = ruleFactory;
     }
 
     @Override
     public AbstractRule getObject() {
-        AutowireCapableBeanFactory autowireCapableBeanFactory = applicationContext.getAutowireCapableBeanFactory();
-        RuleDefinition ruleDefinition = RuleDefinitionBuilder.build(ruleClass).getRuleDefinition();
-        RuleBuilder builder = RuleBuilder.build(ruleDefinition)
-                .expressionParser(autowireCapableBeanFactory.getBean(ExpressionParser.class));
-        autowireCapableBeanFactory.autowireBean(builder.getRawRule());
-        return builder.getProxyRule();
+        return ruleFactory.getRule(ruleClass);
     }
 
     @Override
     public Class<?> getObjectType() {
         return ruleClass;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 }
