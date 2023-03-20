@@ -75,6 +75,7 @@ public class RulerAutoConfiguration {
         public RuleFactory ruleFactory(ConfigurableListableBeanFactory beanFactory) {
             List<RuleDefinition> ruleDefinitions = Arrays.stream(beanFactory.getBeanDefinitionNames())
                     .map(beanFactory::getBeanDefinition)
+                    .filter(e -> e instanceof AnnotatedBeanDefinition)
                     .map(AnnotatedBeanDefinition.class::cast)
                     .map(AnnotatedBeanDefinition::getMetadata)
                     .filter(e -> e.hasAnnotation(Rule.class.getName()))
