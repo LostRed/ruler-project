@@ -12,6 +12,7 @@ import info.lostred.ruler.engine.RulesEngine;
 import info.lostred.ruler.factory.*;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
+import org.springframework.beans.factory.annotation.AnnotatedGenericBeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,7 +20,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ScannedGenericBeanDefinition;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.BeanResolver;
 import org.springframework.util.StringUtils;
@@ -50,11 +50,11 @@ public class RulerAutoConfiguration {
         String[] beanNames = beanFactory.getBeanNamesForAnnotation(DomainScan.class);
         Stream<String> packageStream = Arrays.stream(beanNames)
                 .map(beanFactory::getBeanDefinition)
-                .map(ScannedGenericBeanDefinition.class::cast)
+                .map(AnnotatedGenericBeanDefinition.class::cast)
                 .map(beanDefinition -> {
                     String className = beanDefinition.getMetadata().getClassName();
                     try {
-                        return Thread.currentThread().getContextClassLoader().loadClass(className);
+                        return Class.forName(className);
                     } catch (ClassNotFoundException ignored) {
                         logger.warning(className + " is not found.");
                         return null;
