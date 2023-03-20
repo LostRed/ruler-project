@@ -2,10 +2,10 @@ package info.lostred.ruler.builder;
 
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesException;
-import info.lostred.ruler.proxy.RuleProxy;
 import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.rule.DeclarativeRule;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -17,8 +17,8 @@ import java.lang.reflect.InvocationTargetException;
  * @since 3.2.0
  */
 public class RuleBuilder {
-    private final AbstractRule rawRule;
-    private final AbstractRule proxyRule;
+    private final static ExpressionParser PARSER = new SpelExpressionParser();
+    private final AbstractRule abstractRule;
 
     public static RuleBuilder build(RuleDefinition ruleDefinition) {
         return new RuleBuilder(ruleDefinition);
@@ -30,11 +30,12 @@ public class RuleBuilder {
             Constructor<?> constructor = ruleClass.getDeclaredConstructor();
             Object object = constructor.newInstance();
             if (object instanceof AbstractRule) {
-                rawRule = (AbstractRule) object;
-                rawRule.setRuleDefinition(ruleDefinition);
-                rawRule.init();
-                RuleProxy ruleProxy = new RuleProxy(rawRule);
-                proxyRule = ruleProxy.newProxyInstance();
+                abstractRule = (AbstractRule) object;
+                abstractRule.setRuleDefinition(ruleDefinition);
+                if (abstractRule instanceof DeclarativeRule) {
+                    ((DeclarativeRule) abstractRule).setExpressionParser(PARSER);
+                }
+                abstractRule.init();
             } else {
                 throw new RulesException("Internal error: " + ruleClass.getName() +
                         " cannot be instantiated, because it is not instance of AbstractRule.", ruleDefinition);
@@ -46,24 +47,12 @@ public class RuleBuilder {
         }
     }
 
-    public RuleBuilder expressionParser(ExpressionParser expressionParser) {
-        if (rawRule instanceof DeclarativeRule) {
-            ((DeclarativeRule) rawRule).setExpressionParser(expressionParser);
-        }
-        return this;
+    public AbstractRule getAbstractRule() {
+        this.checkRule();
+        return abstractRule;
     }
 
-    public AbstractRule getRawRule() {
-        this.checkRule(rawRule);
-        return rawRule;
-    }
-
-    public AbstractRule getProxyRule() {
-        this.checkRule(proxyRule);
-        return proxyRule;
-    }
-
-    private void checkRule(AbstractRule abstractRule) {
+    private void checkRule() {
         if (abstractRule instanceof DeclarativeRule) {
             DeclarativeRule declarativeRule = (DeclarativeRule) abstractRule;
             String classname = declarativeRule.getClass().getName();

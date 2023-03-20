@@ -1,4 +1,4 @@
-package info.lostred.ruler.test.rule;
+package info.lostred.ruler.test.elem;
 
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.rule.SimpleRule;

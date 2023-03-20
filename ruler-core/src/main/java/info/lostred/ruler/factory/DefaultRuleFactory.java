@@ -25,15 +25,12 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
                 .filter(e -> e.isAnnotationPresent(Rule.class))
                 .map(e -> RuleDefinitionBuilder.build(e).getRuleDefinition())
                 .forEach(this::registerRuleDefinition);
-
     }
 
-    public DefaultRuleFactory(Iterable<AbstractRule> abstractRules) {
+    public DefaultRuleFactory(Iterable<RuleDefinition> ruleDefinitions) {
         Map<String, RuleDefinition> ruleDefinitionMap = this.getRuleDefinitionMap();
-        Map<String, AbstractRule> abstractRuleMap = this.getAbstractRuleMap();
-        for (AbstractRule abstractRule : abstractRules) {
-            ruleDefinitionMap.put(abstractRule.getRuleDefinition().getRuleCode(), abstractRule.getRuleDefinition());
-            abstractRuleMap.put(abstractRule.getRuleDefinition().getRuleCode(), abstractRule);
+        for (RuleDefinition ruleDefinition : ruleDefinitions) {
+            ruleDefinitionMap.put(ruleDefinition.getRuleCode(), ruleDefinition);
         }
     }
 }

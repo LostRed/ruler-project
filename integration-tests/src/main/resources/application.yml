@@ -9,6 +9,7 @@ logging:
     info.lostred.ruler.rule: debug
     info.lostred.ruler.engine: debug
     info.lostred.ruler.test.rule: debug
+    info.lostred.ruler.test.elem: debug
 
 spring:
   jackson:

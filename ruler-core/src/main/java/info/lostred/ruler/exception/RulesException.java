@@ -35,7 +35,7 @@ public class RulesException extends RuntimeException {
         this.ruleDefinition = ruleDefinition;
     }
 
-    public RuleDefinition getRuleInfo() {
+    public RuleDefinition getRuleDefinition() {
         return ruleDefinition;
     }
 }
