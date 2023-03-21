@@ -39,6 +39,6 @@ public class ClassPathAbstractRuleScanner extends ClassPathBeanDefinitionScanner
     @Override
     protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
         AnnotationMetadata metadata = beanDefinition.getMetadata();
-        return metadata.isConcrete();
+        return metadata.isConcrete() && metadata.isIndependent();
     }
 }

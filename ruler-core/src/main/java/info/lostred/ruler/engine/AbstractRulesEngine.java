@@ -81,6 +81,13 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     /**
+     * 销毁评估上下文
+     */
+    protected void destroyContext() {
+        ExecutionContextHolder.clear();
+    }
+
+    /**
      * 规则执行
      *
      * @param rootObject 根对象

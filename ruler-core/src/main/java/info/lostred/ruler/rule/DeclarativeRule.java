@@ -27,20 +27,20 @@ public class DeclarativeRule extends AbstractRule implements Evaluator {
     }
 
     @Override
+    public Object getValue(Object object) {
+        String parameterExp = this.getRuleDefinition().getParameterExp();
+        return this.getExpressionParser()
+                .parseExpression(parameterExp)
+                .getValue(ExecutionContextHolder.getContext());
+    }
+
+    @Override
     public boolean evaluate(Object object) {
         String predicateExp = this.getRuleDefinition().getPredicateExp();
         Boolean flag = this.getExpressionParser()
                 .parseExpression(predicateExp)
                 .getValue(ExecutionContextHolder.getContext(), Boolean.class);
         return Boolean.TRUE.equals(flag);
-    }
-
-    @Override
-    public Object getValue(Object object) {
-        String parameterExp = this.getRuleDefinition().getParameterExp();
-        return this.getExpressionParser()
-                .parseExpression(parameterExp)
-                .getValue(ExecutionContextHolder.getContext());
     }
 
     public ExpressionParser getExpressionParser() {
