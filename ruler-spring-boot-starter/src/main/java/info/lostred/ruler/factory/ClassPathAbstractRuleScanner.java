@@ -1,11 +1,13 @@
 package info.lostred.ruler.factory;
 
+import info.lostred.ruler.util.ClassUtils;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.lang.NonNull;
 
 import java.util.Set;
 
@@ -21,17 +23,15 @@ public class ClassPathAbstractRuleScanner extends ClassPathBeanDefinitionScanner
     }
 
     @Override
-    protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
+    @NonNull
+    protected Set<BeanDefinitionHolder> doScan(@NonNull String... basePackages) {
         Set<BeanDefinitionHolder> holders = super.doScan(basePackages);
         for (BeanDefinitionHolder holder : holders) {
             AbstractBeanDefinition definition = (AbstractBeanDefinition) holder.getBeanDefinition();
             String beanClassName = definition.getBeanClassName();
-            try {
-                Class<?> ruleClass = Class.forName(beanClassName);
-                definition.setBeanClassName(RuleFactoryBean.class.getName());
-                definition.getConstructorArgumentValues().addGenericArgumentValue(ruleClass);
-            } catch (ClassNotFoundException ignored) {
-            }
+            Class<?> ruleClass = ClassUtils.loadClass(beanClassName);
+            definition.setBeanClassName(RuleFactoryBean.class.getName());
+            definition.getConstructorArgumentValues().addGenericArgumentValue(ruleClass);
         }
         return holders;
     }

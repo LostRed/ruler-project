@@ -10,6 +10,7 @@ import info.lostred.ruler.engine.CompleteRulesEngine;
 import info.lostred.ruler.engine.IncompleteRulesEngine;
 import info.lostred.ruler.engine.RulesEngine;
 import info.lostred.ruler.factory.*;
+import info.lostred.ruler.util.ClassUtils;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -22,6 +23,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.expression.BeanResolver;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -72,6 +75,12 @@ public class RulerAutoConfiguration {
     @Configuration(proxyBeanMethods = false)
     public static class RuleAutoConfiguration {
         @Bean
+        @ConditionalOnMissingBean
+        public ExpressionParser expressionParser() {
+            return new SpelExpressionParser();
+        }
+
+        @Bean
         public RuleFactory ruleFactory(ConfigurableListableBeanFactory beanFactory) {
             List<RuleDefinition> ruleDefinitions = Arrays.stream(beanFactory.getBeanDefinitionNames())
                     .map(beanFactory::getBeanDefinition)
@@ -79,13 +88,7 @@ public class RulerAutoConfiguration {
                     .map(AnnotatedBeanDefinition.class::cast)
                     .map(AnnotatedBeanDefinition::getMetadata)
                     .filter(e -> e.hasAnnotation(Rule.class.getName()))
-                    .map(e -> {
-                        try {
-                            return Class.forName(e.getClassName());
-                        } catch (ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    })
+                    .map(e -> ClassUtils.loadClass(e.getClassName()))
                     .map(e -> RuleDefinitionBuilder.build(e).getRuleDefinition())
                     .collect(Collectors.toList());
             return new SpringRuleFactory(ruleDefinitions);

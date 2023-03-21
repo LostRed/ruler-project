@@ -6,15 +6,17 @@ import info.lostred.ruler.test.domain.Area;
 import info.lostred.ruler.test.domain.Person;
 import org.springframework.util.ObjectUtils;
 
-import javax.annotation.Resource;
 import java.util.Set;
 
 @Rule(ruleCode = "地区城市枚举规则",
         businessType = "person",
         description = "地区中的城市必须是枚举值")
 public class AreaCityEnumRule extends SimpleRule<Person> {
-    @Resource
-    private Set<String> areaCities;
+    private final Set<String> areaCities;
+
+    public AreaCityEnumRule(Set<String> areaCities) {
+        this.areaCities = areaCities;
+    }
 
     @Override
     public Object getValueInternal(Person person) {

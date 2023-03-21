@@ -22,7 +22,7 @@ public class CompleteRulesEngine extends AbstractRulesEngine {
                     this.executeInternal(rootObject, rule, result);
                 } catch (Exception e) {
                     RuleDefinition ruleDefinition = rule.getRuleDefinition();
-                    throw new RulesEnginesException("rule[" + ruleDefinition.getRuleCode() + " " + ruleDefinition.getGrade() + "] has occurred an exception: " + e.getMessage(), this.getBusinessType(), this.getClass());
+                    throw new RulesEnginesException("rule[" + ruleDefinition.getRuleCode() + " " + ruleDefinition.getGrade() + "] has occurred an exception: " + e.getMessage(), e, this.getBusinessType(), this.getClass());
                 }
             }
             return result;
