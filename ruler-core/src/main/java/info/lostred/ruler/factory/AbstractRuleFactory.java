@@ -1,7 +1,6 @@
 package info.lostred.ruler.factory;
 
 import info.lostred.ruler.annotation.Rule;
-import info.lostred.ruler.builder.RuleBuilder;
 import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.exception.RulesException;
 import info.lostred.ruler.rule.AbstractRule;
@@ -54,9 +53,15 @@ public abstract class AbstractRuleFactory implements RuleFactory {
             if (ruleDefinition == null) {
                 throw new RuntimeException("The rule [" + ruleCode + "] is not found in RuleFactory");
             }
-            AbstractRule abstractRule = this.createRule(ruleCode, ruleDefinition);
-            abstractRuleMap.put(ruleCode, abstractRule);
-            return abstractRule;
+            synchronized (this) {
+                if (abstractRuleMap.containsKey(ruleCode)) {
+                    return abstractRuleMap.get(ruleCode);
+                } else {
+                    AbstractRule abstractRule = this.createRule(ruleCode, ruleDefinition);
+                    abstractRuleMap.put(ruleCode, abstractRule);
+                    return abstractRule;
+                }
+            }
         }
     }
 
@@ -77,14 +82,7 @@ public abstract class AbstractRuleFactory implements RuleFactory {
      * @param ruleDefinition 规则定义
      * @return 抽象规则
      */
-    protected synchronized AbstractRule createRule(String ruleCode, RuleDefinition ruleDefinition) {
-        Map<String, AbstractRule> abstractRuleMap = this.getAbstractRuleMap();
-        if (abstractRuleMap.containsKey(ruleCode)) {
-            return abstractRuleMap.get(ruleCode);
-        } else {
-            return RuleBuilder.build(ruleDefinition).getAbstractRule();
-        }
-    }
+    protected abstract AbstractRule createRule(String ruleCode, RuleDefinition ruleDefinition);
 
     @Override
     public List<AbstractRule> getRulesWithBusinessType(String businessType) {

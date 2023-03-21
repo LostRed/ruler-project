@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.lostred.ruler</groupId>
     <artifactId>ruler-core</artifactId>
-    <version>3.2.5</version>
+    <version>3.2.6</version>
     <name>ruler core</name>
     <description>ruler core.</description>
 
@@ -45,6 +45,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
+            <version>5.3.20</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
             <version>5.3.20</version>
         </dependency>
     </dependencies>

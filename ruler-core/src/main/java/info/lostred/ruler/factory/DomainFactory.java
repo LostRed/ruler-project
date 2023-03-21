@@ -1,7 +1,7 @@
 package info.lostred.ruler.factory;
 
 import info.lostred.ruler.domain.PropertyInfo;
-import info.lostred.ruler.util.ClassPathScanUtils;
+import info.lostred.ruler.util.ClassUtils;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -28,8 +28,8 @@ public class DomainFactory {
 
     public DomainFactory(String... scanPackages) {
         if (scanPackages != null) {
-            for (String packageName : scanPackages) {
-                ClassPathScanUtils.getClasses(packageName).stream()
+            for (String scanPackage : scanPackages) {
+                ClassUtils.getTypeFromPackage(scanPackage).stream()
                         .peek(this.domainSet::add)
                         .forEach(e -> this.propertyInfoMap.put(e.getName(), this.getPropertyList(e)));
             }

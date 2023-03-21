@@ -10,6 +10,7 @@ import info.lostred.ruler.engine.CompleteRulesEngine;
 import info.lostred.ruler.engine.IncompleteRulesEngine;
 import info.lostred.ruler.engine.RulesEngine;
 import info.lostred.ruler.factory.*;
+import info.lostred.ruler.util.ClassUtils;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -20,7 +21,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.expression.BeanFactoryResolver;
+import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.expression.BeanResolver;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -28,7 +32,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,27 +43,19 @@ import java.util.stream.Stream;
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(RulerProperties.class)
 public class RulerAutoConfiguration {
-    private final static Logger logger = Logger.getLogger(RulerAutoConfiguration.class.getName());
-
     @Bean
     @ConditionalOnMissingBean
     public DomainFactory domainFactory(ConfigurableListableBeanFactory beanFactory,
                                        RulerProperties rulerProperties) {
-        String[] beanNames = beanFactory.getBeanNamesForAnnotation(DomainScan.class);
-        Stream<String> packageStream = Arrays.stream(beanNames)
+        Stream<String> packageStream = Arrays.stream(beanFactory.getBeanNamesForAnnotation(DomainScan.class))
                 .map(beanFactory::getBeanDefinition)
                 .map(AnnotatedBeanDefinition.class::cast)
-                .map(beanDefinition -> {
-                    String className = beanDefinition.getMetadata().getClassName();
-                    try {
-                        return Class.forName(className);
-                    } catch (ClassNotFoundException ignored) {
-                        logger.warning(className + " is not found.");
-                        return null;
-                    }
-                })
+                .map(AnnotatedBeanDefinition::getMetadata)
+                .map(e -> e.getAnnotationAttributes(DomainScan.class.getName()))
+                .map(AnnotationAttributes::fromMap)
                 .filter(Objects::nonNull)
-                .flatMap(e -> Arrays.stream(e.getAnnotation(DomainScan.class).value()));
+                .map(e -> e.getStringArray("value"))
+                .flatMap(Arrays::stream);
         String[] scanPackages = Stream.concat(Arrays.stream(rulerProperties.getDomainScanPackages()), packageStream)
                 .filter(StringUtils::hasText)
                 .distinct()
@@ -80,6 +75,12 @@ public class RulerAutoConfiguration {
     @Configuration(proxyBeanMethods = false)
     public static class RuleAutoConfiguration {
         @Bean
+        @ConditionalOnMissingBean
+        public ExpressionParser expressionParser() {
+            return new SpelExpressionParser();
+        }
+
+        @Bean
         public RuleFactory ruleFactory(ConfigurableListableBeanFactory beanFactory) {
             List<RuleDefinition> ruleDefinitions = Arrays.stream(beanFactory.getBeanDefinitionNames())
                     .map(beanFactory::getBeanDefinition)
@@ -87,13 +88,7 @@ public class RulerAutoConfiguration {
                     .map(AnnotatedBeanDefinition.class::cast)
                     .map(AnnotatedBeanDefinition::getMetadata)
                     .filter(e -> e.hasAnnotation(Rule.class.getName()))
-                    .map(e -> {
-                        try {
-                            return Class.forName(e.getClassName());
-                        } catch (ClassNotFoundException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    })
+                    .map(e -> ClassUtils.loadClass(e.getClassName()))
                     .map(e -> RuleDefinitionBuilder.build(e).getRuleDefinition())
                     .collect(Collectors.toList());
             return new SpringRuleFactory(ruleDefinitions);
