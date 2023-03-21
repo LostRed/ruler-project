@@ -72,7 +72,7 @@ public class RuleDefinition {
 
     public static RuleDefinition of(String description,
                                     Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
-        return RuleDefinition.of(UUID.randomUUID().toString(), RulerConstants.BUSINESS_TYPE_COMMON, Grade.ILLEGAL, description,
+        return of(UUID.randomUUID().toString(), RulerConstants.BUSINESS_TYPE_COMMON, Grade.ILLEGAL, description,
                 0, false, true,
                 ruleClass, parameterExp, conditionExp, predicateExp);
     }

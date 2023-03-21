@@ -48,12 +48,12 @@ public class DefaultRuleFactory extends AbstractRuleFactory {
             }
             abstractRule.init();
             return abstractRule;
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RulesException("Internal error: " + ruleClass.getName() +
-                    " cannot be instantiated.", e, ruleDefinition);
         } catch (NoSuchMethodException e) {
             throw new RulesException("Please provide a no argument constructor in " + ruleClass.getName() +
                     ", override 'init()' method to initialize its member parameters.", e, ruleDefinition);
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            throw new RulesException("Internal error: " + ruleClass.getName() +
+                    " cannot be instantiated.", e, ruleDefinition);
         }
     }
 }

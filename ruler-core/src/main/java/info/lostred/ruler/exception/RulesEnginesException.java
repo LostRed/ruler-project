@@ -6,7 +6,7 @@ package info.lostred.ruler.exception;
  * @author lostred
  */
 public class RulesEnginesException extends RuntimeException {
-    private final String businessType;
+    private String businessType;
     private final Class<?> rulesEngineType;
 
     public RulesEnginesException(String businessType,
@@ -27,6 +27,11 @@ public class RulesEnginesException extends RuntimeException {
         super(message, cause);
         this.businessType = businessType;
         this.rulesEngineType = rulesEngineType;
+    }
+
+    public RulesEnginesException(String message, Throwable cause, Class<?> rulesEngineClass) {
+        super(message, cause);
+        this.rulesEngineType = rulesEngineClass;
     }
 
     public RulesEnginesException(Throwable cause, String businessType,

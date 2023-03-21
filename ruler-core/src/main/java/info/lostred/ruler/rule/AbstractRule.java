@@ -29,7 +29,7 @@ public abstract class AbstractRule implements Evaluator {
     }
 
     /**
-     * 在给定的评估上下文与表达式解析器下，评估接口是否支持对该参数进行判断
+     * 规则是否支持对该参数进行判断
      *
      * @param object 参数
      * @return 支持返回true，否则返回false

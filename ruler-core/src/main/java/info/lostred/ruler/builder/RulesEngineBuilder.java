@@ -2,6 +2,7 @@ package info.lostred.ruler.builder;
 
 import info.lostred.ruler.engine.AbstractRulesEngine;
 import info.lostred.ruler.engine.RulesEngine;
+import info.lostred.ruler.exception.RulesEnginesException;
 import info.lostred.ruler.factory.RuleFactory;
 import org.springframework.expression.BeanResolver;
 
@@ -28,9 +29,11 @@ public class RulesEngineBuilder {
             Constructor<? extends AbstractRulesEngine> constructor = rulesEngineClass.getDeclaredConstructor();
             abstractRulesEngine = constructor.newInstance();
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new RulesEnginesException("Please provide a no argument constructor in " + rulesEngineClass.getName() +
+                    ", override 'init()' method to initialize its member parameters.", e, rulesEngineClass);
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException(e);
+            throw new RulesEnginesException("Internal error: " + rulesEngineClass.getName() +
+                    " cannot be instantiated.", e, rulesEngineClass);
         }
     }
 
