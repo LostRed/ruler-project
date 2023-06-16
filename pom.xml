@@ -6,7 +6,7 @@
     <groupId>info.lostred.ruler</groupId>
     <artifactId>ruler-project</artifactId>
     <packaging>pom</packaging>
-    <version>3.2.8</version>
+    <version>3.2.10</version>
     <name>ruler project</name>
     <description>ruler project</description>
 

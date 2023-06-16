@@ -161,6 +161,10 @@ public class RuleDefinition {
         this.enabled = enabled;
     }
 
+    public void setRuleClass(Class<? extends AbstractRule> ruleClass) {
+        this.ruleClass = ruleClass;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

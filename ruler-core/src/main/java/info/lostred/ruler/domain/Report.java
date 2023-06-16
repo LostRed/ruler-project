@@ -1,5 +1,7 @@
 package info.lostred.ruler.domain;
 
+import info.lostred.ruler.constant.Grade;
+
 import java.io.Serializable;
 
 /**
@@ -9,6 +11,10 @@ import java.io.Serializable;
  */
 public class Report implements Serializable {
     /**
+     * 错误等级
+     */
+    private final String grade;
+    /**
      * 规则描述
      */
     private final String description;
@@ -17,13 +23,18 @@ public class Report implements Serializable {
      */
     private final Object returnValue;
 
-    public static Report newInstance(String description, Object returnValue) {
-        return new Report(description, returnValue);
+    public static Report newInstance(Grade grade, String description, Object returnValue) {
+        return new Report(grade.name(), description, returnValue);
     }
 
-    private Report(String description, Object returnValue) {
+    private Report(String grade, String description, Object returnValue) {
+        this.grade = grade;
         this.description = description;
         this.returnValue = returnValue;
+    }
+
+    public String getGrade() {
+        return grade;
     }
 
     public String getDescription() {
