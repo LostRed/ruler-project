@@ -44,7 +44,7 @@ public class Result implements Serializable {
      * @param value          需要记录的值
      */
     public void addReport(RuleDefinition ruleDefinition, Object value) {
-        Report report = Report.newInstance(ruleDefinition.getDescription(), value);
+        Report report = Report.newInstance(ruleDefinition.getGrade(), ruleDefinition.getDescription(), value);
         this.reports.put(ruleDefinition.getRuleCode(), report);
         this.updateGrade(ruleDefinition.getGrade());
     }
