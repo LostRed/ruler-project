@@ -33,6 +33,13 @@ public @interface Rule {
     String businessType() default RulerConstants.BUSINESS_TYPE_COMMON;
 
     /**
+     * 规则类型
+     *
+     * @return 规则类型
+     */
+    String ruleType() default "";
+
+    /**
      * 规则的严重等级
      *
      * @return 规则的严重等级

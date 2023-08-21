@@ -44,6 +44,14 @@ public interface RulesEngine {
     AbstractRule getRule(String ruleCode);
 
     /**
+     * 根据规则类型获取引擎中的规则
+     *
+     * @param ruleType 规则类型
+     * @return 规则
+     */
+    List<AbstractRule> getRules(String ruleType);
+
+    /**
      * 在引擎中添加规则并按顺序号排序
      *
      * @param ruleCode 规则编号

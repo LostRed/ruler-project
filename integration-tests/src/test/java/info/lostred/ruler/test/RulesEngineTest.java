@@ -2,9 +2,13 @@ package info.lostred.ruler.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import info.lostred.ruler.constant.Grade;
 import info.lostred.ruler.domain.Result;
+import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.engine.RulesEngine;
+import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.factory.RulesEngineFactory;
+import info.lostred.ruler.rule.DeclarativeRule;
 import info.lostred.ruler.test.domain.Area;
 import info.lostred.ruler.test.domain.Contact;
 import info.lostred.ruler.test.domain.Person;
@@ -24,6 +28,8 @@ class RulesEngineTest {
     static Person person;
     @Autowired
     RulesEngineFactory rulesEngineFactory;
+    @Autowired
+    RuleFactory ruleFactory;
     @Autowired
     ObjectMapper objectMapper;
 
@@ -64,5 +70,15 @@ class RulesEngineTest {
         Result result = rulesEngine.execute(person);
         long e = System.currentTimeMillis();
         printResult(result, s, e);
+    }
+
+    @Test
+    void registerRuleDefinitionAndExecuteTest() throws JsonProcessingException {
+        RuleDefinition ruleDefinition = RuleDefinition.of("test", businessType, "", Grade.ILLEGAL, "this is a test rule",
+                0, false, true, DeclarativeRule.class, "#root", "true", "true");
+        ruleFactory.registerRuleDefinition(ruleDefinition);
+        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
+        rulesEngine.addRule(ruleDefinition.getRuleCode());
+        this.executeTest();
     }
 }
