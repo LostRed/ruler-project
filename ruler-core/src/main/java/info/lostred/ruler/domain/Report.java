@@ -38,6 +38,10 @@ public class Report implements Serializable {
         this.returnValue = returnValue;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public String getGrade() {
         return grade;
     }
