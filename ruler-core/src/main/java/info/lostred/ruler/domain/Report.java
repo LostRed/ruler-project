@@ -11,6 +11,10 @@ import java.io.Serializable;
  */
 public class Report implements Serializable {
     /**
+     * 类型
+     */
+    private final String type;
+    /**
      * 错误等级
      */
     private final String grade;
@@ -23,11 +27,12 @@ public class Report implements Serializable {
      */
     private final Object returnValue;
 
-    public static Report newInstance(Grade grade, String description, Object returnValue) {
-        return new Report(grade.name(), description, returnValue);
+    public static Report newInstance(String type, Grade grade, String description, Object returnValue) {
+        return new Report(type, grade.name(), description, returnValue);
     }
 
-    private Report(String grade, String description, Object returnValue) {
+    private Report(String type, String grade, String description, Object returnValue) {
+        this.type = type;
         this.grade = grade;
         this.description = description;
         this.returnValue = returnValue;
