@@ -142,6 +142,13 @@ public abstract class AbstractRulesEngine implements RulesEngine {
     }
 
     @Override
+    public List<AbstractRule> getRules(String ruleType) {
+        return this.rules.stream()
+                .filter(rule -> rule.getRuleDefinition().getRuleType().equals(ruleType))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void addRule(String ruleCode) {
         AbstractRule rule = this.ruleFactory.getRule(ruleCode);
         for (int i = 0; i < this.rules.size(); i++) {

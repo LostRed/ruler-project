@@ -23,6 +23,10 @@ public class RuleDefinition {
      */
     private String businessType;
     /**
+     * 规则类型
+     */
+    private String ruleType;
+    /**
      * 严重等级
      */
     private Grade grade;
@@ -65,22 +69,22 @@ public class RuleDefinition {
     private String predicateExp;
 
     public static RuleDefinition of(Rule rule, Class<? extends AbstractRule> ruleClass) {
-        return of(rule.ruleCode(), rule.businessType(), rule.grade(), rule.description(),
+        return of(rule.ruleCode(), rule.businessType(), rule.ruleType(), rule.grade(), rule.description(),
                 rule.order(), rule.required(), rule.enable(),
                 ruleClass, rule.parameterExp(), rule.conditionExp(), rule.predicateExp());
     }
 
     public static RuleDefinition of(String description,
                                     Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
-        return of(UUID.randomUUID().toString(), RulerConstants.BUSINESS_TYPE_COMMON, Grade.ILLEGAL, description,
+        return of(UUID.randomUUID().toString(), RulerConstants.BUSINESS_TYPE_COMMON, "", Grade.ILLEGAL, description,
                 0, false, true,
                 ruleClass, parameterExp, conditionExp, predicateExp);
     }
 
-    public static RuleDefinition of(String ruleCode, String businessType, Grade grade, String description,
+    public static RuleDefinition of(String ruleCode, String businessType, String ruleType, Grade grade, String description,
                                     Integer order, boolean required, boolean enable,
                                     Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
-        return new RuleDefinition(ruleCode, businessType, grade, description,
+        return new RuleDefinition(ruleCode, businessType, ruleType, grade, description,
                 order, required, enable,
                 ruleClass, parameterExp, conditionExp, predicateExp);
     }
@@ -88,12 +92,13 @@ public class RuleDefinition {
     private RuleDefinition() {
     }
 
-    public RuleDefinition(String ruleCode, String businessType, Grade grade, String description,
+    public RuleDefinition(String ruleCode, String businessType, String ruleType, Grade grade, String description,
                           Integer order, boolean required, boolean enabled,
                           Class<? extends AbstractRule> ruleClass, String parameterExp, String conditionExp, String predicateExp) {
         ruleCode = ruleCode == null || "".equals(ruleCode) ? UUID.randomUUID().toString() : ruleCode;
         this.ruleCode = ruleCode;
         this.businessType = businessType;
+        this.ruleType = ruleType;
         this.grade = grade;
         this.description = description;
         this.order = order;
@@ -111,6 +116,10 @@ public class RuleDefinition {
 
     public String getBusinessType() {
         return businessType;
+    }
+
+    public String getRuleType() {
+        return ruleType;
     }
 
     public Grade getGrade() {
