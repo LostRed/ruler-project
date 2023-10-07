@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.lostred.ruler</groupId>
     <artifactId>ruler-spring-boot-starter</artifactId>
-    <version>3.2.11</version>
+    <version>3.2.12</version>
     <name>ruler spring boot starter</name>
     <description>ruler's spring boot starter.</description>
 
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>info.lostred.ruler</groupId>
             <artifactId>ruler-core</artifactId>
-            <version>3.2.11</version>
+            <version>3.2.12</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
