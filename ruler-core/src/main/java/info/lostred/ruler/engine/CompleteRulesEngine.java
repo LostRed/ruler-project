@@ -23,7 +23,7 @@ public class CompleteRulesEngine extends AbstractRulesEngine {
                     RuleDefinition ruleDefinition = rule.getRuleDefinition();
                     throw new RulesEnginesException("rule[" + ruleDefinition.getRuleCode() +
                             " " + ruleDefinition.getGrade() + "] has occurred an exception: " +
-                            e.getMessage(), e, this.getBusinessType(), this.getClass());
+                            e.getMessage() + ", at " + e.getStackTrace()[0], e, this.getBusinessType(), this.getClass());
                 }
             }
             return result;
