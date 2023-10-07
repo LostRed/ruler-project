@@ -197,4 +197,27 @@ public abstract class AbstractRulesEngine implements RulesEngine {
         this.rules.clear();
         this.rules.addAll(rules);
     }
+
+    /**
+     * 获取异常信息
+     *
+     * @param rule 规则
+     * @param e    异常
+     * @return 异常信息
+     */
+    protected String getExceptionMessage(AbstractRule rule, Exception e) {
+        RuleDefinition ruleDefinition = rule.getRuleDefinition();
+        StackTraceElement[] stackTrace = e.getStackTrace();
+        String message;
+        if (stackTrace.length == 0) {
+            message = "rule[" + ruleDefinition.getRuleCode() +
+                    " " + ruleDefinition.getGrade() + "] has occurred an exception: " +
+                    e.getMessage();
+        } else {
+            message = "rule[" + ruleDefinition.getRuleCode() +
+                    " " + ruleDefinition.getGrade() + "] has occurred an exception: " +
+                    e.getMessage() + ", at " + e.getStackTrace()[0];
+        }
+        return message;
+    }
 }

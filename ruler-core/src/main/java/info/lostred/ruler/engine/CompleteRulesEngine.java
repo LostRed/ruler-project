@@ -20,10 +20,8 @@ public class CompleteRulesEngine extends AbstractRulesEngine {
                 try {
                     this.executeInternal(rootObject, rule, result);
                 } catch (Exception e) {
-                    RuleDefinition ruleDefinition = rule.getRuleDefinition();
-                    throw new RulesEnginesException("rule[" + ruleDefinition.getRuleCode() +
-                            " " + ruleDefinition.getGrade() + "] has occurred an exception: " +
-                            e.getMessage() + ", at " + e.getStackTrace()[0], e, this.getBusinessType(), this.getClass());
+                    String message = this.getExceptionMessage(rule, e);
+                    throw new RulesEnginesException(message, e, this.getBusinessType(), this.getClass());
                 }
             }
             return result;
