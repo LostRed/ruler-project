@@ -6,6 +6,7 @@ import info.lostred.ruler.rule.AbstractRule;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 规则引擎接口
@@ -20,6 +21,15 @@ public interface RulesEngine {
      * @return 执行结果
      */
     Result execute(Object rootObject);
+
+    /**
+     * 使用特定规则执行
+     *
+     * @param rootObject 根对象
+     * @param ruleCodes  规则编号
+     * @return 执行结果
+     */
+    Result executeWithRules(Object rootObject, Set<String> ruleCodes);
 
     /**
      * 获取引擎的业务类型

@@ -2,7 +2,6 @@ package info.lostred.ruler.test.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +13,7 @@ public class Person {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date birthday;
     private Area area;
-    private List<Contact> contacts = new ArrayList<>();
+    private List<Contact> contacts ;
 
     public String getCertNo() {
         return certNo;
