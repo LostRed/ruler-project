@@ -17,10 +17,6 @@ import org.springframework.context.ApplicationContextAware;
 public class SpringRuleFactory extends AbstractRuleFactory implements ApplicationContextAware {
     private AutowireCapableBeanFactory beanFactory;
 
-    public SpringRuleFactory(Iterable<RuleDefinition> ruleDefinitions) {
-        super(ruleDefinitions);
-    }
-
     @Override
     protected AbstractRule createRule(String ruleCode, RuleDefinition ruleDefinition) {
         Class<? extends AbstractRule> ruleClass = ruleDefinition.getRuleClass();

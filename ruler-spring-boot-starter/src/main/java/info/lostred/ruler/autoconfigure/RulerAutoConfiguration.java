@@ -3,6 +3,7 @@ package info.lostred.ruler.autoconfigure;
 import info.lostred.ruler.annotation.DomainScan;
 import info.lostred.ruler.annotation.Rule;
 import info.lostred.ruler.builder.RuleDefinitionBuilder;
+import info.lostred.ruler.builder.RuleFactoryBuilder;
 import info.lostred.ruler.builder.RulesEngineBuilder;
 import info.lostred.ruler.constant.EngineType;
 import info.lostred.ruler.domain.RuleDefinition;
@@ -92,7 +93,9 @@ public class RulerAutoConfiguration {
                     .map(e -> ClassUtils.loadClass(e.getClassName()))
                     .map(e -> RuleDefinitionBuilder.build(e).getRuleDefinition())
                     .collect(Collectors.toList());
-            return new SpringRuleFactory(ruleDefinitions);
+            RuleFactoryBuilder builder = RuleFactoryBuilder.build(SpringRuleFactory.class);
+            return builder.registerRuleDefinition(ruleDefinitions)
+                    .getRuleFactory();
         }
     }
 

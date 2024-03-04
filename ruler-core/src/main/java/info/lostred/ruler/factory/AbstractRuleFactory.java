@@ -31,10 +31,6 @@ public abstract class AbstractRuleFactory implements RuleFactory {
     public AbstractRuleFactory() {
     }
 
-    public AbstractRuleFactory(Iterable<RuleDefinition> ruleDefinitions) {
-        ruleDefinitions.forEach(this::registerRuleDefinition);
-    }
-
     @Override
     public void registerRuleDefinition(RuleDefinition ruleDefinition) {
         if (this.ruleDefinitionMap.containsKey(ruleDefinition.getRuleCode())) {

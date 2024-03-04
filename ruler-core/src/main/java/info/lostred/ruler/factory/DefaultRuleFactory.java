@@ -21,10 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 public class DefaultRuleFactory extends AbstractRuleFactory {
     private final static ExpressionParser EXPRESSION_PARSER = new SpelExpressionParser();
 
-    public DefaultRuleFactory(Iterable<RuleDefinition> ruleDefinitions) {
-        super(ruleDefinitions);
-    }
-
     public DefaultRuleFactory(String... scanPackages) {
         if (scanPackages == null || scanPackages.length == 0) {
             throw new IllegalArgumentException("At least one base package must be specified");
