@@ -5,6 +5,7 @@ import info.lostred.ruler.constant.Grade;
 import info.lostred.ruler.constant.RulerConstants;
 import info.lostred.ruler.rule.AbstractRule;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
  *
  * @author lostred
  */
-public class RuleDefinition {
+public class RuleDefinition implements Serializable {
     /**
      * 规则编号
      */
