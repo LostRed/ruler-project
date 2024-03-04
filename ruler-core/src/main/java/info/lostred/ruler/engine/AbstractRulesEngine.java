@@ -6,6 +6,7 @@ import info.lostred.ruler.domain.RuleDefinition;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 import info.lostred.ruler.rule.SimpleRule;
+import org.springframework.context.expression.MapAccessor;
 import org.springframework.expression.BeanResolver;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -75,6 +76,7 @@ public abstract class AbstractRulesEngine implements RulesEngine {
      */
     protected void initContext(Object rootObject) {
         StandardEvaluationContext context = new StandardEvaluationContext(rootObject);
+        context.addPropertyAccessor(new MapAccessor());
         context.setBeanResolver(beanResolver);
         globalFunctions.forEach(e -> context.registerFunction(e.getName(), e));
         ExecutionContextHolder.setContext(context);
