@@ -81,6 +81,7 @@ public class RulerAutoConfiguration {
         }
 
         @Bean
+        @ConditionalOnMissingBean
         public RuleFactory ruleFactory(ConfigurableListableBeanFactory beanFactory) {
             List<RuleDefinition> ruleDefinitions = Arrays.stream(beanFactory.getBeanDefinitionNames())
                     .map(beanFactory::getBeanDefinition)
