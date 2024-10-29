@@ -6,10 +6,11 @@ package info.lostred.ruler.rule;
  * 方便编程式开发。这种情况下无需定义parameterExp参数表达式、conditionExp条件表达式和predicateExp断定表达式。</p>
  *
  * @param <T> 校验值的类型
+ * @param <R> 返回类型
  * @author lostred
  * @since 2.2.0
  */
-public abstract class ProgrammaticRule<T> extends AbstractRule {
+public abstract class ProgrammaticRule<T, R> extends AbstractRule {
     @SuppressWarnings("unchecked")
     @Override
     public boolean supports(Object object) {
@@ -18,7 +19,7 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object getValue(Object object) {
+    public R getValue(Object object) {
         return this.getValueInternal((T) object);
     }
 
@@ -42,7 +43,7 @@ public abstract class ProgrammaticRule<T> extends AbstractRule {
      * @param object 转换成泛型类后的参数
      * @return 需要记录的值
      */
-    public abstract Object getValueInternal(T object);
+    public abstract R getValueInternal(T object);
 
     /**
      * 评估参数是否满足特定的条件

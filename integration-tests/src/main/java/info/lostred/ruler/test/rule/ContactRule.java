@@ -6,14 +6,15 @@ import info.lostred.ruler.test.domain.Contact;
 import info.lostred.ruler.test.domain.Person;
 import org.springframework.util.ObjectUtils;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Rule(ruleCode = "联系方式",
         businessType = "person",
         description = "联系方式密码不能为1234")
-public class ContactRule extends ProgrammaticRule<Person> {
+public class ContactRule extends ProgrammaticRule<Person, List<String>> {
     @Override
-    public Object getValueInternal(Person person) {
+    public List<String> getValueInternal(Person person) {
         return person.getContacts().stream()
                 .map(Contact::getPassword)
                 .filter("1234"::equals)

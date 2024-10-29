@@ -8,10 +8,10 @@ import org.springframework.util.ObjectUtils;
 @Rule(ruleCode = "姓名必填",
         businessType = "person",
         description = "姓名不能为空")
-public class NameRule extends SimpleRule<Person> {
+public class NameRule extends SimpleRule<Person, String> {
     @Override
-    public Object getValueInternal(Person person) {
-        return ObjectUtils.isEmpty(person.getName()) ? person.getName() + "" : null;
+    public String getValueInternal(Person person) {
+        return ObjectUtils.isEmpty(person.getName()) ? person.getName() : null;
     }
 
     @Override

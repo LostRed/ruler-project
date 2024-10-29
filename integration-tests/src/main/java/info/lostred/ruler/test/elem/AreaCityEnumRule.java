@@ -11,7 +11,7 @@ import java.util.Set;
 @Rule(ruleCode = "地区城市枚举规则",
         businessType = "person",
         description = "地区中的城市必须是枚举值")
-public class AreaCityEnumRule extends SimpleRule<Person> {
+public class AreaCityEnumRule extends SimpleRule<Person, String> {
     private final Set<String> areaCities;
 
     public AreaCityEnumRule(Set<String> areaCities) {
@@ -19,7 +19,7 @@ public class AreaCityEnumRule extends SimpleRule<Person> {
     }
 
     @Override
-    public Object getValueInternal(Person person) {
+    public String getValueInternal(Person person) {
         Area area = person.getArea();
         String city = area.getCity();
         if (!areaCities.contains(city)) {
