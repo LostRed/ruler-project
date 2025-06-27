@@ -5,7 +5,7 @@ import info.lostred.ruler.exception.RulesEnginesException;
 import info.lostred.ruler.factory.RuleFactory;
 import info.lostred.ruler.rule.AbstractRule;
 
-import java.util.Set;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class NoTerminableRulesEngine extends AbstractRulesEngine {
     @Override
-    public Result executeWithRules(Object rootObject, Set<String> ruleCodes) {
+    public Result executeWithRules(Object rootObject, List<String> ruleCodes) {
         try {
             this.initContext(rootObject);
             Result result = Result.newInstance();

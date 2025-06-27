@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -126,10 +125,10 @@ public abstract class AbstractRulesEngine implements RulesEngine {
 
     @Override
     public Result execute(Object rootObject) {
-        Set<String> ruleCodes = rules.stream()
+        List<String> ruleCodes = rules.stream()
                 .filter(e -> e.getRuleDefinition().isEnabled())
                 .map(e -> e.getRuleDefinition().getRuleCode())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
         return this.executeWithRules(rootObject, ruleCodes);
     }
 

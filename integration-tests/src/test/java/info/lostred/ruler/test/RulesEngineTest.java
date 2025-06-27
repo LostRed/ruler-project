@@ -53,7 +53,7 @@ class RulesEngineTest {
         person.setBirthday(parse);
         Area area = new Area();
         area.setCity("广州");
-        person.setArea(area);
+//        person.setArea(area);
         Contact contact1 = new Contact();
         contact1.setArea(area);
         contact1.setType("qq");
@@ -68,6 +68,15 @@ class RulesEngineTest {
         RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
         long s = System.currentTimeMillis();
         Result result = rulesEngine.execute(person);
+        long e = System.currentTimeMillis();
+        printResult(result, s, e);
+    }
+
+    @Test
+    void executeWithRulesTest() throws JsonProcessingException {
+        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
+        long s = System.currentTimeMillis();
+        Result result = rulesEngine.executeWithRules(person, Arrays.asList("身份证号码长度", "联系方式", "性别码值"));
         long e = System.currentTimeMillis();
         printResult(result, s, e);
     }

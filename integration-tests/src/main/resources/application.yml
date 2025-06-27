@@ -1,8 +1,9 @@
 ruler:
   business-type: person
-  engine-type: no_terminable
+  engine-type: terminable
   rule-scan-packages: info.lostred.ruler.test.rule
   domain-scan-packages: info.lostred.ruler.test.domain
+  termination-grade: illegal
 
 logging:
   level:
