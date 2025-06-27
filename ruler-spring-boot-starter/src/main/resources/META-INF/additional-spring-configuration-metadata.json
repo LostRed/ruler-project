@@ -22,6 +22,13 @@
       "defaultValue": "no_terminable"
     },
     {
+      "name": "ruler.termination-grade",
+      "type": "java.lang.String",
+      "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
+      "description": "终止规则引擎终止的严重等级(该等级的违规规则检出违规时停止运行后续规则).",
+      "defaultValue": "reminder"
+    },
+    {
       "name": "ruler.rule-scan-packages",
       "type": "java.lang.String",
       "sourceType": "info.lostred.ruler.autoconfigure.RulerProperties",
@@ -45,6 +52,23 @@
         {
           "value": "no_terminable",
           "description": "不可终止的规则引擎，能够返回校验的结果报告，会执行引擎中的所有规则."
+        }
+      ]
+    },
+    {
+      "name": "ruler.termination-grade",
+      "values": [
+        {
+          "value": "reminder",
+          "description": "提醒."
+        },
+        {
+          "value": "suspected",
+          "description": "可疑."
+        },
+        {
+          "value": "illegal",
+          "description": "非法."
         }
       ]
     },

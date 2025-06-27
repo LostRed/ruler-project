@@ -1,7 +1,6 @@
 package info.lostred.ruler.accessor;
 
 import org.springframework.context.expression.MapAccessor;
-import org.springframework.expression.AccessException;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.TypedValue;
 import org.springframework.lang.Nullable;
@@ -18,9 +17,8 @@ public class IgnoreContainKeyMapAccessor extends MapAccessor {
         return target instanceof Map;
     }
 
-
     @Override
-    public TypedValue read(EvaluationContext context, @Nullable Object target, String name) throws AccessException {
+    public TypedValue read(EvaluationContext context, @Nullable Object target, String name) {
         Assert.state(target instanceof Map, "Target must be of type Map");
         Map<?, ?> map = (Map<?, ?>) target;
         Object value = map.get(name);
