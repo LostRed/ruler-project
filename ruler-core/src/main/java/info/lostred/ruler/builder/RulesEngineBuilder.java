@@ -2,8 +2,8 @@ package info.lostred.ruler.builder;
 
 import info.lostred.ruler.constant.Grade;
 import info.lostred.ruler.engine.AbstractRulesEngine;
-import info.lostred.ruler.engine.TerminableRulesEngine;
 import info.lostred.ruler.engine.RulesEngine;
+import info.lostred.ruler.engine.TerminableRulesEngine;
 import info.lostred.ruler.exception.RulesEnginesException;
 import info.lostred.ruler.factory.RuleFactory;
 import org.springframework.expression.BeanResolver;
@@ -116,10 +116,10 @@ public class RulesEngineBuilder {
             throw new IllegalArgumentException(classname + " need to set a businessType in builder.");
         }
         if (abstractRulesEngine.getRuleFactory() == null) {
-            throw new IllegalArgumentException(classname + " need to set a RuleFactory in builder.");
+            throw new IllegalArgumentException(classname + " need to set a ruleFactory in builder.");
         }
         if (abstractRulesEngine.getBeanResolver() == null) {
-            throw new IllegalArgumentException(classname + " need to set a BeanResolver in builder.");
+            throw new IllegalArgumentException(classname + " need to set a beanResolver in builder.");
         }
     }
 }
