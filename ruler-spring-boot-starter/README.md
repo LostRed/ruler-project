@@ -7,7 +7,7 @@
 ```xml
 
 <dependency>
-    <groupId>io.github.lostred</groupId>
+    <groupId>info.lostred.ruler</groupId>
     <artifactId>ruler-spring-boot-starter</artifactId>
     <version>{ruler.version}</version>
 </dependency>
