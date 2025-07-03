@@ -7,7 +7,7 @@
 ```xml
 
 <dependency>
-    <groupId>info.lostred.ruler</groupId>
+    <groupId>com.ylzinfo.brt.ruler</groupId>
     <artifactId>ruler-spring-boot-starter</artifactId>
     <version>{ruler.version}</version>
 </dependency>
