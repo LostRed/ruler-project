@@ -65,7 +65,7 @@ class RulesEngineTest {
 
     @Test
     void executeTest() throws JsonProcessingException {
-        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
+        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType).get(0);
         long s = System.currentTimeMillis();
         Result result = rulesEngine.execute(person);
         long e = System.currentTimeMillis();
@@ -74,7 +74,7 @@ class RulesEngineTest {
 
     @Test
     void executeWithRulesTest() throws JsonProcessingException {
-        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
+        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType).get(0);
         long s = System.currentTimeMillis();
         Result result = rulesEngine.executeWithRules(person, Arrays.asList("身份证号码长度", "联系方式", "性别码值"));
         long e = System.currentTimeMillis();
@@ -86,7 +86,7 @@ class RulesEngineTest {
         RuleDefinition ruleDefinition = RuleDefinition.of("test", businessType, "", Grade.ILLEGAL, "this is a test rule",
                 0, false, true, DeclarativeRule.class, "#root", "true", "true");
         ruleFactory.registerRuleDefinition(ruleDefinition);
-        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType);
+        RulesEngine rulesEngine = rulesEngineFactory.getEngine(businessType).get(0);
         rulesEngine.addRule(ruleDefinition.getRuleCode());
         this.executeTest();
     }
