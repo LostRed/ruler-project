@@ -29,7 +29,7 @@ public interface RulesEngineFactory {
      * @param businessType 业务类型
      * @return 规则引擎
      */
-    RulesEngine getEngine(String businessType);
+    List<RulesEngine> getEngine(String businessType);
 
     /**
      * 获取所有规则引擎

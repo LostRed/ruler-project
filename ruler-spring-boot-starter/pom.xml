@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ylzinfo.brt.ruler</groupId>
     <artifactId>ruler-spring-boot-starter</artifactId>
-    <version>3.4.1</version>
+    <version>3.4.2</version>
     <name>ruler spring boot starter</name>
     <description>ruler's spring boot starter.</description>
 
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.ylzinfo.brt.ruler</groupId>
             <artifactId>ruler-core</artifactId>
-            <version>3.4.1</version>
+            <version>3.4.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
