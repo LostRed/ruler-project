@@ -95,14 +95,14 @@
 
     <distributionManagement>
         <repository>
-            <id>ylz</id>
+            <id>zykj</id>
             <name>maven-releases</name>
-            <url>http://10.16.0.125:8081/repository/maven-releases/</url>
+            <url>http://192.168.32.227:8931/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>ylz</id>
+            <id>zykj</id>
             <name>maven-snapshots</name>
-            <url>http://10.16.0.125:8081/repository/maven-snapshots/</url>
+            <url>http://192.168.32.227:8931/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 </project>
